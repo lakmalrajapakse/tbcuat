@@ -1,0 +1,41 @@
+<!-- sldsValidatorIgnore -->
+<!--
+   @description       : 
+   @author            : Simon Coles
+   @group             : 
+   @last modified on  : 20-11-2024
+   Modifications Log 
+   Ver   Date         Author        Modification
+   1.0   20-11-2024   Simon Coles   Initial Version
+   -->
+<template>
+    <template if:false={isReadOnly}>
+        <fieldset class="slds-form-element slds-form-element_compound c-form-element">
+            <div class={getFormControlClass}>
+                <div class="slds-form-element__row">
+                    <div class="slds-size_1-of-2">
+                        <lightning-input type="text" name="input_stat_time" placeholder="Start Time"
+                            data-fieldtype="start" variant="label-hidden" value={startTime} onchange={handleFieldChange}
+                            onblur={handleBlur} disabled={startDisabled} autocomplete="off" onclick={handleOnClick}>
+                        </lightning-input>
+                    </div>
+                    <div class="slds-size_1-of-2">
+                        <lightning-input type="text" name="input_end_time" placeholder="End Time" data-fieldtype="end"
+                            variant="label-hidden" value={endTime} onchange={handleFieldChange} onblur={handleBlur}
+                            disabled={endDisabled} autocomplete="off" onclick={handleOnClick}>
+                        </lightning-input>
+                    </div>
+                </div>
+                <div class="slds-form-element__help" if:true={hasError}>{errorMessage}</div>
+            </div>
+        </fieldset>
+    </template>
+    <template if:true={isReadOnly}>
+        <div>
+            <div><b>{dayOfWeek}</b></div>
+            <div><b>{shiftDate}</b></div>
+            <div>{startTime} - </div>
+            <div>{endTime}</div>
+        </div>
+    </template>
+</template>

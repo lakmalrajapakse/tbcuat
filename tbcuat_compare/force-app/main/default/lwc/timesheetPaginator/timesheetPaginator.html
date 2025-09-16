@@ -1,0 +1,75 @@
+<template>
+    <!-- COMPONENT BODY -->
+    <table width="100%">
+        <tr>
+            <td width="33.3%" >
+                <div class="slds-float_left">
+                    Show&nbsp;{startIndex}&nbsp;to&nbsp;{endIndex}&nbsp;of&nbsp;{totalNumberOfRecords}&nbsp;records
+                </div>
+            </td>
+            <td width="33.3%" >
+                <div align="center">
+                    <!-- FIRST PAGE -->
+                    <lightning-button-icon 
+                        icon-name="utility:chevronleft" 
+                        alternative-text="Goto first page." 
+                        disabled={isFirstPage}
+                        onclick={handleFirst}
+                        title="First">
+                    </lightning-button-icon>
+                    <!-- FIRST PAGE -->
+
+                    <!-- PREVIOUS PAGE -->
+                    <lightning-button-icon 
+                        icon-name="utility:left" 
+                        alternative-text="Goto previous page." 
+                        disabled={isFirstPage}
+                        onclick={handlePrevious}
+                        title="Previous">
+                    </lightning-button-icon>
+                    <!-- PREVIOUS PAGE -->
+
+                    <!-- PAGES LIST -->
+                    <lightning-button-group>
+                        <template for:each={pagesList} for:item="page">
+                            <lightning-button 
+                                key={page.pageName}
+                                value={page.pageName}
+                                label={page.pageName}
+                                variant={page.variant}
+                                onclick={handlePageClick}
+                            ></lightning-button>
+                        </template>
+                    </lightning-button-group>
+                    <!-- PAGES LIST -->
+
+                    <!-- NEXT PAGE -->
+                    <lightning-button-icon 
+                        icon-name="utility:right" 
+                        alternative-text="Goto next page." 
+                        disabled={isLastPage}
+                        onclick={handleNext}
+                        title="Next">
+                    </lightning-button-icon>
+                    <!-- NEXT PAGE -->
+
+                    <!-- LAST PAGE -->
+                    <lightning-button-icon 
+                        icon-name="utility:chevronright" 
+                        alternative-text="Goto last page." 
+                        disabled={isLastPage}
+                        onclick={handleLast}
+                        title="Last">
+                    </lightning-button-icon>
+                    <!-- LAST PAGE -->
+                </div>
+            </td>
+            <td width="33.3%" >
+                <div class="slds-float_right">
+                    Page&nbsp;{currentPage}&nbsp;of&nbsp;{totalNumberOfPages}
+                </div>
+            </td>
+        </tr>
+    </table>
+    <!-- COMPONENT BODY -->
+</template>

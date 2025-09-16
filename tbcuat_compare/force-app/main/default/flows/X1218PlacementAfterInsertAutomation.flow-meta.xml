@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>SetContactFields</name>
+        <label>Set Contact Fields</label>
+        <locationX>50</locationX>
+        <locationY>647</locationY>
+        <assignmentItems>
+            <assignToReference>GetContact.DateOfJoining__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.sirenum__Start_Date__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>UpdateContact</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>DateOfJoiningNullDecision</name>
+        <label>Date Of Joining Null Decision</label>
+        <locationX>182</locationX>
+        <locationY>539</locationY>
+        <defaultConnector>
+            <targetReference>UpdatePlacement</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>DateOfJoiningNull</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetContact.DateOfJoining__c</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SetContactFields</targetReference>
+            </connector>
+            <label>Date Of Joining Null</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>PlacementContactNotNullDecision</name>
+        <label>Placement Contact Not Null Decision</label>
+        <locationX>336</locationX>
+        <locationY>323</locationY>
+        <defaultConnector>
+            <targetReference>UpdatePlacement</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>PlacementContactNotNull</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.sirenum__Contact__c</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>GetContact</targetReference>
+            </connector>
+            <label>Placement Contact Not Null</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <interviewLabel>Placement After Insert Automation {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>1218 Placement After Insert Automation</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>GetContact</name>
+        <label>Get Contact</label>
+        <locationX>182</locationX>
+        <locationY>431</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>DateOfJoiningNullDecision</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.sirenum__Contact__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Contact</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>UpdateContact</name>
+        <label>Update Contact</label>
+        <locationX>50</locationX>
+        <locationY>755</locationY>
+        <connector>
+            <targetReference>UpdatePlacement</targetReference>
+        </connector>
+        <inputReference>GetContact</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>UpdatePlacement</name>
+        <label>Update Placement</label>
+        <locationX>336</locationX>
+        <locationY>1031</locationY>
+        <inputAssignments>
+            <field>InTimeExternalId__c</field>
+            <value>
+                <elementReference>$Record.PlacementReference__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>210</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>PlacementContactNotNullDecision</targetReference>
+        </connector>
+        <object>sirenum__Placement__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

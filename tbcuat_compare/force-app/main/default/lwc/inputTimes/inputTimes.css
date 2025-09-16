@@ -1,0 +1,21 @@
+fieldset.slds-form-element.slds-form-element_compound.c-form-element {
+    margin-top: 4px;
+}
+
+
+div.slds-size_1-of-2 {
+    margin-left: none;
+}
+
+.z-time-approval {
+    display: flex;
+    gap: 10px;
+}
+
+.z-time-approval div[class*="slds-size_1-of-2"] lightning-input {
+    width: 10px;
+}
+
+.z {
+    float: left;
+}

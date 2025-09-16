@@ -1,0 +1,51 @@
+<template>
+    <lightning-modal-header label="Add Rating"></lightning-modal-header>
+    <lightning-modal-body>
+        <div class="slds-is-relative modal-body">
+            <lightning-spinner alternative-text="Loading" if:true={isLoading} variant="brand"></lightning-spinner>
+            <div class="search-body">
+                <div class="search-body-output">
+                    <lightning-layout pull-to-boundary="medium" multiple-rows class="slds-border_bottom datatable">
+                        <lightning-layout-item size="6" padding="horizontal-medium">
+                            <c-object-search-grid
+                                object-name={raterApiName}
+                                object-fields={raterApiFields}
+                                columns={raterColumns}
+                                onrowselected={handleRaterSelected}
+                            ></c-object-search-grid>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="6" padding="horizontal-medium">
+                            <c-object-search-grid
+                                object-name={customerApiName}
+                                object-fields={customerApiFields}
+                                columns={customerColumns}
+                                onrowselected={handleCustomerSelected}
+                            ></c-object-search-grid>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+                <div class="slds-m-top_medium">
+                    <lightning-combobox
+                        name="ratingField"
+                        label="Rating"
+                        value={selectedRating}
+                        placeholder="Select Rating"
+                        options={ratingOptions}
+                        onchange={handleRatingChange}
+                        required
+                    ></lightning-combobox>
+                </div>
+            </div>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="Cancel" onclick={handleCancelClick}></lightning-button>
+        <lightning-button
+            label="Add"
+            variant="brand"
+            onclick={handleAddClick}
+            class="slds-m-left_small"
+            disabled={addButtonDisabled}
+        ></lightning-button>
+    </lightning-modal-footer>
+</template>

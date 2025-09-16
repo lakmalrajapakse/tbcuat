@@ -1,0 +1,36 @@
+<!--
+  @description       : 
+  @author            : James Ridge
+  @group             : 
+  @last modified on  : 08-21-2020
+  @last modified by  : James Ridge
+  Modifications Log 
+  Ver   Date         Author        Modification
+  1.0   08-18-2020   James Ridge   Initial Version
+-->
+<template>
+    <template if:false={disabled}>
+        <fieldset class="slds-form-element slds-form-element_compound c-form-element">
+            <div class={getFormControlClass}> 
+                <div class="slds-form-element__row">
+                    <div class="slds-size_1-of-1">
+                        <lightning-input type="text" name="input_hours"  placeholder="Hours"
+                            data-fieldtype="hours" variant="label-hidden"
+                            value={shiftLength} class="z-hour-approval"
+                            onchange={handleFieldChange} onblur={handleBlur} disabled={disabled} onclick={handleOnClick} autocomplete="off">
+                        </lightning-input>    
+                    </div>
+                </div>
+                <div class="slds-form-element__help" if:true={hasError}>{errorMessage}</div>
+            </div>
+        </fieldset>  
+    </template>
+    
+    <template if:true={disabled}>
+        <div>
+            <div><b>{shiftDate}</b></div>
+            <div if:false={displayAsDecimal}>{startTime} - {endTime}</div>
+            <div if:true={displayAsDecimal}>{shiftLength}</div>
+        </div>
+    </template>
+</template>

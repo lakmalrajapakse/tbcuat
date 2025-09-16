@@ -1,0 +1,29 @@
+<template>
+    <div class="slds-is-relative">
+        <lightning-spinner alternative-text="Loading" if:true={isLoading} variant="brand"></lightning-spinner>
+        <div class="slds-m-bottom_small">
+            <lightning-button-icon
+                icon-name="utility:add"
+                variant="border-filled"
+                alternative-text="Add Qualification"
+                title="Add Qualification"
+                onclick={handleAddClick}
+                if:true={hasData}
+            ></lightning-button-icon>
+        </div>
+
+        <lightning-datatable if:true={hasData} key-field="id" data={data} columns={columns}> </lightning-datatable>
+        <c-no-data-illustration if:false={hasData} class="slds-align_absolute-center" style="height: 250px">
+            <div slot="message" class="slds-text-body_regular">
+                No data to show, yet. Would you like to
+                <lightning-button
+                    class="slds-m-left_xx-small"
+                    label="Add new qualification?"
+                    variant="base"
+                    onclick={handleAddClick}
+                >
+                </lightning-button>
+            </div>
+        </c-no-data-illustration>
+    </div>
+</template>

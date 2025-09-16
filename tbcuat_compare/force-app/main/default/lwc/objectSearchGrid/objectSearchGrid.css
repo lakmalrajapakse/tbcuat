@@ -1,0 +1,21 @@
+.search-body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-body-output {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.datatable {
+  flex: 1;
+  overflow: hidden;
+}
+
+.illustration {
+  height: 150px;
+}

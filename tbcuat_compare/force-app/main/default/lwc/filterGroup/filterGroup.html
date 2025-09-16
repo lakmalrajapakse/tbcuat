@@ -1,0 +1,168 @@
+<!--
+  @description       : 
+  @author            : James Ridge
+  @group             : 
+  @last modified on  : 08-21-2020
+  @last modified by  : James Ridge
+  Modifications Log 
+  Ver   Date         Author        Modification
+  1.0   08-17-2020   James Ridge   Initial Version
+-->
+<template>
+    <li class="slds-expression__group">
+        <fieldset>
+            <legend class="slds-expression__legend slds-expression__legend_group"  if:true={hasMultipleGroups}>
+                <span>{crossGroupOperator}</span>
+            </legend>
+
+            <div class="slds-grid slds-grid_align-spread">
+                <div class="slds-col">
+                     <lightning-combobox
+                        label="Filter shifts when"
+                        value={_crossConditionOperator}
+                        placeholder="Select Option"
+                        options={crossConditionOperators}
+                        data-type="filter-type"
+                        onchange={handleFieldChange}
+                        disabled={isLoading}
+                        required
+                    ></lightning-combobox>
+                </div>
+                
+                <div class="slds-col">
+                    <div class="slds-clearfix">
+                        <lightning-button-icon variant="border-filled" icon-name="utility:chevronup" 
+                        class="slds-button slds-m-left_x-small" data-direction="up" onclick={reorderGroup} if:false={isFirst} disabled={isLoading}></lightning-button-icon>
+                        <lightning-button-icon variant="border-filled" icon-name="utility:chevrondown" 
+                        class="slds-button slds-m-left_x-small" data-direction="down" onclick={reorderGroup} if:false={isLast} disabled={isLoading}></lightning-button-icon>
+                    </div>
+                </div>
+            </div>
+            <ul>
+                <li class="slds-expression__row slds-expression__row_group">
+                    <template iterator:it={conditions}>
+                        <fieldset key={it.value.id}>
+                            <legend class="slds-expression__legend slds-expression__legend_group" if:true={it.first}>
+                            </legend>
+                            <legend class="slds-expression__legend slds-expression__legend_group" if:false={it.first}>
+                                {_crossConditionOperator}
+                            </legend>
+
+                            <div class="slds-grid slds-gutters_xx-small">
+                                <div class="slds-col slds-size_5-of-12">
+                                    <lightning-combobox
+                                            label="Criteria"
+                                            placeholder="Select Criteria"
+                                            options={getConditionCriteria}
+                                            value={it.value.selectedCriteria.targetField}
+                                            data-element-id={it.index}
+                                            data-type="select-criteria"   
+                                            onchange={handleFieldChange}
+                                            disabled={isLoading}
+                                            required
+                                    ></lightning-combobox>
+                                </div>
+                                <div class="slds-col slds-grow-none">
+                                    <lightning-combobox
+                                            label="Operator"
+                                            placeholder="Select Operator"
+                                            options={it.value.selectedCriteria.operators}
+                                            value={it.value.selectedOperator}
+                                            data-element-id={it.index}
+                                            data-type="select-operator"  
+                                            onchange={handleFieldChange}    
+                                            disabled={isLoading}                                  
+                                            required
+                                    ></lightning-combobox>
+                                </div>
+                                <!-- Field Stencil for Loading state-->
+                                <div class="slds-col slds-size_5-of-12" if:true={isLoading}>
+                                    <div class="slds-form-element">
+                                        <span class="slds-form-element__label">Value</span>
+                                        <div class="slds-form-element__control">
+                                            <input type="text" placeholder="Loading..." class="slds-input"  disabled/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Field Types -->
+                                <div class="slds-col slds-size_5-of-12" if:false={isLoading}>
+                                    <template if:true={it.value.selectedCriteria.isLookupMatch}>
+                                        <c-lookup 
+                                        sobject-name={it.value.selectedCriteria.searchObject}
+                                        title={it.value.selectedCriteria.searchObjectField}
+                                        subtitle={it.value.selectedCriteria.subTitleField}
+                                        value={it.value.targetValue}
+                                        icon-name={it.value.selectedCriteria.searchIcon}
+                                        data-element-id={it.index}
+                                        data-type={it.value.selectedCriteria.targetField}
+                                        data-is-lookup="true"
+                                        onselected={handleFieldChange}
+                                        read-only={it.value.disableTargetValue}
+                                            ></c-lookup>
+                                    </template>
+                                    <template if:true={it.value.selectedCriteria.isTextMatch}>
+                                        <lightning-input type="text" 
+                                            label={it.value.selectedCriteria.label} 
+                                            data-element-id={it.index}
+                                            data-type={it.value.selectedCriteria.targetField}
+                                            value={it.value.targetValue}
+                                            onchange={handleFieldChange}
+                                            disabled={it.value.disableTargetValue}
+                                            ></lightning-input>
+                                    </template>
+                                    <template if:true={it.value.selectedCriteria.isDateMatch}>
+                                        <lightning-input type="date" label={it.value.selectedCriteria.label} 
+                                            data-element-id={it.index}
+                                            data-type={it.value.selectedCriteria.targetField}
+                                            value={it.value.targetValue}
+                                            onchange={handleFieldChange}
+                                            disabled={it.value.disableTargetValue}
+                                            ></lightning-input>
+                                    </template>
+                                    <template if:true={it.value.selectedCriteria.isBooleanMatch}>
+                                        <lightning-combobox
+                                            label="State"
+                                            placeholder="Select State"
+                                            options={it.value.selectedCriteria.options}
+                                            data-element-id={it.index}
+                                            data-type={it.value.selectedCriteria.targetField}
+                                            value={it.value.targetValue}
+                                            onchange={handleFieldChange}
+                                            disabled={it.value.disableTargetValue}
+                                    ></lightning-combobox>
+                                    </template>
+                                    <template if:true={it.value.selectedCriteria.isPicklistMatch}>
+                                        <lightning-combobox
+                                            label="Option"
+                                            placeholder="Select Option"
+                                            options={it.value.selectedCriteria.options}
+                                            data-element-id={it.index}
+                                            data-type={it.value.selectedCriteria.targetField}
+                                            value={it.value.targetValue}
+                                            onchange={handleFieldChange}
+                                            disabled={it.value.disableTargetValue}
+                                    ></lightning-combobox>
+                                    </template>
+                                </div>
+                                <div class="slds-col slds-grow-none">
+                                    <div class="slds-m-top_small slds-float_right">
+                                        <lightning-button-icon icon-name="utility:delete" disabled={isLoading} class="slds-button slds-m-top_x-small" data-element-id={it.index} onclick={removeCondition} ></lightning-button-icon>
+                                    </div>             
+                                </div>
+                            </div>
+                        </fieldset>
+                    </template>
+                </li>
+            </ul>
+            <div class="slds-grid slds-grid_align-spread slds-m-top_x-small">
+                <div class="slds-col">
+                     <lightning-button label="Add Condition" title="Add Condition" icon-name="utility:add" class="slds-m-left_x-small" onclick={addCondition}  disabled={isLoading}></lightning-button>
+                </div>
+                
+                <div class="slds-col">
+                    <lightning-button label="Remove Group" title="Remove Group" variant="destructive" icon-name="utility:delete" class="slds-m-left_medium" onclick={removeGroup} disabled={isLoading}></lightning-button>
+                </div>
+            </div>
+        </fieldset>
+    </li>  
+</template>

@@ -1,0 +1,233 @@
+<template>
+    <!-- SPINNER -->
+    <template if:true={isLoading}>
+        <div class="slds-spinner_container">
+            <lightning-spinner
+                alternative-text="Loading..."
+                variant="brand"
+                size="large"
+            ></lightning-spinner>
+        </div>
+    </template>
+    
+    <!-- SPINNER -->
+    <!-- COMPONENT BODY -->
+    <lightning-card>
+        <!-- LARGE FORM FACTOR -->
+        <template if:false={isLoading}>
+            <template if:true={isDesktop}>
+                <!-- SEARCH OPTION -->
+                <lightning-layout multiple-rows="true" class="slds-p-bottom_small">
+                    <lightning-layout-item padding="horizontal-small" size="4">
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="horizontal-small" size="4">
+                        <lightning-input 
+                            type="date" 
+                            value={_selectedDate}
+                            onchange={handleSelectedDateChange}
+                            label="Search"
+                        ></lightning-input>
+                        <div class="slds-p-top_small" align="center">
+                            <lightning-layout multiple-rows="true" class="slds-p-bottom_small" vertical-align="center">
+                                <lightning-layout-item padding="horizontal-small" size="3">
+                                    <lightning-button-icon 
+                                        icon-name="utility:chevronleft" 
+                                        alternative-text="Previous"
+                                        data-direction="prev" 
+                                        class="slds-p-right_x-small"
+                                        onclick={handlePreviousWeek}
+                                    ></lightning-button-icon>
+                                </lightning-layout-item>
+                                <lightning-layout-item padding="horizontal-small" size="6">
+                                    <!-- <b>{_weekName}</b><br /> -->
+                                    <b>{_weekDateFormat}</b>
+                                </lightning-layout-item>
+                                <lightning-layout-item padding="horizontal-small" size="3">
+                                    <lightning-button-icon 
+                                        icon-name="utility:chevronright" 
+                                        alternative-text="Previous"
+                                        data-direction="prev" 
+                                        class="slds-p-left_x-small"
+                                        onclick={handleNextWeek}
+                                    ></lightning-button-icon>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="horizontal-small" size="4">
+                    </lightning-layout-item>
+                </lightning-layout>
+                <!-- SEARCH OPTION -->
+                <!-- CALENDER TABLE -->
+                <template if:true={hasShiftExists}>
+                    <table class="slds-table slds-table_fixed-layout slds-table_resizable-cols">
+                        <thead>
+                            <tr>
+                                <template for:each={_datesList} for:item="date" >
+                                    <td key={date.date} class="shiftData">
+                                        <div align="center" class="slds-p-top_small">
+                                            <b>{date.day}</b>
+                                        </div>
+                                        <div align="center" class="slds-p-bottom_small slds-p-top_xx-small" >
+                                            {date.formattedDate}
+                                        </div>
+                                    </td>
+                                </template>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={_shiftsList} for:item="shift" >
+                                <tr key={shift.Id}>
+                                    <template for:each={_datesList} for:item="date" >
+                                        <td key={date.date} class="shiftData">
+                                           <c-time-entry
+                                                shift-date={date}
+                                                shift={shift}
+                                                team-name={shift.teamName}
+                                                location-name={shift.locationName}
+                                                onshiftchange={handleOnShiftChange}
+                                                form-factor={_formFactor}
+                                            ></c-time-entry>
+                                        </td>
+                                    </template>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                    <div align="center" class="slds-p-top_small">
+                        <lightning-button 
+                            variant="brand" 
+                            label="Submit" 
+                            title="Submit" 
+                            onclick={handleSubmitTimesheet} 
+                            class="slds-m-left_x-small"
+                        ></lightning-button>
+                    </div>
+                </template>
+                <template if:false={hasShiftExists}>
+                    <div class="slds-p-around_medium" >
+                        <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_dark" role="status">
+                            <div class="slds-media__body">
+                                <p>
+                                    No shifts exists for this time period
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <!-- CALENDER TABLE -->
+            </template>
+            <!-- LARGE FORM FACTOR -->
+            <!-- MEDIUM OR SMALL FORM FACTOR -->
+            <template if:true={isMediumOrSmallDevice}>
+                <!-- SEARCH OPTION -->
+                <lightning-layout multiple-rows="true" class="slds-p-bottom_small">
+                    <lightning-layout-item padding="horizontal-small" size="12">
+                        <div align="center" >
+                            <lightning-input 
+                                type="date" 
+                                value={_selectedDate}
+                                onchange={handleSelectedDateChange}
+                                label="Search"
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-p-top_small" align="center">
+                            <lightning-layout multiple-rows="true" class="slds-p-bottom_small" vertical-align="center">
+                                <lightning-layout-item padding="horizontal-small" size="2">
+                                    <lightning-button-icon 
+                                        icon-name="utility:chevronleft" 
+                                        alternative-text="Previous"
+                                        data-direction="prev" 
+                                        onclick={handlePreviousWeek}
+                                    ></lightning-button-icon>
+                                </lightning-layout-item>
+                                <lightning-layout-item padding="horizontal-small" size="8">
+                                    <b>{_weekName}</b><br />
+                                    <b>{_weekDateFormat}</b>
+                                </lightning-layout-item>
+                                <lightning-layout-item padding="horizontal-small" size="2">
+                                    <lightning-button-icon 
+                                        icon-name="utility:chevronright" 
+                                        alternative-text="Previous"
+                                        data-direction="prev" 
+                                        onclick={handleNextWeek}
+                                    ></lightning-button-icon>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </div>
+                    </lightning-layout-item>
+                </lightning-layout>
+                <!-- SEARCH OPTION -->
+                <!-- CALENDER TABLE -->
+                <template if:true={hasShiftExists}>
+                    <div align="center" class="slds-p-around_small">
+                        <table class="slds-table slds-table_fixed-layout slds-table_resizable-cols">
+                            <thead>
+                                <tr>
+                                    <template for:each={_datesList} for:item="date" >
+                                        <td key={date.date} class={date.class} data-id={date.dateOptionValue} onclick={handleOnDateChange}>
+                                            <div align="center" class="slds-p-top_small">
+                                                <b>{date.shortDay}</b>
+                                            </div>
+                                            <div align="center" class="slds-p-bottom_small" >
+                                                {date.shortFormattedDate}
+                                            </div>
+                                        </td>
+                                    </template>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <table width="100%" class="slds-table slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols slds-table_col-bordered">
+                        <thead>
+                            <tr>
+                                <th width="30%">
+
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={_shiftsList} for:item="shift" >
+                                <tr key={shift.Id}>
+                                    <td class="shiftData">
+                                        <c-time-entry
+                                            shift-date={_selectedShiftDateFromOption}
+                                            shift={shift}
+                                            team-name={shift.teamName}
+                                            location-name={shift.locationName}
+                                            onshiftchange={handleOnShiftChange}
+                                            form-factor={_formFactor}
+                                        ></c-time-entry>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                    <div align="center" class="slds-p-top_small">
+                        <lightning-button 
+                            variant="brand" 
+                            label="Submit" 
+                            title="Submit" 
+                            onclick={handleSubmitTimesheet} 
+                            class="slds-m-left_x-small"
+                        ></lightning-button>
+                    </div>
+                </template>
+                <template if:false={hasShiftExists}>
+                    <div class="slds-p-around_medium" >
+                        <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_dark" role="status">
+                            <div class="slds-media__body">
+                                <p>
+                                    No shifts exists for this time period
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <!-- CALENDER TABLE -->
+            </template>
+            <!-- LARGE FORM FACTOR -->
+         </template>
+    </lightning-card>
+    <!-- COMPONENT BODY -->
+</template>

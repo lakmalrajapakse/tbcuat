@@ -1,0 +1,57 @@
+.fill-vertical {
+  height: 100%;
+}
+
+.modal-body {
+  height: calc(50vh);
+}
+
+.search-body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-body-output {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.datatable {
+  flex: 1;
+  overflow: hidden;
+}
+
+.date-input {
+  height: 75px;
+}
+
+.file-input {
+  height: 100%;
+}
+
+.file-input-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.file-upload-button {
+  align-self: flex-start; /* This is actually to prevent the button hit box stretching to fill the whole flex box width. */
+}
+
+.file-attachment-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.file-attachment-label {
+  align-content: center;
+  padding-right: 4px;
+}
+
+.file-attachment-delete-button {
+  padding-bottom: 4px;
+}

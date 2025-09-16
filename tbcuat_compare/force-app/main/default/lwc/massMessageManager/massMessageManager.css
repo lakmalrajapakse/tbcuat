@@ -1,0 +1,10 @@
+:host {
+    display: block;
+    --lwc-brandAccessible: rgba(14, 45, 109, 1);
+
+  }
+  
+  .icon-container {
+    background-color: transparent;
+    margin-bottom: var(--lwc-spacingXxxSmall, 0.125rem); /* Reduce the space between icons and the section below */
+  }

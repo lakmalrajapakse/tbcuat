@@ -1,0 +1,31 @@
+<apex:page standardController="Contact" showHeader="false" sidebar="false">
+    <style>
+        .contactPhoto {
+            max-height: 100px;
+            max-width: 100px;
+            display: block;
+            margin-left:25px;
+            border-radius: 10px;
+        }
+    </style>
+    <apex:form style="text-align: center" >
+        <div align="left" >
+            <apex:outputPanel rendered="{!NOT(ISBLANK(Contact.sirenum__Photo_ID__c))}" >
+                <apex:outputPanel rendered="{!CONTAINS(LEFT($Api.Partner_Server_URL_90, FIND('/services',$Api.Partner_Server_URL_90)),'my.site.com')}" >
+                    <img src="{!SUBSTITUTE(SUBSTITUTE(LEFT($Api.Partner_Server_URL_90, FIND('/services',$Api.Partner_Server_URL_90)),'my.site.com','file.force.com'),'/clientportal/','')&SUBSTITUTE(URLFOR($Action.Attachment.Download, Contact.sirenum__Photo_ID__c),'/clientportal','')}" class="contactPhoto" />
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!NOT(CONTAINS(LEFT($Api.Partner_Server_URL_90, FIND('/services',$Api.Partner_Server_URL_90)),'my.site.com'))}" >
+                    <img src="{!URLFOR($Action.Attachment.Download, Contact.sirenum__Photo_ID__c)}" class="contactPhoto" />
+                </apex:outputPanel>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!ISBLANK(Contact.sirenum__Photo_ID__c)}" >
+                <apex:outputPanel rendered="{!CONTAINS(LEFT($Api.Partner_Server_URL_90, FIND('/services',$Api.Partner_Server_URL_90)),'my.site.com')}" >
+                    <img src="{!SUBSTITUTE(SUBSTITUTE(LEFT($Api.Partner_Server_URL_90, FIND('/services',$Api.Partner_Server_URL_90)),'my.site.com','file.force.com'),'/clientportal/','')&SUBSTITUTE(URLFOR($Resource.sirenum__Sirenum, 'ss_user.svg'),'/clientportal','')}" class="contactPhoto" />
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!NOT(CONTAINS(LEFT($Api.Partner_Server_URL_90, FIND('/services',$Api.Partner_Server_URL_90)),'my.site.com'))}" >
+                    <img src="{!SUBSTITUTE(LEFT($Api.Partner_Server_URL_90, FIND('/services',$Api.Partner_Server_URL_90)),'my.site.com','file.force.com')&URLFOR($Resource.sirenum__Sirenum, 'ss_user.svg')}" class="contactPhoto" />
+                </apex:outputPanel>
+            </apex:outputPanel>
+        </div>
+    </apex:form>
+</apex:page>

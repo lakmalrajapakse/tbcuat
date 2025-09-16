@@ -1,0 +1,51 @@
+/* Custom Avatar Styles */
+.chat-avatar {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px; 
+    height: 32px;
+    border-radius: 50%; 
+    background-color: #54698d; 
+    color: white;
+    font-weight: bold; 
+    margin-right: 0.5rem;
+}
+
+/* Custom Message Bubble Styles */
+.chat-message-bubble {
+    background-color: #f4f6f9;
+    border-radius: 12px;
+    padding: 0.75rem;
+    margin: 0.5rem;
+    border: 1px solid #d8dde6;
+    flex-grow: 1;
+    position: relative; /* Needed for absolute positioning of metadata */
+}
+
+/* Custom Message Meta Styles */
+.chat-message-meta {
+    font-size: 0.75rem;
+    color: #707070;
+    position: absolute;
+    bottom: -20px;
+    right: 0;
+}
+
+/* Custom Avatar Initials */
+.chat-avatar-initials {
+    color: white; /* White initials on dark background */
+    font-weight: bold; /* Bold initials */
+}
+
+/* Custom Message Body Styles */
+.chat-message-body {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 10px; /* Space between messages */
+}
+
+/* Custom Message Container */
+.chat-message-container {
+    width: 100%; /* Ensures message uses full width */
+}

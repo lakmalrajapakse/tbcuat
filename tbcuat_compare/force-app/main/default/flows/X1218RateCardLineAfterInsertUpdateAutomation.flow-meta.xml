@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>63.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <customErrors>
+        <name>RateCardUpdateError</name>
+        <label>Rate Card Update Error</label>
+        <locationX>50</locationX>
+        <locationY>539</locationY>
+        <customErrorMessages>
+            <errorMessage>The Rate card ({!$Record.sirenum__Rate_Card_Page__r.sirenum__Rate_Card__r.Name}) is associated with WFM contracts that have been approved. It cannot be changed.</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <decisions>
+        <name>HasApprovedContractDecision</name>
+        <label>Has Approved Contract Decision</label>
+        <locationX>182</locationX>
+        <locationY>431</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>HasApprovedContract</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetApprovedContract</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>RateCardUpdateError</targetReference>
+            </connector>
+            <label>Has Approved Contract</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <interviewLabel>1218 Rate Card Line After Insert Update Automation {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>1218 Rate Card Line After Insert Update Automation</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>GetApprovedContract</name>
+        <label>Get Approved Contract</label>
+        <locationX>182</locationX>
+        <locationY>323</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>HasApprovedContractDecision</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>sirenum__Rate_Card__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.sirenum__Rate_Card_Page__r.sirenum__Rate_Card__c</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Approved__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>sirenum__ProActiveContract__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>GetApprovedContract</targetReference>
+        </connector>
+        <object>sirenum__Rate_Line__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

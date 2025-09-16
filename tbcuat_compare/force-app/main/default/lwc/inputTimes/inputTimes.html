@@ -1,0 +1,29 @@
+<template>
+    <template if:false={isReadOnly}>
+        <fieldset class="slds-form-element slds-form-element_compound c-form-element" >
+            <div class={getFormControlClass}> 
+                <div class="slds-form-element__row z-approval">
+                    <div class="slds-size_1-of-2" style="width: 100px;">
+                        <lightning-input type="text" name="input_stat_time"  placeholder="Start Time"
+                            data-fieldtype="start" variant="label-hidden" class="z-time-approval" style="width: 100px;"
+                            value={startTime} onchange={handleFieldChange} onblur={handleBlur} disabled={startDisabled} autocomplete="off" onclick={handleOnClick}>
+                        </lightning-input>    
+                    </div>
+                    <div class="slds-size_1-of-2" style="width: 100px;">
+                        <lightning-input type="text" name="input_end_time"  placeholder="End Time"
+                            data-fieldtype="end" variant="label-hidden" class="z-time-approval" style="width: 100px;"
+                            value={endTime} onchange={handleFieldChange} onblur={handleBlur} disabled={endDisabled} autocomplete="off" onclick={handleOnClick}>
+                        </lightning-input> 
+                    </div>
+                </div>
+                <div class="slds-form-element__help" if:true={hasError}>{errorMessage}</div>
+            </div>
+        </fieldset>  
+    </template>
+    <template if:true={isReadOnly}>
+        <div>
+            <div><b>{shiftDate}</b></div>
+            <div>{startTime} - {endTime}</div>
+        </div>
+    </template>
+</template>

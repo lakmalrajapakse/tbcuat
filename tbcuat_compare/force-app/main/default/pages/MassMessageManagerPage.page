@@ -1,0 +1,67 @@
+<apex:page standardController="Contact" recordSetVar="contacts" extensions="CaptureSelectedRecordsExtension" lightningStylesheets="true">
+        <apex:includeLightning />
+        <!-- LWC Component Loading -->
+        <div class="slds-scope" id="loader">
+            <span>Loading...</span>
+            <div class="slds-spinner_container slds-is-absolute">
+                <div role="status" class="slds-spinner slds-spinner--large slds-spinner--brand">
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- LWC Component Container -->
+        <div id="mass_message_manager" />
+    
+        <script>
+            
+            const app = {
+                init(){
+                    //Start Loading
+                    this.getSelectedContacts();
+                },
+                getSelectedContacts() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    let selectedContactIds = urlParams.get('selectedContactIds');
+
+                    if (!selectedContactIds) {
+                         selectedContactIds = "{!selectedRecordIds}"; // Use merge field to get value from extension
+                    }
+
+                console.log('selectedContactIds', selectedContactIds);
+                const conIds = selectedContactIds.split(',');
+
+                console.log('Passing the following list of conIds: ', conIds)
+                this.buildMassMessageManagerComponent(conIds);
+            },
+                buildMassMessageManagerComponent(conIds) {
+                    let context = this;
+                    $Lightning.use("c:MassMessageManagerApp", function () {
+                        $Lightning.createComponent("c:massMessageManager", {
+                            recordIds: JSON.stringify(conIds)
+                        },
+                            "mass_message_manager",
+                            function (cmp) {
+                                console.log("LWC component was created");
+                                //Stop Loading
+                                context.toggleLoading(false);
+                            }
+                        );
+                    });
+                },
+                toggleLoading(show){
+                    let loader = document.getElementById('loader');
+                    if(show){
+                        loader.style.display = "block";
+                    }else{
+                        loader.style.display = "none";
+                    }
+                }
+            }
+    
+            window.onload = (event) => {
+                app.init();
+            };
+        </script>
+    </apex:page>

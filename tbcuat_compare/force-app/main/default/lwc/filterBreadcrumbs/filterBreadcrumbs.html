@@ -1,0 +1,56 @@
+<!-- sldsValidatorIgnore -->
+<!--
+   @description       : 
+   @author            : Zach Palmer
+   @group             : 
+   @last modified on  : 12/19/2023
+   @last modified by  : Zach Palmer
+   Modifications Log 
+   Ver   Date         Author        Modification
+   1.1.  12/19/2023   Zach Palmer   People In
+   -->
+
+<template>
+    <template if:true={hasFilter}>
+        <ul class="c-filter slds-p-bottom_small">
+            <template iterator:group={filterBreadcrumbs.groups}>
+                <li key={group.value.id} class="c-filter-group">
+                    <template if:false={group.first}>
+                        <span class="c-group-operator slds-text-title_caps"><b>{filterBreadcrumbs.crossGroupOperator} </b></span> 
+                    </template>
+
+                    <div class="slds-pill_container">
+                        <ul class="slds-listbox slds-listbox_horizontal" role="listbox" aria-orientation="horizontal">
+                            <template iterator:condition={group.value.conditions}>
+                                <c-bread-crumb-pill 
+                                value={condition.value} 
+                                is-first={condition.first}
+                                cross-condition-operator={group.value.crossConditionOperator}
+                                key={condition.value.id}>
+                                    <span class="slds-icon_container slds-pill__remove" title="Remove" 
+                                        data-group-index={group.index} data-group-condition-index={condition.index} onclick={deleteCondition} if:false={hideDeleteAction}>
+                                        <svg class="slds-icon slds-icon_x-small slds-icon-text-default" aria-hidden="true">
+                                            <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                        </svg>
+                                    </span>
+                                </c-bread-crumb-pill>
+                            </template>
+                        </ul>
+                    </div>
+                </li>
+            </template>
+        </ul>
+    </template>
+
+    <template if:false={hasFilter}>
+        <ul class="c-filter">
+            <li class="c-filter-group">
+                <div class="slds-pill_container">
+                    <ul class="slds-listbox slds-listbox_horizontal" role="listbox"  aria-orientation="horizontal">
+                        <span class="c-no-filter slds-p-horizontal_small">{_labels.NO_FILTER}</span>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </template>
+</template>

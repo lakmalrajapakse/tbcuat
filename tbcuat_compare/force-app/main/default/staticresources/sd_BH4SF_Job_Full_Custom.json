@@ -1,0 +1,2491 @@
+{
+    "objectType": "TR1__Job__c",
+    "startFieldPath": "TR1__Estimated_Start_Date__c",
+    "endFieldPath": "TR1__Estimated_End_Date__c",
+    "launcher": {
+      "contextProvider": "BH4SFJob_Scheduling_Context_Provider"
+    },
+    "schedulables": [
+      {
+        "objectType": "sirenum__Shift__c",
+        "startFieldPath": "sirenum__Scheduled_Start_Time__c",
+        "endFieldPath": "sirenum__Scheduled_End_Time__c",
+        "selectionClause": "s5m__BH4SFJob__c IN :contextIds",
+        "relatedLists": [
+          {
+            "relationship": "sirenum__Alerts__r",
+            "fields": [
+              {
+                "path": "sirenum__SeverityIndex__c"
+              },
+              {
+                "path": "sirenum__RuleMessage__c"
+              },
+              {
+                "path": "sirenum__ConstraintType__c"
+              },
+              {
+                "path": "sirenum__RuleValue0__c"
+              },
+              {
+                "path": "sirenum__RuleValue1__c"
+              },
+              {
+                "path": "sirenum__RuleValue2__c"
+              },
+              {
+                "path": "sirenum__RuleValue3__c"
+              },
+              {
+                "path": "sirenum__RuleValue4__c"
+              }
+            ],
+            "orderByClause": "sirenum__SeverityIndex__c DESC",
+            "limitSize": 6
+          }
+        ],
+        "tuples": [
+          {
+            "name": "find-work",
+            "icon": {
+              "literal": "search"
+            },
+            "label": {
+              "label": {
+                "default": "Find Work",
+                "nl_NL": "Werk zoeken",
+                "fr": "Trouver du travail",
+                "de": "Arbeit finden"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Find a (currently unfilled) Shift for the worker that starts on the selected date",
+                "nl_NL": "Vind een (momenteel niet ingevulde) dienst voor de werknemer die begint op de geselecteerde datum",
+                "fr": "Trouver une mission (actuellement vacante) pour le travailleur débutant à la date sélectionnée",
+                "de": "Suche einer (aktuell unbesetzten) Schicht für den Mitarbeiter, beginnend am ausgewählten Datum"
+              }
+            },
+            "uri": {
+              "pattern": {
+                "format": {
+                  "default": "$action:flow/sirenum__ILSFindWork/large?selections=${selection.cells}&recordId={0}"
+                },
+                "values": [
+                  {
+                    "context": {
+                      "record": "id"
+                    }
+                  }
+                ]
+              }
+            },
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "true"
+                  },
+                  {
+                    "selection": "cellCount",
+                    "operator": "Equals",
+                    "value": "1"
+                  },
+                  {
+                    "device": "date",
+                    "operator": "LessOrEquals",
+                    "compare": {
+                      "field": "sirenum__Scheduled_Start_Time__c"
+                    }
+                  },
+                  {
+                    "createPermission": [
+                      "sirenum__Contact__c"
+                    ],
+                    "operator": "Equals",
+                    "value": "true"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            }
+          },
+          {
+            "name": "new-record",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "true"
+                  },
+                  {
+                    "selection": "cellCount",
+                    "operator": "Equals",
+                    "value": "1"
+                  },
+                  {
+                    "createPermission": [],
+                    "operator": "Equals",
+                    "value": "true"
+                  },
+                  {
+                    "device": "date",
+                    "operator": "LessOrEquals",
+                    "compare": {
+                      "field": "sirenum__Scheduled_Start_Time__c"
+                    }
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "custom:custom95"
+            },
+            "label": {
+              "label": {
+                "default": "New Shift",
+                "nl_NL": "Nieuwe dienst",
+                "fr": "Nouvelle mission",
+                "de": "Neue Schicht"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Create a new Shift or Shift Demand",
+                "nl_NL": "Een nieuwe dienst of dienstaanvraag maken",
+                "fr": "Créer une nouvelle mission ou demande de mission",
+                "de": "Erstellen einer neuen Schicht oder Schichtbedarfs"
+              }
+            },
+            "uri": {
+              "pattern": {
+                "format": {
+                  "default": "$action:create/sirenum__Shift__c/interactive?sirenum__Scheduled_Start_Time__c='${Selection.date}T12:00:00Z'&sirenum__Scheduled_End_Time__c='${Selection.date}T12:00:00Z'&${Selection.resourceLookup}='${Selection.resource}'&sirenum__Site__c='{0}'",
+                  "nl_NL": "$action:create/sirenum__Shift__c/interactive?sirenum__Scheduled_Start_Time__c='${Selection.date}T12:00:00Z'&sirenum__Scheduled_End_Time__c='${Selection.date}T12:00:00Z'&${Selection.resourceLookup}='${Selection.resource}'&sirenum__Site__c='{0}'",
+                  "fr": "$action:create/sirenum__Shift__c/interactive?sirenum__Scheduled_Start_Time__c='${Selection.date}T12:00:00Z'&sirenum__Scheduled_End_Time__c='${Selection.date}T12:00:00Z'&${Selection.resourceLookup}='${Selection.resource}'&sirenum__Site__c='{0}'",
+                  "de": "$action:create/sirenum__Shift__c/interactive?sirenum__Scheduled_Start_Time__c='${Selection.date}T12:00:00Z'&sirenum__Scheduled_End_Time__c='${Selection.date}T12:00:00Z'&${Selection.resourceLookup}='${Selection.resource}'&sirenum__Site__c='{0}'"
+                },
+                "values": [
+                  {
+                    "context": {
+                      "record": "id"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "delete",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "deletePermission": true,
+                    "operator": "Equals",
+                    "value": "true"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "delete"
+            },
+            "label": {
+              "label": {
+                "default": "Delete",
+                "nl_NL": "Verwijderen",
+                "fr": "Supprimer",
+                "de": "Löschen"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Delete the selected Shifts",
+                "nl_NL": "Geselecteerde diensten verwijderen",
+                "fr": "Supprimer les missions sélectionnées",
+                "de": "Löschen der ausgewählten Schichten"
+              }
+            },
+            "uri": {
+              "literal": "$action:delete"
+            }
+          },
+          {
+            "name": "edit-record",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "editPermission": [],
+                    "operator": "Equals",
+                    "value": "true"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "edit_form"
+            },
+            "label": {
+              "label": {
+                "default": "Edit",
+                "nl_NL": "Bewerken",
+                "fr": "Modifier",
+                "de": "Bearbeiten"
+              }
+            },
+            "title": {
+              "firstMatch": [
+                {
+                  "selector": {
+                    "field": "sirenum__IsShiftDemand__c",
+                    "operator": "Equals",
+                    "value": "true"
+                  },
+                  "value": {
+                    "label": {
+                      "default": "Quick edit the selected Shift Demand(s) together",
+                      "nl_NL": "Geselecteerde dienstaanvragen bewerken",
+                      "fr": "Modifier la demandes de mission sélectionnée",
+                      "de": "Bearbeiten der ausgewählten Schichtbedarfe"
+                    }
+                  }
+                },
+                {
+                  "value": {
+                    "label": {
+                      "default": "Quick edit the selected Shift(s) together",
+                      "nl_NL": "Geselecteerde dienst bewerken",
+                      "fr": "Modifier la mission sélectionnée",
+                      "de": "Bearbeiten der ausgewählten Schicht"
+                    }
+                  }
+                }
+              ]
+            },
+            "uri": {
+              "firstMatch": [
+                {
+                  "selector": {
+                    "field": "sirenum__IsShiftDemand__c",
+                    "operator": "Equals",
+                    "value": "true"
+                  },
+                  "value": {
+                    "literal": "$action:update/interactive/Shift_Demand"
+                  }
+                },
+                {
+                  "value": {
+                    "literal": "$action:update/interactive/Shift"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "cut",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "clipboardPermission": "cut",
+                    "operator": "Equals",
+                    "value": "true"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "cut"
+            },
+            "label": {
+              "label": {
+                "default": "Cut",
+                "nl_NL": "Knippen",
+                "fr": "Couper",
+                "de": "Ausschneiden"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Allows the selected records to be moved to another date and/or resource",
+                "nl_NL": "Zorgt ervoor dat de geselecteerde records naar een andere datum en/of bron verplaatst kunnen worden",
+                "fr": "Permet de déplacer les enregistrements sélectionnés vers une autre date et/ou ressource",
+                "de": "Ermöglicht das Verschieben der ausgewählten Datensätze auf ein anderes Datum und/oder eine andere Ressource"
+              }
+            },
+            "uri": {
+              "literal": "$clipboard:cut"
+            }
+          },
+          {
+            "name": "copy",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "clipboardPermission": "copy",
+                    "operator": "Equals",
+                    "value": "true"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "copy_to_clipboard"
+            },
+            "label": {
+              "label": {
+                "default": "Copy",
+                "nl_NL": "Kopiëren",
+                "fr": "Copier",
+                "de": "Kopieren"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Allows the selected records to be copied to another date and/or resource",
+                "nl_NL": "Zorgt ervoor dat de geselecteerde records naar een andere datum en/of bron gekopieerd kunnen worden",
+                "fr": "Permet de copier les enregistrements sélectionnés vers une autre date et/ou ressource",
+                "de": "Ermöglicht das Kopieren der ausgewählten Datensätze auf ein anderes Datum und/oder eine andere Ressource"
+              }
+            },
+            "uri": {
+              "literal": "$clipboard:copy"
+            }
+          },
+          {
+            "name": "paste",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "true"
+                  },
+                  {
+                    "clipboardPermission": "paste",
+                    "operator": "Equals",
+                    "value": "true"
+                  },
+                  {
+                    "selection": "cellCount",
+                    "operator": "Equals",
+                    "value": "1"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "paste"
+            },
+            "label": {
+              "label": {
+                "default": "Paste",
+                "nl_NL": "Plakken",
+                "fr": "Coller",
+                "de": "Einfügen"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Moves or copies the selections to an alternative date and/or resource",
+                "nl_NL": "Verplaatst of kopieert de selecties naar een alternatieve datum en/of bron",
+                "fr": "Déplace et copie les sélections vers une autre date et/ou ressource",
+                "de": "Ermöglicht das Verschieben oder Kopieren der Auswahl auf ein anderes Datum und/oder Ressource"
+              }
+            },
+            "uri": {
+              "literal": "$clipboard:paste"
+            }
+          },
+          {
+            "name": "publish-shifts",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "field": "sirenum__Contact__c",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "field": "sirenum__Scheduled_End_Time__c",
+                    "operator": "Greater",
+                    "compare": {
+                      "device": "datetime"
+                    }
+                  },
+                  {
+                    "editPermission": [
+                      "sirenum__Published__c"
+                    ],
+                    "operator": "Equals",
+                    "value": "true"
+                  },
+                  {
+                    "field": "sirenum__Published__c",
+                    "operator": "Equals",
+                    "value": "false"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "push"
+            },
+            "label": {
+              "label": {
+                "default": "Publish",
+                "nl_NL": "Publiceren",
+                "fr": "Publier",
+                "de": "Veröffentlichen"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Publish the selected Shifts",
+                "nl_NL": "Geselecteerde diensten publiceren",
+                "fr": "Publier les missions sélectionnées",
+                "de": "Veröffentlichen Sie die ausgewählten Schichten"
+              }
+            },
+            "uri": {
+              "literal": "$action:update?sirenum__Published__c=true"
+            }
+          },
+          {
+            "name": "auto-assign",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "field": "sirenum__Cancelled__c",
+                    "operator": "Equals",
+                    "value": "false"
+                  },
+                  {
+                    "device": "datetime",
+                    "operator": "Less",
+                    "compare": {
+                      "field": "sirenum__Scheduled_Start_Time__c"
+                    }
+                  },
+                  {
+                    "some": {
+                      "operands": [
+                        {
+                          "every": {
+                            "operands": [
+                              {
+                                "field": "sirenum__Broadcasts__c",
+                                "operator": "IsNull",
+                                "value": "false"
+                              },
+                              {
+                                "some": {
+                                  "operands": [
+                                    {
+                                      "field": "sirenum__AssignedShifts__c",
+                                      "operator": "Less",
+                                      "compare": {
+                                        "field": "sirenum__Broadcasts__c"
+                                      }
+                                    },
+                                    {
+                                      "field": "sirenum__AssignedShifts__c",
+                                      "operator": "IsNull",
+                                      "value": "true"
+                                    }
+                                  ]
+                                },
+                                "operator": "Equals",
+                                "value": "true"
+                              },
+                              {
+                                "createPermission": [
+                                  "sirenum__Contact__c"
+                                ],
+                                "operator": "Equals",
+                                "value": "true"
+                              }
+                            ]
+                          },
+                          "operator": "Equals",
+                          "value": "true"
+                        },
+                        {
+                          "every": {
+                            "operands": [
+                              {
+                                "field": "sirenum__Broadcasts__c",
+                                "operator": "IsNull",
+                                "value": "true"
+                              },
+                              {
+                                "editPermission": [
+                                  "sirenum__Contact__c"
+                                ],
+                                "operator": "Equals",
+                                "value": "true"
+                              }
+                            ]
+                          },
+                          "operator": "Equals",
+                          "value": "true"
+                        }
+                      ]
+                    },
+                    "operator": "Equals",
+                    "value": "true"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "resource_capacity"
+            },
+            "label": {
+              "label": {
+                "default": "Auto Assign",
+                "nl_NL": "Automatisch toewijzen",
+                "fr": "Attribution automatique",
+                "de": "Auto-Zuweisung"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Find and assign the most appropriate workers for your selection",
+                "nl_NL": "De meest geschikte werknemers voor uw selectie zoeken en toewijzen",
+                "fr": "Trouver et attribuer les travailleurs les plus adéquats pour votre sélection",
+                "de": "Suchen und Zuweisen der für Ihre Auswahl am besten geeigneten Mitarbeiter"
+              }
+            },
+            "uri": {
+              "literal": "$action:flow/sirenum__ILSAutoAssignShifts/large?demandIds=${Selection.recordIds}"
+            }
+          },
+          {
+            "name": "manage-invitations",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "device": "datetime",
+                    "operator": "Less",
+                    "compare": {
+                      "field": "sirenum__Scheduled_Start_Time__c"
+                    }
+                  },
+                  {
+                    "some": {
+                      "operands": [
+                        {
+                          "every": {
+                            "operands": [
+                              {
+                                "field": "sirenum__Broadcasts__c",
+                                "operator": "IsNull",
+                                "value": "false"
+                              },
+                              {
+                                "some": {
+                                  "operands": [
+                                    {
+                                      "field": "sirenum__AssignedShifts__c",
+                                      "operator": "Less",
+                                      "compare": {
+                                        "field": "sirenum__Broadcasts__c"
+                                      }
+                                    },
+                                    {
+                                      "field": "sirenum__AssignedShifts__c",
+                                      "operator": "IsNull",
+                                      "value": "true"
+                                    }
+                                  ]
+                                },
+                                "operator": "Equals",
+                                "value": "true"
+                              }
+                            ]
+                          },
+                          "operator": "Equals",
+                          "value": "true"
+                        },
+                        {
+                          "every": {
+                            "operands": [
+                              {
+                                "field": "sirenum__Broadcasts__c",
+                                "operator": "IsNull",
+                                "value": "true"
+                              },
+                              {
+                                "field": "sirenum__Contact__c",
+                                "operator": "IsNull",
+                                "value": "true"
+                              }
+                            ]
+                          },
+                          "operator": "Equals",
+                          "value": "true"
+                        }
+                      ]
+                    },
+                    "operator": "Equals",
+                    "value": "true"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "resource_capacity"
+            },
+            "label": {
+              "label": {
+                "default": "Manage Invitations",
+                "nl_NL": "Uitnodigingen beheren",
+                "fr": "Gérer les invitations",
+                "de": "Einladungen verwalten"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Manage invitations to the selected Shifts",
+                "nl_NL": "Uitnodigingen voor de geselecteerde diensten beheren",
+                "fr": "Gérer les invitations aux missions sélectionnées",
+                "de": "Einladungen für die ausgewählten Schichten verwalten"
+              }
+            },
+            "uri": {
+              "literal": "$action:flow/sirenum__InviteWorkers/large?demandIds=${Selection.recordIds}&screenWidth=large"
+            }
+          },
+          {
+            "name": "find-workers",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "field": "sirenum__Cancelled__c",
+                    "operator": "Equals",
+                    "value": "false"
+                  },
+                  {
+                    "device": "datetime",
+                    "operator": "Less",
+                    "compare": {
+                      "field": "sirenum__Scheduled_Start_Time__c"
+                    }
+                  },
+                  {
+                    "some": {
+                      "operands": [
+                        {
+                          "every": {
+                            "operands": [
+                              {
+                                "field": "sirenum__Broadcasts__c",
+                                "operator": "IsNull",
+                                "value": "false"
+                              },
+                              {
+                                "some": {
+                                  "operands": [
+                                    {
+                                      "field": "sirenum__AssignedShifts__c",
+                                      "operator": "Less",
+                                      "compare": {
+                                        "field": "sirenum__Broadcasts__c"
+                                      }
+                                    },
+                                    {
+                                      "field": "sirenum__AssignedShifts__c",
+                                      "operator": "IsNull",
+                                      "value": "true"
+                                    }
+                                  ]
+                                },
+                                "operator": "Equals",
+                                "value": "true"
+                              },
+                              {
+                                "createPermission": [
+                                  "sirenum__Contact__c"
+                                ],
+                                "operator": "Equals",
+                                "value": "true"
+                              }
+                            ]
+                          },
+                          "operator": "Equals",
+                          "value": "true"
+                        },
+                        {
+                          "every": {
+                            "operands": [
+                              {
+                                "field": "sirenum__Broadcasts__c",
+                                "operator": "IsNull",
+                                "value": "true"
+                              },
+                              {
+                                "editPermission": [
+                                  "sirenum__Contact__c"
+                                ],
+                                "operator": "Equals",
+                                "value": "true"
+                              }
+                            ]
+                          },
+                          "operator": "Equals",
+                          "value": "true"
+                        }
+                      ]
+                    },
+                    "operator": "Equals",
+                    "value": "true"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "resource_territory"
+            },
+            "label": {
+              "label": {
+                "default": "Find Workers",
+                "nl_NL": "Werknemers zoeken",
+                "fr": "Trouver des travailleurs",
+                "de": "Mitarbeiter suchen"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Find additional or alternative workers for your selection",
+                "nl_NL": "Aanvullende of alternatieve werknemers voor uw selectie zoeken",
+                "fr": "Trouver des travailleurs supplémentaires ou de remplacement pour votre sélection",
+                "de": "Zusätzliche oder alternative Mitarbeiter für Ihre Auswahl suchen"
+              }
+            },
+            "uri": {
+              "literal": "$action:flow/sirenum__ILSFindWorkersForShifts/large?demandIds=${Selection.recordIds}"
+            }
+          },
+          {
+            "name": "hours-coverage",
+            "icon": {
+              "literal": "chart"
+            },
+            "value": {
+              "pattern": {
+                "format": {
+                  "default": "{0}%",
+                  "nl_NL": "{0}%",
+                  "fr": "{0} %",
+                  "de": "{0} %"
+                },
+                "values": [
+                  {
+                    "field": "sirenum__FillRateByHours__c"
+                  }
+                ]
+              }
+            },
+            "title": {
+              "pattern": {
+                "format": {
+                  "default": "{0}% {1}/{2} hours",
+                  "nl_NL": "{0}% {1}/{2} uren",
+                  "fr": "{0} % {1}/{2} heures",
+                  "de": "{0} % {1}/{2} Stunden"
+                },
+                "values": [
+                  {
+                    "field": "sirenum__FillRateByHours__c"
+                  },
+                  {
+                    "field": "sirenum__TotalAssignedHours__c"
+                  },
+                  {
+                    "field": "sirenum__TotalRequiredHours__c"
+                  }
+                ]
+              }
+            },
+            "variant": {
+              "firstMatch": [
+                {
+                  "selector": {
+                    "field": "sirenum__FillRateByHours__c",
+                    "operator": "LessOrEquals",
+                    "value": "70"
+                  },
+                  "value": {
+                    "literal": "error"
+                  }
+                },
+                {
+                  "selector": {
+                    "field": "sirenum__FillRateByHours__c",
+                    "operator": "GreaterOrEquals",
+                    "value": "100"
+                  },
+                  "value": {
+                    "literal": "success"
+                  }
+                },
+                {
+                  "value": {
+                    "literal": "warning"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "shifts-coverage",
+            "icon": {
+              "literal": "chart"
+            },
+            "value": {
+              "pattern": {
+                "format": {
+                  "default": "{0}/{1}",
+                  "nl_NL": "{0}/{1}",
+                  "fr": "{0}/{1}",
+                  "de": "{0}/{1}"
+                },
+                "values": [
+                  {
+                    "field": "sirenum__AssignedShifts__c"
+                  },
+                  {
+                    "field": "sirenum__Broadcasts__c"
+                  }
+                ]
+              }
+            },
+            "title": {
+              "pattern": {
+                "format": {
+                  "default": "{0}% {1}/{2} shifts",
+                  "nl_NL": "{0}% {1}/{2} diensten",
+                  "fr": "{0} % {1}/{2} missions",
+                  "de": "{0} % {1}/{2} Schichten"
+                },
+                "values": [
+                  {
+                    "field": "sirenum__FillRateByCount__c"
+                  },
+                  {
+                    "field": "sirenum__AssignedShifts__c"
+                  },
+                  {
+                    "field": "sirenum__Broadcasts__c"
+                  }
+                ]
+              }
+            },
+            "variant": {
+              "firstMatch": [
+                {
+                  "selector": {
+                    "field": "sirenum__FillRateByCount__c",
+                    "operator": "LessOrEquals",
+                    "value": "70"
+                  },
+                  "value": {
+                    "literal": "error"
+                  }
+                },
+                {
+                  "selector": {
+                    "field": "sirenum__FillRateByCount__c",
+                    "operator": "GreaterOrEquals",
+                    "value": "100"
+                  },
+                  "value": {
+                    "literal": "success"
+                  }
+                },
+                {
+                  "value": {
+                    "literal": "warning"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "pending-invites",
+            "selector": {
+              "field": "sirenum__Pending_Invitation_Count__c",
+              "operator": "Greater",
+              "value": "0"
+            },
+            "icon": {
+              "literal": "email"
+            },
+            "value": {
+              "field": "sirenum__Pending_Invitation_Count__c"
+            },
+            "title": {
+              "label": {
+                "default": "Pending Job Offers",
+                "nl_NL": "Functies in behandeling",
+                "fr": "Offres d’emploi en attente",
+                "de": "Offene Stellenangebote"
+              }
+            }
+          },
+          {
+            "name": "is-cancelled",
+            "selector": {
+              "field": "sirenum__Cancelled__c",
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "ban"
+            },
+            "title": {
+              "field": "sirenum__CancellationReason__c"
+            },
+            "variant": {
+              "literal": "error"
+            }
+          },
+          {
+            "name": "has-shift-demand",
+            "selector": {
+              "field": "sirenum__ShiftDemand__c",
+              "operator": "IsNull",
+              "value": "false"
+            },
+            "icon": {
+              "literal": "link"
+            },
+            "title": {
+              "pattern": {
+                "format": {
+                  "default": "For Shift Demand {0}",
+                  "nl_NL": "Voor dienstaanvraag {0}",
+                  "fr": "Pour la demande de mission {0}",
+                  "de": "Für Schichtbedarf {0}"
+                },
+                "values": [
+                  {
+                    "field": "sirenum__ShiftDemand__r.Name"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "is-not-published",
+            "selector": {
+              "firstMatch": [
+                {
+                  "selector": {
+                    "field": "sirenum__Contact__c",
+                    "operator": "IsNull",
+                    "value": "true"
+                  },
+                  "value": {
+                    "literal": "true"
+                  }
+                },
+                {
+                  "value": {
+                    "field": "sirenum__Published__c"
+                  }
+                }
+              ],
+              "operator": "NotEquals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "hide_mobile"
+            },
+            "title": {
+              "label": {
+                "default": "Not Published",
+                "nl_NL": "Niet gepubliceerd",
+                "fr": "Non publié",
+                "de": "Nicht veröffentlicht"
+              }
+            }
+          },
+          {
+            "name": "cancel-shifts",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "field": "sirenum__Timesheet_summaries__c",
+                    "operator": "IsNull",
+                    "value": "true"
+                  },
+                  {
+                    "field": "sirenum__Actual_Start_Time__c",
+                    "operator": "IsNull",
+                    "value": "true"
+                  },
+                  {
+                    "editPermission": [
+                      "sirenum__Cancelled__c",
+                      "sirenum__CancellationReason__c"
+                    ],
+                    "operator": "Equals",
+                    "value": "true"
+                  },
+                  {
+                    "field": "sirenum__Cancelled__c",
+                    "operator": "Equals",
+                    "value": "false"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "ban"
+            },
+            "label": {
+              "label": {
+                "default": "Cancel",
+                "nl_NL": "Annuleren",
+                "fr": "Annuler",
+                "de": "Abbrechen"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Cancel the selected Shifts and/or Shift Demands",
+                "nl_NL": "Geselecteerde diensten en/of dienstaanvragen annuleren",
+                "fr": "Annuler les missions et/ou demandes de mission sélectionnées",
+                "de": "Abbrechen der ausgewählten Schichten und/oder Schichtbedarfe"
+              }
+            },
+            "uri": {
+              "literal": "$action:flow/sirenum__ILSCancelShifts?demandIds=${Selection.recordIds}"
+            }
+          },
+          {
+            "name": "acceptance",
+            "icon": {
+              "firstMatch": [
+                {
+                  "selector": {
+                    "field": "sirenum__Accepted__c",
+                    "operator": "Greater",
+                    "value": "0"
+                  },
+                  "value": {
+                    "literal": "like"
+                  }
+                },
+                {
+                  "selector": {
+                    "field": "sirenum__Accepted__c",
+                    "operator": "Less",
+                    "value": "0"
+                  },
+                  "value": {
+                    "literal": "dislike"
+                  }
+                }
+              ]
+            },
+            "title": {
+              "firstMatch": [
+                {
+                  "selector": {
+                    "field": "sirenum__Accepted__c",
+                    "operator": "Greater",
+                    "value": "0"
+                  },
+                  "value": {
+                    "label": {
+                      "default": "Accepted",
+                      "nl_NL": "Geaccepteerd",
+                      "fr": "Accepté",
+                      "de": "Angenommen/Akzeptiert"
+                    }
+                  }
+                },
+                {
+                  "selector": {
+                    "field": "sirenum__Accepted__c",
+                    "operator": "Less",
+                    "value": "0"
+                  },
+                  "value": {
+                    "label": {
+                      "default": "Declined",
+                      "nl_NL": "Afgewezen",
+                      "fr": "Refusé",
+                      "de": "Abgelehnt"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "value": {
+              "match": {
+                "field": "sirenum__Shift_Status__c",
+                "equals": {
+                  "Stale": {
+                    "literal": "X"
+                  },
+                  "No-Show": {
+                    "literal": "N"
+                  },
+                  "Late": {
+                    "literal": "L"
+                  },
+                  "At-Risk": {
+                    "literal": "A"
+                  },
+                  "Ongoing": {
+                    "literal": "O"
+                  }
+                }
+              }
+            },
+            "title": {
+              "match": {
+                "field": "sirenum__Shift_Status__c",
+                "equals": {
+                  "Stale": {
+                    "label": {
+                      "default": "Stale",
+                      "nl_NL": "Verlopen",
+                      "fr": "Obsolète",
+                      "de": "Abgelaufen"
+                    }
+                  },
+                  "No-Show": {
+                    "label": {
+                      "default": "No-Show",
+                      "nl_NL": "No-show",
+                      "fr": "Ne s’est pas présenté",
+                      "de": "Nichterscheinen"
+                    }
+                  },
+                  "Late": {
+                    "label": {
+                      "default": "Late",
+                      "nl_NL": "Te laat",
+                      "fr": "En retard",
+                      "de": "Spät"
+                    }
+                  },
+                  "At-Risk": {
+                    "label": {
+                      "default": "At-Risk",
+                      "nl_NL": "In gevaar",
+                      "fr": "À risque",
+                      "de": "Gefährdet"
+                    }
+                  },
+                  "Ongoing": {
+                    "label": {
+                      "default": "Ongoing",
+                      "nl_NL": "Lopend",
+                      "fr": "En cours",
+                      "de": "Laufend"
+                    }
+                  }
+                }
+              }
+            },
+            "variant": {
+              "match": {
+                "field": "sirenum__Shift_Status__c",
+                "equals": {
+                  "Stale": {
+                    "literal": "warning"
+                  },
+                  "No-Show": {
+                    "literal": "error"
+                  },
+                  "Late": {
+                    "literal": "warning"
+                  },
+                  "At-Risk": {
+                    "literal": "warning"
+                  },
+                  "Ongoing": {
+                    "literal": "info"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "name": "alerts",
+            "selector": {
+              "field": "sirenum__AlertCount__c",
+              "operator": "Greater",
+              "value": "0"
+            },
+            "icon": {
+              "literal": "alert"
+            },
+            "value": {
+              "field": "sirenum__AlertCount__c"
+            },
+            "title": {
+              "pattern": {
+                "format": {
+                  "default": "{0} alert(s):\n{1}",
+                  "nl_NL": "{0} waarschuwing(en):\n{1}",
+                  "fr": "{0} alerte(s) :\n{1}",
+                  "de": "{0} Alarm(e):\n{1}"
+                },
+                "values": [
+                  {
+                    "field": "sirenum__AlertCount__c"
+                  },
+                  {
+                    "concat": {
+                      "relationship": "sirenum__Alerts__r",
+                      "item": {
+                        "pattern": {
+                          "format": {
+                            "default": "{0} ({1})",
+                            "nl_NL": "{0} ({1})",
+                            "fr": "{0} ({1})",
+                            "de": "{0} ({1})"
+                          },
+                          "values": [
+                            {
+                              "firstMatch": [
+                                {
+                                  "selector": {
+                                    "field": "sirenum__RuleMessage__c",
+                                    "operator": "IsNull",
+                                    "value": "false"
+                                  },
+                                  "value": {
+                                    "field": "sirenum__RuleMessage__c"
+                                  }
+                                },
+                                {
+                                  "value": {
+                                    "pattern": {
+                                      "formatter": {
+                                        "field": "sirenum__ConstraintType__c",
+                                        "facet": "display"
+                                      },
+                                      "values": [
+                                        {
+                                          "field": "sirenum__RuleValue0__c"
+                                        },
+                                        {
+                                          "field": "sirenum__RuleValue1__c"
+                                        },
+                                        {
+                                          "field": "sirenum__RuleValue2__c"
+                                        },
+                                        {
+                                          "field": "sirenum__RuleValue3__c"
+                                        },
+                                        {
+                                          "field": "sirenum__RuleValue4__c"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "match": {
+                                "field": "sirenum__SeverityIndex__c",
+                                "equals": {
+                                  "4": {
+                                    "label": {
+                                      "default": "Fatal",
+                                      "nl_NL": "Fataal",
+                                      "fr": "Grave",
+                                      "de": "Fatal"
+                                    }
+                                  },
+                                  "3": {
+                                    "label": {
+                                      "default": "High",
+                                      "nl_NL": "Hoog",
+                                      "fr": "Élevée",
+                                      "de": "Hoch"
+                                    }
+                                  },
+                                  "2": {
+                                    "label": {
+                                      "default": "Medium",
+                                      "nl_NL": "Midden",
+                                      "fr": "Moyenne",
+                                      "de": "Mittel"
+                                    }
+                                  }
+                                },
+                                "otherwise": {
+                                  "label": {
+                                    "default": "Low",
+                                    "nl_NL": "Laag",
+                                    "fr": "Basse",
+                                    "de": "Niedrig"
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "separator": {
+                        "default": "\n"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "variant": {
+              "match": {
+                "field": "sirenum__AlertHighestSeverity__c",
+                "equals": {
+                  "4": {
+                    "literal": "error"
+                  },
+                  "3": {
+                    "literal": "error"
+                  },
+                  "2": {
+                    "literal": "warning"
+                  }
+                },
+                "otherwise": {
+                  "literal": "success"
+                }
+              }
+            }
+          },
+          {
+            "name": "job-order",
+            "icon": {
+              "literal": "custom:custom45"
+            },
+            "value": {
+              "field": "sirenum__JobOrder__c"
+            }
+          },
+          {
+            "name": "job-role",
+            "icon": {
+              "literal": "custom:custom57"
+            },
+            "value": {
+              "field": "sirenum__Team__c"
+            }
+          },
+          {
+            "name": "site",
+            "icon": {
+              "literal": "checkin"
+            },
+            "value": {
+              "field": "sirenum__Site__c"
+            }
+          },
+          {
+            "name": "location",
+            "icon": {
+              "literal": "location"
+            },
+            "value": {
+              "field": "sirenum__Location__c"
+            }
+          },
+          {
+            "name": "rota",
+            "icon": {
+              "literal": "macros"
+            },
+            "value": {
+              "field": "sirenum__Rota__c"
+            }
+          },
+          {
+            "name": "contact",
+            "icon": {
+              "literal": "standard:contact"
+            },
+            "value": {
+              "field": "sirenum__Contact__c"
+            }
+          },
+          {
+            "name": "scheduling-comments",
+            "icon": {
+              "literal": "note"
+            },
+            "value": {
+              "field": "sirenum__Scheduling_Comments__c"
+            }
+          },
+          {
+            "name": "absolute-local-times",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "sirenum__Absolute_Local_Start_Date__c",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "field": "sirenum__Absolute_Local_Start_Time__c",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "field": "sirenum__Site__r.sirenum__Timezone__c",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "field": "sirenum__Site__r.sirenum__Timezone__c",
+                    "operator": "NotEquals",
+                    "compare": {
+                      "user": "timezone"
+                    }
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "standard:business_hours"
+            },
+            "title": {
+              "pattern": {
+                "format": {
+                  "default": "Local times in {0}"
+                },
+                "values": [
+                  {
+                    "field": "sirenum__Site__r.sirenum__Timezone__c"
+                  }
+                ]
+              }
+            },
+            "value": {
+              "firstMatch": [
+                {
+                  "selector": {
+                    "field": "sirenum__Absolute_Local_Start_Date__c",
+                    "operator": "NotEquals",
+                    "compare": {
+                      "field": "sirenum__Shift_Date__c"
+                    }
+                  },
+                  "value": {
+                    "pattern": {
+                      "format": {
+                        "default": "{0}, {1} - {2} ({3})"
+                      },
+                      "values": [
+                        {
+                          "field": "sirenum__Absolute_Local_Start_Date__c"
+                        },
+                        {
+                          "field": "sirenum__Absolute_Local_Start_Time__c"
+                        },
+                        {
+                          "firstDefined": [
+                            {
+                              "field": "sirenum__Absolute_Local_End_Time__c"
+                            },
+                            {
+                              "literal": ""
+                            }
+                          ]
+                        },
+                        {
+                          "field": "sirenum__Site__r.sirenum__Timezone__c"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "value": {
+                    "pattern": {
+                      "format": {
+                        "default": "{0} - {1} ({2})"
+                      },
+                      "values": [
+                        {
+                          "field": "sirenum__Absolute_Local_Start_Time__c"
+                        },
+                        {
+                          "firstDefined": [
+                            {
+                              "field": "sirenum__Absolute_Local_End_Time__c"
+                            },
+                            {
+                              "literal": ""
+                            }
+                          ]
+                        },
+                        {
+                          "field": "sirenum__Site__r.sirenum__Timezone__c"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "actual-times",
+            "selector": {
+              "field": "sirenum__Actual_Start_Time__c",
+              "operator": "IsNull",
+              "value": "false"
+            },
+            "icon": {
+              "literal": "standard:operating_hours"
+            },
+            "value": {
+              "interval": {
+                "startFieldPath": "sirenum__Actual_Start_Time__c",
+                "endFieldPath": "sirenum__Actual_End_Time__c"
+              }
+            }
+          },
+          {
+            "name": "is-auto-fulfil",
+            "selector": {
+              "field": "s5m__BH4SFAutoFulfil__c",
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "fulfillment_order"
+            },
+            "title": {
+              "label": {
+                "default": "Auto-fulfil",
+                "nl_NL": "Auto-fulfil",
+                "fr": "Auto-fulfil",
+                "de": "Auto-fulfil"
+              }
+            }
+          },
+          {
+            "name": "job",
+            "icon": {
+              "literal": "standard:job_profile"
+            },
+            "value": {
+              "field": "s5m__BH4SFJob__c"
+            }
+          },
+          {
+            "name": "closing-report",
+            "icon": {
+              "literal": "standard:job_position"
+            },
+            "value": {
+              "field": "s5m__BH4SFClosingReport__c"
+            }
+          }
+        ],
+        "tileLayouts": [
+          {
+            "selector": {
+              "field": "sirenum__Broadcasts__c",
+              "operator": "IsNull",
+              "value": "false"
+            },
+            "decorations": [
+              "hours-coverage",
+              "shifts-coverage",
+              "pending-invites",
+              "is-auto-fulfil",
+              "is-cancelled"
+            ],
+            "contents": [
+              "absolute-local-times",
+              "job-order",
+              "job",
+              "job-role",
+              "site",
+              "location",
+              "rota",
+              "scheduling-comments"
+            ]
+          },
+          {
+            "decorations": [
+              "has-shift-demand",
+              "acceptance",
+              "is-not-published",
+              "status",
+              "alerts",
+              "pending-invites",
+              "is-cancelled"
+            ],
+            "contents": [
+              "actual-times",
+              "absolute-local-times",
+              "job-order",
+              "job",
+              "closing-report",
+              "job-role",
+              "site",
+              "location",
+              "rota",
+              "contact",
+              "scheduling-comments"
+            ]
+          }
+        ],
+        "actions": [
+          "new-record",
+          "edit-record",
+          "cut",
+          "copy",
+          "paste",
+          "manage-invitations",
+          "find-workers",
+          "auto-assign",
+          "find-work",
+          "publish-shifts",
+          "cancel-shifts",
+          "delete"
+        ]
+      },
+      {
+        "objectType": "sirenum__Employee_Request__c",
+        "startFieldPath": "sirenum__Start_Time__c",
+        "endFieldPath": "sirenum__End_Time__c",
+        "tuples": [
+          {
+            "name": "approve-request",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "field": "sirenum__Start_Time__c",
+                    "operator": "Greater",
+                    "compare": {
+                      "device": "datetime"
+                    }
+                  },
+                  {
+                    "editPermission": [
+                      "sirenum__Approved__c",
+                      "sirenum__Rejected__c"
+                    ],
+                    "operator": "Equals",
+                    "value": "true"
+                  },
+                  {
+                    "field": "sirenum__Approved__c",
+                    "operator": "Equals",
+                    "value": "false"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "success"
+            },
+            "label": {
+              "label": {
+                "default": "Approve",
+                "nl_NL": "Goedkeuren",
+                "fr": "Approuver",
+                "de": "Genehmigen"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Approve the selected Employee Requests",
+                "nl_NL": "De geselecteerde verzoeken van werknemers goedkeuren",
+                "fr": "Approuver les demandes d'employé sélectionnées",
+                "de": "Genehmigen der ausgewählten Mitarbeiteranfragen"
+              }
+            },
+            "uri": {
+              "literal": "$action:update?sirenum__Approved__c=true&sirenum__Rejected__c=false"
+            }
+          },
+          {
+            "name": "reject-request",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "field": "sirenum__Start_Time__c",
+                    "operator": "Greater",
+                    "compare": {
+                      "device": "datetime"
+                    }
+                  },
+                  {
+                    "editPermission": [
+                      "sirenum__Approved__c",
+                      "sirenum__Rejected__c"
+                    ],
+                    "operator": "Equals",
+                    "value": "true"
+                  },
+                  {
+                    "field": "sirenum__Rejected__c",
+                    "operator": "Equals",
+                    "value": "false"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "error"
+            },
+            "label": {
+              "label": {
+                "default": "Reject",
+                "nl_NL": "Afwijzen",
+                "fr": "Rejeter",
+                "de": "Ablehnen"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Reject the selected Employee Requests",
+                "nl_NL": "De geselecteerde verzoeken van werknemers afwijzen",
+                "fr": "Refuser les demandes d'employé sélectionnées",
+                "de": "Ablehnen der ausgewählten Mitarbeiteranfragen"
+              }
+            },
+            "uri": {
+              "literal": "$action:update?sirenum__Approved__c=false&sirenum__Rejected__c=true"
+            }
+          },
+          {
+            "name": "new-record",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "true"
+                  },
+                  {
+                    "createPermission": [],
+                    "operator": "Equals",
+                    "value": "true"
+                  },
+                  {
+                    "selection": "cellCount",
+                    "operator": "Equals",
+                    "value": "1"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "custom:custom82"
+            },
+            "label": {
+              "label": {
+                "default": "New Request",
+                "nl_NL": "Nieuw verzoek",
+                "fr": "Nouvelle demande",
+                "de": "Neue Anfrage"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Create a new Employee Request",
+                "nl_NL": "Een nieuw verzoek van werknemer maken",
+                "fr": "Créer une demande d'employé",
+                "de": "Erstellen einer neuen Mitarbeiteranfrage"
+              }
+            },
+            "uri": {
+              "literal": "$action:create/sirenum__Employee_Request__c/interactive?sirenum__Start_Time__c='${Selection.date}T12:00:00Z'&sirenum__End_Time__c='${Selection.date}T12:00:00Z'&${Selection.resourceLookup}='${Selection.resource}'"
+            }
+          },
+          {
+            "name": "delete",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "deletePermission": true,
+                    "operator": "Equals",
+                    "value": "true"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "delete"
+            },
+            "label": {
+              "label": {
+                "default": "Delete",
+                "nl_NL": "Verwijderen",
+                "fr": "Supprimer",
+                "de": "Löschen"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Delete the selected Requests",
+                "nl_NL": "Geselecteerde verzoeken verwijderen",
+                "fr": "Supprimer les demandes sélectionnées",
+                "de": "Löschen der ausgewählten Anfragen"
+              }
+            },
+            "uri": {
+              "literal": "$action:delete"
+            }
+          },
+          {
+            "name": "edit-record",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "editPermission": [],
+                    "operator": "Equals",
+                    "value": "true"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "edit_form"
+            },
+            "label": {
+              "label": {
+                "default": "Edit",
+                "nl_NL": "Bewerken",
+                "fr": "Modifier",
+                "de": "Bearbeiten"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Quick edit the selected Request(s) together",
+                "nl_NL": "Geselecteerd verzoek bewerken",
+                "fr": "Modifier la demande sélectionnée",
+                "de": "Bearbeiten der ausgewählten Anfrage"
+              }
+            },
+            "uri": {
+              "literal": "$action:update/interactive/Employee_Request"
+            }
+          },
+          {
+            "name": "cut",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "clipboardPermission": "cut",
+                    "operator": "Equals",
+                    "value": "true"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "cut"
+            },
+            "label": {
+              "label": {
+                "default": "Cut",
+                "nl_NL": "Knippen",
+                "fr": "Couper",
+                "de": "Ausschneiden"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Allows the selected records to be moved to another date and/or resource",
+                "nl_NL": "Zorgt ervoor dat de geselecteerde records naar een andere datum en/of bron verplaatst kunnen worden",
+                "fr": "Permet de déplacer les enregistrements sélectionnés vers une autre date et/ou ressource",
+                "de": "Ermöglicht das Verschieben der ausgewählten Datensätze auf ein anderes Datum und/oder eine andere Ressource"
+              }
+            },
+            "uri": {
+              "literal": "$clipboard:cut"
+            }
+          },
+          {
+            "name": "copy",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "false"
+                  },
+                  {
+                    "clipboardPermission": "copy",
+                    "operator": "Equals",
+                    "value": "true"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "copy_to_clipboard"
+            },
+            "label": {
+              "label": {
+                "default": "Copy",
+                "nl_NL": "Kopiëren",
+                "fr": "Copier",
+                "de": "Kopieren"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Allows the selected records to be copied to another date and/or resource",
+                "nl_NL": "Zorgt ervoor dat de geselecteerde records naar een andere datum en/of bron gekopieerd kunnen worden",
+                "fr": "Permet de copier les enregistrements sélectionnés vers une autre date et/ou ressource",
+                "de": "Ermöglicht das Kopieren der ausgewählten Datensätze auf ein anderes Datum und/oder eine andere Ressource"
+              }
+            },
+            "uri": {
+              "literal": "$clipboard:copy"
+            }
+          },
+          {
+            "name": "paste",
+            "selector": {
+              "every": {
+                "operands": [
+                  {
+                    "field": "Id",
+                    "operator": "IsNull",
+                    "value": "true"
+                  },
+                  {
+                    "clipboardPermission": "paste",
+                    "operator": "Equals",
+                    "value": "true"
+                  },
+                  {
+                    "selection": "cellCount",
+                    "operator": "Equals",
+                    "value": "1"
+                  }
+                ]
+              },
+              "operator": "Equals",
+              "value": "true"
+            },
+            "icon": {
+              "literal": "paste"
+            },
+            "label": {
+              "label": {
+                "default": "Paste",
+                "nl_NL": "Plakken",
+                "fr": "Coller",
+                "de": "Einfügen"
+              }
+            },
+            "title": {
+              "label": {
+                "default": "Moves or copies the selections to an alternative date and/or resource",
+                "nl_NL": "Verplaatst of kopieert de selecties naar een alternatieve datum en/of bron",
+                "fr": "Déplace et copie les sélections vers une autre date et/ou ressource",
+                "de": "Ermöglicht das Verschieben oder Kopieren der Auswahl auf ein anderes Datum und/oder Ressource"
+              }
+            },
+            "uri": {
+              "literal": "$clipboard:paste"
+            }
+          },
+          {
+            "name": "approval",
+            "icon": {
+              "firstMatch": [
+                {
+                  "selector": {
+                    "field": "sirenum__Approved__c",
+                    "operator": "Equals",
+                    "value": "true"
+                  },
+                  "value": {
+                    "literal": "success"
+                  }
+                },
+                {
+                  "selector": {
+                    "field": "sirenum__Rejected__c",
+                    "operator": "Equals",
+                    "value": "true"
+                  },
+                  "value": {
+                    "literal": "error"
+                  }
+                }
+              ]
+            },
+            "title": {
+              "firstMatch": [
+                {
+                  "selector": {
+                    "field": "sirenum__Approved__c",
+                    "operator": "Equals",
+                    "value": "true"
+                  },
+                  "value": {
+                    "label": {
+                      "default": "Approved",
+                      "nl_NL": "Goedgekeurd",
+                      "fr": "Approuvé",
+                      "de": "Genehmigt"
+                    }
+                  }
+                },
+                {
+                  "selector": {
+                    "field": "sirenum__Rejected__c",
+                    "operator": "Equals",
+                    "value": "true"
+                  },
+                  "value": {
+                    "label": {
+                      "default": "Rejected",
+                      "nl_NL": "Afgewezen",
+                      "fr": "Rejets",
+                      "de": "Abgelehnt"
+                    }
+                  }
+                }
+              ]
+            },
+            "variant": {
+              "firstMatch": [
+                {
+                  "selector": {
+                    "field": "sirenum__Approved__c",
+                    "operator": "Equals",
+                    "value": "true"
+                  },
+                  "value": {
+                    "literal": "success"
+                  }
+                },
+                {
+                  "selector": {
+                    "field": "sirenum__Rejected__c",
+                    "operator": "Equals",
+                    "value": "true"
+                  },
+                  "value": {
+                    "literal": "error"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "availability",
+            "icon": {
+              "firstMatch": [
+                {
+                  "selector": {
+                    "field": "sirenum__Availability__c",
+                    "operator": "Equals",
+                    "value": "false"
+                  },
+                  "value": {
+                    "literal": "resource_absence"
+                  }
+                }
+              ]
+            },
+            "title": {
+              "firstMatch": [
+                {
+                  "selector": {
+                    "field": "sirenum__Availability__c",
+                    "operator": "Equals",
+                    "value": "false"
+                  },
+                  "value": {
+                    "label": {
+                      "default": "Unavailable",
+                      "nl_NL": "Niet beschikbaar",
+                      "fr": "Non disponible",
+                      "de": "Nicht verfügbar"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "contact",
+            "icon": {
+              "literal": "contact"
+            },
+            "value": {
+              "field": "sirenum__Contact__c"
+            }
+          },
+          {
+            "name": "type",
+            "icon": {
+              "literal": "work_order_type"
+            },
+            "value": {
+              "field": "sirenum__Type__c"
+            }
+          },
+          {
+            "name": "description",
+            "icon": {
+              "literal": "description"
+            },
+            "value": {
+              "field": "sirenum__Description__c"
+            }
+          }
+        ],
+        "tileLayouts": [
+          {
+            "decorations": [
+              "approval",
+              "availability"
+            ],
+            "contents": [
+              "contact",
+              "type",
+              "description"
+            ]
+          }
+        ],
+        "actions": [
+          "new-record",
+          "edit-record",
+          "cut",
+          "copy",
+          "paste",
+          "approve-request",
+          "reject-request",
+          "delete"
+        ]
+      },
+      {
+        "objectType": "sirenum__Special_Date__c",
+        "selectionClause": "Id != NULL",
+        "startFieldPath": "sirenum__Date__c",
+        "icon": {
+          "literal": "none"
+        },
+        "variant": {
+          "literal": "warning"
+        },
+        "tuples": [
+          {
+            "name": "category",
+            "icon": {
+              "literal": "standard:category"
+            },
+            "value": {
+              "field": "sirenum__Category__c"
+            }
+          }
+        ],
+        "tileLayouts": [
+          {
+            "contents": [
+              "category"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [
+      {
+        "type": "Week",
+        "name": "Week",
+        "label": {
+          "default": "Week",
+          "nl_NL": "Week",
+          "fr": "Semaine",
+          "de": "Woche"
+        },
+        "cellChunkSize": 6
+      },
+      {
+        "type": "Grid",
+        "name": "By Worker",
+        "label": {
+          "default": "By Worker",
+          "nl_NL": "Op werknemer",
+          "fr": "Par travailleur",
+          "de": "Von Arbeiter"
+        },
+        "isDefault": true,
+        "cellChunkSize": 4,
+        "resource": {
+          "objectType": "Contact",
+          "label": {
+            "default": "Workers",
+            "nl_NL": "Werknemers",
+            "fr": "Travailleurs",
+            "de": "Arbeiter"
+          },
+          "relatedLists": [
+            {
+              "relationship": "sirenum__MobileDevices__r",
+              "limitSize": 1
+            }
+          ],
+          "filterSelectionClause": "$Filter.Candidates",
+          "relationships": [
+            {
+              "schedulableObjectType": "sirenum__Shift__c",
+              "resourceLookupFieldPath": "sirenum__Contact__c",
+              "auxiliarySelectionClause": "unfiltered"
+            },
+            {
+              "schedulableObjectType": "sirenum__Employee_Request__c",
+              "resourceLookupFieldPath": "sirenum__Contact__c",
+              "auxiliarySelectionClause": "unfiltered"
+            }
+          ],
+          "tuples": [
+            {
+              "name": "mobile-registered",
+              "selector": {
+                "some": {
+                  "operands": [
+                    {
+                      "field": "sirenum__Client_Password__c",
+                      "operator": "IsNull",
+                      "value": "false"
+                    },
+                    {
+                      "count": {
+                        "relationship": "sirenum__MobileDevices__r"
+                      },
+                      "operator": "Greater",
+                      "value": "0"
+                    }
+                  ]
+                },
+                "operator": "Equals",
+                "value": "true"
+              },
+              "icon": {
+                "literal": "phone_portrait"
+              },
+              "title": {
+                "pattern": {
+                  "format": {
+                    "default": "{0} is mobile app registered",
+                    "nl_NL": "{0} is geregistreerd op de mobiele app",
+                    "fr": "{0} est une application mobile enregistrée",
+                    "de": "{0} ist in der Mobile App registriert"
+                  },
+                  "values": [
+                    {
+                      "field": "Name"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "phone",
+              "icon": {
+                "literal": "call"
+              },
+              "value": {
+                "field": "Phone"
+              }
+            },
+            {
+              "name": "mobile-phone",
+              "icon": {
+                "literal": "phone_portrait"
+              },
+              "value": {
+                "field": "MobilePhone"
+              }
+            },
+            {
+              "name": "general-comments",
+              "icon": {
+                "literal": "comments"
+              },
+              "value": {
+                "field": "sirenum__General_Comments__c"
+              }
+            }
+          ],
+          "tileLayouts": [
+            {
+              "decorations": [
+                "mobile-registered"
+              ],
+              "contents": [
+                "phone",
+                "mobile-phone",
+                "general-comments"
+              ]
+            }
+          ],
+          "nullResource": {
+            "label": {
+              "default": "Shift Demands",
+              "nl_NL": "Dienstaanvragen",
+              "fr": "Demandes de mission",
+              "de": "Schichtbedarfe"
+            },
+            "visibility": "always"
+          },
+          "chunkSize": 10
+        }
+      }
+    ]
+  }
+  
+  

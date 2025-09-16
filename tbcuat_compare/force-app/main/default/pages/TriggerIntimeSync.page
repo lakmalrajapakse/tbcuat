@@ -1,0 +1,8 @@
+<apex:page standardController="InTimeSyncItem__c" recordSetVar="intimeSyncItems" extensions="TriggerIntimeSyncController" action="{!triggerSync}" lightningStylesheets="true" docType="html-5.0">
+    <apex:pageMessages />
+    <apex:form >
+        <div align="center" >
+            <apex:commandButton action="{!returnToListViewPage}" value="Go Back" id="theButton" rendered="{!triggeredSyncActionSuccessfully}" />
+        </div>
+    </apex:form>
+</apex:page>

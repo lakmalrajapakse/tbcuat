@@ -1,0 +1,16 @@
+:root {
+	--sirenum-brandPrimaryColor: #CE0058;
+	--sirenum-brandSecondaryColor: #000000;
+}
+
+.pbSubheader{
+	background-color: #CE0058 !important;
+}
+
+.sirenumPageParent[menuTop="true"] #sirenumNavigation {
+    border-bottom: 3px solid #CE0058 !important;
+}
+
+.sirenumPageParent[menuTop="true"] #sirenumNavigation .iconDiv[current=true] {
+    border-top: 3px solid #CE0058 !important;
+}

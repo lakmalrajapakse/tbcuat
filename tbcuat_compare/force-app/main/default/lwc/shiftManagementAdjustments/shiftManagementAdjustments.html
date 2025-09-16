@@ -1,0 +1,49 @@
+<template>
+    <div class="slds-is-relative">
+        <lightning-spinner
+            if:true={isLoading}
+            alternative-text="Loading"
+            size="large"
+            variant="brand"
+        ></lightning-spinner>
+
+        <div class="slds-clearfix slds-m-bottom_small">
+            <ul class="slds-float_right slds-list_horizontal">
+                <li class="slds-button-group-item">
+                    <lightning-button
+                        label="Reverse"
+                        class="slds-m-left_x-small"
+                        disabled={buttonsDisabled}
+                        onclick={handleReversalAdjustmentClick}
+                    ></lightning-button>
+                </li>
+                <li class="slds-button-group-item">
+                    <lightning-button
+                        label="Timesheet Adjust"
+                        class="slds-m-left_x-small"
+                        disabled={buttonsDisabled}
+                        onclick={handleAdjustmentClick}
+                    ></lightning-button>
+                </li>
+                <li class="slds-button-group-item">
+                    <lightning-button
+                        label="Invoice Adjust"
+                        class="slds-m-left_x-small"
+                        disabled={invoiceDisabled}
+                        onclick={handleInvoiceAdjustmentClick}
+                    ></lightning-button>
+                </li>
+            </ul>
+        </div>
+        <lightning-datatable
+            columns={columns}
+            data={data}
+            key-field="Name"
+            onrowselection={handleRowSelection}
+            onrowaction={handleRowAction}
+        ></lightning-datatable>
+        <c-no-data-illustration if:false={hasData} class="slds-align_absolute-center" style="height: 250px">
+            <div slot="message" class="slds-text-body_regular">No data to show, yet.</div>
+        </c-no-data-illustration>
+    </div>
+</template>

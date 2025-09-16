@@ -1,0 +1,30 @@
+<template>
+    <!-- SPINNER -->
+    <lightning-spinner
+        alternative-text="Loading..."
+        variant="brand"
+        class="slds-hide"
+    ></lightning-spinner>
+    <!-- SPINNER -->
+    <!-- COMPONENT BODY -->
+    <lightning-card>
+        <!-- DISPLAY COMPONENT -->
+        <div align="center" >
+            <template if:true={_attachmentUrl} >
+                <img class="profile-img" src={_attachmentUrl} />
+            </template>
+        </div>
+        <!-- DISPLAY COMPONENT -->
+        <!-- UPLOAD COMPONENT -->
+        <div align="center" >
+            <lightning-input 
+                type="file" 
+                accept={acceptedFormats}
+                label="Attachment" 
+                onchange={handleOnFileUpload}
+            ></lightning-input>
+        </div>
+        <!-- UPLOAD COMPONENT -->
+    </lightning-card>
+    <!-- COMPONENT BODY -->
+</template>

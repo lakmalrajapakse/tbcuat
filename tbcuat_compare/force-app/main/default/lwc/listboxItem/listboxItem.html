@@ -1,0 +1,26 @@
+<!--
+  @description       : 
+  @author            : James Ridge
+  @group             : 
+  @last modified on  : 05-06-2021
+  @last modified by  : James Ridge
+  Modifications Log 
+  Ver   Date         Author        Modification
+  1.0   08-13-2020   James Ridge   Initial Version
+-->
+<template>
+    <div onmousedown={clickRecord} class={itemClasses} role="option">
+        <span class="slds-media__figure slds-listbox__option-icon">
+            <lightning-icon icon-name={iconName} size="small"></lightning-icon>
+        </span>
+
+        <span class="slds-media__body">
+            <span class="slds-listbox__option-text slds-listbox__option-text_entity">
+                {label}
+            </span>
+            <span class="slds-listbox__option-meta slds-listbox__option-meta_entity slds-truncate">
+                {subLabel}
+            </span>
+        </span>
+    </div>
+</template>

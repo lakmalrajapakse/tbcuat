@@ -1,0 +1,641 @@
+<apex:component >
+  <style>
+  #drop{
+        font-family: Helvetica, Arial, sans-serif;
+        border:2px dashed #bbb;
+        border-radius:5px;
+        padding:25px;
+        text-align:center;
+        color: #bbb;
+        font-size:20pt;
+        font-weight:bold;
+    }
+    #b64data{
+        width:100%;
+    }
+    
+    .page-wrapper.settings {
+        min-width: 770px;
+        cursor: pointer;
+        cursor: pointer;
+        position: relative;
+    }
+    
+    *,
+       *:before,
+       *:after {
+         -moz-box-sizing: border-box;
+         -webkit-box-sizing: border-box;
+         box-sizing: border-box;
+    }
+    
+    .wrapper-wrapper{
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center;
+    }
+    .sirenumLabel {       
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        font-weight: bold;
+        display: block;
+    }
+   
+    .page-wrapper{
+        background: #FFFFFF;
+        padding: 1em;
+        margin: 1em auto;
+        border-top: 5px solid #fa6900;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.8);
+    }
+    table.sirenumRadio td {
+        min-width: 40px;
+        text-align: center;
+        font-weight: bold;
+    }
+    .hiddenInput{
+        display:none !important;
+    }
+    
+    .sirenumPhotoElement img.thumb {
+        width: 100%;
+    }
+    img.loadingSpinner {
+        width: 30px;
+    }
+    div#messages {
+        border: 1px dotted #ccc;
+        font-family: monospace;
+        background: #FBFFF0;
+        padding: 10px;
+        font-size: 10px;
+        display:none;
+    }
+    .sirenumLabel.info {
+        font-weight: normal;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+        float: left;
+        margin-right: 10px;
+    }
+    .sirenumPhotoElement img{
+        width:100%;
+    }    
+    
+    .sirenumFormElement {
+        
+    }
+    
+    .sirenumLabel.info.comments {
+        text-transform: none;
+        float: none;
+        margin: 5px;
+        padding: 5px;
+        border-top: 1px dotted #ccc;
+    }
+   
+    /* Chosen */   
+    
+    /* error */
+    td.messageCell div {
+        border: 1px dotted #ccc;
+        border-radius: 4px;
+        padding: 10px;
+        font-family: monospace;
+        line-height: 10px;
+        background: floralwhite;
+        opacity: 0.7;
+        /* width: 150px; */
+        height: auto;
+        position: fixed;
+        right: 50%;
+        z-index: 10;
+    }    
+    
+    img.loadingSpinnerCard {
+        width: 15px;
+        display:none;
+    }
+    img.loadingSpinnerCardShow{
+        width: 15px;
+        display: -webkit-inline-box !important;
+    }
+    img#genericLoader {
+        position: absolute;
+        right: 1%;
+    } 
+    /* modal */
+    .modalDialog {
+        position: fixed;
+        display:none;
+        font-family: Helvetica, Arial, sans-serif;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(0,0,0,0.8);
+        z-index: 99999;       
+        -webkit-transition: opacity 400ms ease-in;
+        -moz-transition: opacity 400ms ease-in;
+        transition: opacity 400ms ease-in;
+        opacity:1;
+        pointer-events: auto;
+        
+    }
+
+    .modalDialog > div {
+        width: auto;
+        position: relative;
+        margin: 10% auto;
+        padding: 5px 20px 13px 20px;
+        border-radius: 10px;   
+             
+    }
+
+    
+    .close {
+        background: #606061;
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -13px;
+        text-align: center;
+        top: -20px;
+        width: 24px;
+        text-decoration: none;
+        font-weight: bold;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        border-radius: 12px;
+        -moz-box-shadow: 1px 1px 3px #000;
+        -webkit-box-shadow: 1px 1px 3px #000;
+        box-shadow: 1px 1px 3px #000;
+        opacity:1 !important;
+    }
+    .close:hover { background: #00d9ff; }
+    
+    .left {
+        float: left;
+        position: relative;
+        display: block;
+        width: 50%;
+    }
+    .right {
+        position: relative;
+        float: left;
+        display: block;
+        width: 50%;
+        
+    }
+    .picklist {
+        width: 95% !important;
+    }
+    .requiredInput {
+        border-left: 3px dotted #d9534f;        
+    }
+    
+    .page-wrapper.settings.preview{
+        display: block;
+    }
+    .page-wrapper.settings.preview .sirenumLabel{
+        position: inherit;
+    }
+   .sirenumFormElement .nextBTN{
+        float: right;
+        display: block;
+    } 
+    .sirenumFormElement .nextBTN {
+        position: absolute;
+        right: 1px;
+        bottom: 1px;
+        border: solid 1px #1797C0;
+        background: #1797C0;
+        border-radius: 0px;
+        color: white;
+        font-weight: normal;
+        cursor: pointer;
+      
+        font-family: arial;
+        font-size: 12px;
+        /* margin: 0px; */
+        outline: none;
+            bottom: -35px;
+        right: 10px;
+    }
+    .chosen-container-active .chosen-choices {
+        width: 200px;
+    }
+    .chosen-container .chosen-drop {
+        width: 200px;
+    }
+    .chosen-container-multi .chosen-choices {
+        width: 200px;
+    }
+    .chosen-container.chosen-container-single {
+        max-width: 200px;
+        width: 200px!important;
+        margin-top: 25px;
+    }
+    .pull-right {
+        margin:10px;
+    }
+    .lookupInput {
+        position: relative;
+        top: 10px;
+    }
+    input.btn.nextBTN.edit {
+       bottom: -38%;
+    }
+    .sirenumFormElement .loadUncovered{
+            left: 4%;
+        top: 10px;
+        position: relative
+    }
+    .lookupWrapper {
+        display: inline-block;
+    }
+    .searchFieldWrapper {
+        position: relative;
+        top: 10px;
+        display: -webkit-inline-box;
+    }
+    div#reportrange {
+        position: relative;
+        right: 9%;
+        top: 10px;
+        left: -44%;
+    }
+    .pull-right {
+        margin: 0px; 
+    }
+    /* the table */
+    /* Component styles */
+.responstable {
+  margin: 1em 0;
+  width: 100%;
+  overflow: hidden;
+  background: #FFF;
+  color: #024457;
+  border-radius: 5px;
+  border: 1px solid #167F92;
+}
+.responstable tr {
+  border: 1px solid #D9E4E6;
+      line-height: 14px;
+      font-size: 9pt;
+}
+.responstable tr:nth-child(odd) {
+  background-color: #EAF3F3;
+}
+tr.errorrow {
+    background-color: #FF4300 !important;
+}
+tr.errorrow td{
+    color:white !important;
+}
+.responstable th {
+  display: none;
+  border: 1px solid #FFF;
+  background-color: #31bc86;
+  color: #FFF;
+  padding: 1em;
+      text-align: center !important;
+}
+.responstable th:first-child {
+  display: table-cell;
+  text-align: center;
+  padding: 10px;
+}
+.responstable th:nth-child(2) {
+  display: table-cell;
+}
+.responstable th:nth-child(2) span {
+  display: none;
+}
+.responstable th:nth-child(2):after {
+  content: attr(data-th);
+}
+.responstable .td{
+    padding: 2px !important;
+}
+@media (min-width: 480px) {
+  .responstable th:nth-child(2) span {
+    display: block;
+    padding: 2px;
+  }
+  .responstable th:nth-child(2):after {
+    display: none;
+  }
+}
+.responstable td {
+  display: block;
+  word-wrap: break-word;
+  max-width: 7em;
+   padding-left: 5px;
+    padding-right: 0px;
+}
+.responstable td:first-child {
+  display: table-cell;
+  text-align: center;
+  border-right: 1px solid #D9E4E6;
+}
+@media (min-width: 480px) {
+  .responstable td {
+    border: 1px solid #D9E4E6;
+  }
+}
+.responstable th, .responstable td {
+  text-align: left;
+  margin: .5em 1em;
+}
+@media (min-width: 480px) {
+  .responstable th, .responstable td {
+    display: table-cell;
+    padding: 1px;
+  }
+}
+.whiteLink{
+    color:white !important;
+}
+.daterangepicker.dropdown-menu.show-calendar.openscenter {
+    width: 730px;
+}
+
+.goodField{
+    padding: 0.34em 0.5em;
+    font-size: 14px;
+    margin-bottom: 15px;
+    border-radius: 3px;
+    margin-top:2px;
+    border: 1px solid #D9D9D9;
+    min-width: 233px;
+}
+/* search field */
+
+    /*-------------------------------------*/
+    
+    .cf:before, .cf:after{
+      content:"";
+      display:table;
+    }
+    
+    .cf:after{
+      clear:both;
+    }
+
+    .cf{
+      zoom:1;
+    }
+
+    /*-------------------------------------*/   
+    
+    .form-wrapper {
+        position: absolute;
+    right: 8px;
+    bottom: 14px;
+    display: block;
+        padding: 6px;
+        width:375px;
+        background: #444;
+        background: rgba(0,0,0,.2);
+        -moz-border-radius: 10px;
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+        -moz-box-shadow: 0 1px 1px rgba(0,0,0,.4) inset, 0 1px 0 rgba(255,255,255,.2);
+        -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.4) inset, 0 1px 0 rgba(255,255,255,.2);
+        box-shadow: 0 1px 1px rgba(0,0,0,.4) inset, 0 1px 0 rgba(255,255,255,.2);
+    }
+    
+    .form-wrapper input {
+        width: 251px;
+        height: 25px;
+        padding: 10px 5px;
+        float: left;    
+        font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
+        border: 0;
+        background: #eee;
+        -moz-border-radius: 3px 0 0 3px;
+        -webkit-border-radius: 3px 0 0 3px;
+        border-radius: 3px 0 0 3px;      
+    }
+    
+    .form-wrapper input:focus {
+        outline: 0;
+        background: #fff;
+        -moz-box-shadow: 0 0 2px rgba(0,0,0,.8) inset;
+        -webkit-box-shadow: 0 0 2px rgba(0,0,0,.8) inset;
+        box-shadow: 0 0 2px rgba(0,0,0,.8) inset;
+    }
+    
+    .form-wrapper input::-webkit-input-placeholder {
+       color: #999;
+       font-weight: normal;
+       font-style: italic;
+    }
+    
+    .form-wrapper input:-moz-placeholder {
+        color: #999;
+        font-weight: normal;
+        font-style: italic;
+    }
+    
+    .form-wrapper input:-ms-input-placeholder {
+        color: #999;
+        font-weight: normal;
+        font-style: italic;
+    }    
+    
+    .form-wrapper .searchBtn{
+        overflow: visible;
+        position: relative;
+        float: right;
+        border: 0;
+        padding: 0;
+        cursor: pointer;
+        height :25px;
+        width: 110px;
+        font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
+        color: #fff;
+        text-transform: uppercase;
+        background: #1797C0;
+        -moz-border-radius: 0 3px 3px 0;
+        -webkit-border-radius: 0 3px 3px 0;
+        border-radius: 0 3px 3px 0;      
+        text-shadow: 0 -1px 0 rgba(0, 0 ,0, .3);
+    }   
+      
+    .form-wrapper .searchBtn:hover{     
+        background: #1797C0;
+    }   
+      
+    .form-wrapper .searchBtn:active,
+    .form-wrapper .searchBtn:focus{   
+        background: #1797C0;    
+    }
+    
+    .form-wrapper .searchBtn:before {
+        content: '';
+        position: absolute;
+        border-width: 8px 8px 8px 0;
+        border-style: solid solid solid none;
+        border-color: transparent #d83c3c transparent;
+        top: 5px;
+        left: -6px;
+    }
+    
+    .form-wrapper .searchBtn:hover:before{
+        border-right-color: #1797C0;
+    }
+    
+    .form-wrapper .searchBtn:focus:before{
+        border-right-color: #1797C0;
+    }    
+    
+    .form-wrapper .searchBtn::-moz-focus-inner {
+        border: 0;
+        padding: 0;
+    }
+    .page-wrapper.settings.upload .sirenumLabel{
+        position: relative;
+    }
+    .modalDialog .page-wrapper.settings{ 
+        width: 500px;
+    }
+    .nextBTN.modalBTN{
+        bottom: 10px;
+    }
+    .page-wrapper.settings.upload  input[type="checkbox"]{
+       
+    }
+    .page-wrapper.settings.upload label{
+        bottom: 30px;
+    }
+    #sirenumAutoCompleteDiv table{
+        color:black !important;
+    }
+    .page-wrapper.settings.upload textarea {
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        padding: 0.34em 0.5em;
+        font-size: 14px;
+        margin-bottom: 0px; 
+        border-radius: 3px;
+        margin-top: 2px;
+        border: 1px solid #D9D9D9;
+    }
+    .sirenumFormElement {
+        width: 100%;
+    }
+    
+    .modal-header {
+    padding: 15px;
+    border-bottom: 1px solid #e5e5e5;
+    /*background: #ba68c8;*/
+    background: #fa6900;
+    opacity: 0.9;
+    color: white;
+    border-top-right-radius: 20px;
+}
+.modal-content {
+    border-top-right-radius: 20px !important;
+}
+.modal-header .close {
+    margin-top: -2px;
+    background: #606061;
+    color: #FFFFFF;
+    line-height: 25px;
+    width: 24px;
+    border: 1px solid;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 12px;
+    box-shadow: 1px 1px 3px #000;
+    opacity: 0.9;
+}
+.modal.in .modal-dialog {
+    width: 98%;
+}
+.form-control{
+height: auto !important;
+    padding: 4px !important;
+    font-size:11pt !important;
+}
+
+img.loadingSpinnerCardShowModal {
+    width: 25px;
+    height: 25px;
+    display: -webkit-inline-box !important;
+    background: white;
+    border: 1px solid white;
+    border-radius: 3px;
+}
+label {
+    color: #999999;
+    font-size: 7pt;
+    right: 18px;
+    bottom: 20px;
+}
+.SetupBox {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+button#buttonSettings {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.page-wrapper.settings.modal-settings {
+    max-width: 500px;
+    min-width: 300px;
+}
+input.btn.btn-danger {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+input[id*="deleteResults"] {
+    position: relative;
+    width: 400px;
+    font-size: 1.2em;
+    border-radius: 3px;
+    border: 1px solid #D9D9D9;
+    margin-bottom: 0px;
+    height: 30px;
+}
+input[id*="emailRecepient"] {
+    
+    width: 300px;
+    margin-left: 5px;    
+    font-size: 1.2em;
+    border-radius: 3px;
+    border: 1px solid #D9D9D9;
+    margin-bottom: 0px;
+    height: 30px;
+    
+}
+
+.import-errors{
+    white-space: pre-wrap;
+}
+  </style>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"/>
+    <script src="/soap/ajax/24.0/connection.js"/>
+    <script src="/soap/ajax/24.0/apex.js"/>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+    
+    <script src="{!URLFOR($Resource.parser, 'shim.js')}" type="text/javascript"></script>
+    <script src="{!URLFOR($Resource.parser, 'jszip.js')}" type="text/javascript"></script>
+    <script src="{!URLFOR($Resource.parser, 'xlsx.js')}" type="text/javascript"></script>
+    <script src="{!URLFOR($Resource.parser, 'dist/ods.js')}" type="text/javascript"></script> 
+    <script src="{!URLFOR($Resource.parser, 'tablejson.js')}" type="text/javascript"></script>
+    <!--- file saver library -->
+    <apex:includescript value="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.13.0/amcharts.js"/>
+    <apex:includescript value="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.13.0/exporting/filesaver.js"/>
+    
+    <apex:includeScript value="{!URLFOR($Resource.ExcelTable, 'dist/handsontable.full.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.ExcelTable, 'dist/handsontable.full.css')}"/>
+    <link href="https://docs.handsontable.com/0.24.1/styles/samples.css" />
+</apex:component>

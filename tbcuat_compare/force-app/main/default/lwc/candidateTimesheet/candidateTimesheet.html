@@ -1,0 +1,397 @@
+<template>
+    <article class="slds-card">
+       <div class="slds-card__body">
+          <header class="slds-theme_default slds-border_bottom" style="z-index:1">
+          
+                <div><h2>Timesheet</h2></div>
+                <div class="header">
+                <lightning-button-icon icon-name="utility:chevronleft" alternative-text="Previous" data-direction="prev" onclick={changeWeek}></lightning-button-icon>
+                <div>{startDateFormatted} - {endDateFormatted}</div>
+                <lightning-button-icon icon-name="utility:chevronright" alternative-text="Next" data-direction="next" onclick={changeWeek}></lightning-button-icon>
+                </div>
+               
+             <div class="slds-grid slds-gutters slds-p-horizontal_small">
+               
+                    
+                   <lightning-input type="date" name="startDate" label="Start Date" value={startDate}
+                      onchange={handleStartDateChange} style="visibility:hidden"></lightning-input>
+             
+                <div class="slds-col slds-size_1-of-12 ">
+                   <lightning-input type="date" name="endDate" label="End Date" value={endDate}
+                      onchange={handleEndDateChange} style="visibility:hidden"></lightning-input>
+                </div>
+             </div>
+          </header>
+          <div style="position:relative;min-height:600px;overflow:hidden;display:flex;flex-direction:row-reverse">
+             <div class="slds-panel slds-size_medium slds-panel_docked slds-panel_docked-right slds-panel_drawer">
+                <div class="slds-panel__header">
+                   <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate">Filters</h2>
+                   <div class="slds-panel__header-actions">
+                      <lightning-button-icon icon-name="utility:custom_apps" size="small" onclick={openFiltersModal}
+                         variant="container"></lightning-button-icon>
+                   </div>
+                </div>
+                <div class="slds-panel__body">
+                   <c-filter-breadcrumbs value={filterBreadcrumbs} hide-delete-action="true"></c-filter-breadcrumbs>
+                </div>
+             </div>
+             <div class="slds-col slds-p-around_medium">
+                <!-- Page Pagination -->
+                <div class="slds-grid slds-grid_align-space slds-m-bottom_medium">
+                   <div class="slds-col">
+                      <span></span>
+                   </div>
+                   <div class="slds-col slds-col_bump-right" style="visibility:hidden">
+                      <template if:false={isLoading}>
+                         <c-paginator total-records={totalResultsCount} visible-pages="4"
+                            onpagechange={handlePaginationChange}></c-paginator>
+                      </template>
+                   </div>
+                   <div class="slds-col button-container">
+                      <ul class="slds-button-group-row">
+                         <li class="slds-button-group-item" lwc:if={hasGeneralError}>
+                            <a class="slds-button c-custom-error-indicator" tabindex="-1" if:true={hasGeneralError}
+                               onclick={toggleGeneralError}>
+                               <svg aria-hidden="true" class="slds-icon slds-icon-text-error slds-icon--x-small">
+                                  <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#error"></use>
+                               </svg>
+                            </a>
+                         </li>
+                         <li class="slds-button-group-item" lwc:if={hasChanges}>
+                            <lightning-button label="Cancel" title="Cancel" class="slds-m-left_x-small" onclick={refresh}
+                               disabled={isSaving}></lightning-button>
+                         </li>
+                         <li class="slds-button-group-item" lwc:if={hasChanges}>
+                            <lightning-button variant="brand" label="Save" title="Save Changes"
+                               class="slds-m-left_x-small" onclick={saveChanges} disabled={isSaving}></lightning-button>
+                         </li>
+                      </ul>
+                   </div>
+                </div>
+                <!-- Data Loading -->
+                <template if:true={isLoading}>
+                   <div class="slds-is-relative" style="height:6rem;">
+                      <div class="stencil-timeline-spinner">
+                         <lightning-spinner alternative-text="Loading" size="large" variant="brand"></lightning-spinner>
+                      </div>
+                   </div>
+                </template>
+                <template if:false={isLoading}>
+                   <!-- Saving Spinner -->
+                   <template if:true={isSaving}>
+                      <div class="slds-is-relative" style="height:6rem;">
+                         <div class="stencil-timeline-spinner">
+                            <lightning-spinner alternative-text="Loading" size="large"
+                               variant="brand"></lightning-spinner>
+                         </div>
+                      </div>
+                   </template>
+ 
+                   <!-- Loaded - Without Results -->
+                   <c-illustration-desert header="No Data" body="Please amend your filter criteria"
+                      if:false={hasRecords}></c-illustration-desert>
+                   <!-- Loaded - With Results -->
+                   <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered"
+                   if:true={hasRecords} style="table-layout:fixed" > 
+                      <template if:true={_USE_TIME_TYPE_ON_SHIFT}>
+                         <thead>
+                            <tr class="slds-line-height_reset">
+                               <th class="" scope="col" if:true={showSaveResults}>
+                                  <!-- Results -->
+                               </th>    
+                             
+                               <th class="" scope="col" style="width:15%">
+                                  <div>Day</div>
+                               </th>
+                               <th class="" scope="col" style="width:8%">
+                                  <div>Date</div>
+                               </th>
+                               <th class="" scope="col">
+                                  <div>Start</div>
+                               </th>
+                               <th class="" scope="col">
+                                <div>End</div>
+                             </th>
+                             <th class="" scope="col">
+                                <div>Hours</div>
+                             </th>
+                             <th class="" scope="col">
+                                <div>Job Role</div>
+                             </th>
+                             <th class="" scope="col">
+                              <div>Site</div>
+                             </th>
+                             <!--<th class="" scope="col" style="width:12%">
+                              <div>Expenses</div>
+                             </th>-->
+                            </tr>
+                         </thead>
+                         <tbody>
+                            <template for:each={records} for:item="record">
+                              
+                               <tr class="slds-hint-parent" key={record.Id}>
+ 
+ 
+                                  <td if:true={showSaveResults}>
+                                     <template if:true={record.saveSuccess}>
+                                        <a href="javascript:void(0);" class="slds-button" tabindex="-1">
+                                           <svg aria-hidden="true"
+                                              class="slds-icon slds-icon-text-success slds-icon--x-small">
+                                              <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#check"></use>
+                                           </svg>
+                                        </a>
+                                     </template>
+                                     <template if:true={record.saveError}>
+                                        <div class="c-record-error-wrapper">
+                                           <section data-shift={record.Id} if:true={record.showPopover}
+                                              class="slds-popover slds-popover_error slds-nubbin_bottom-left c-absolute-position c-line-error-popover"
+                                              role="dialog">
+                                              <button
+                                                 class="slds-button slds-button_icon slds-button_icon-small slds-float_right slds-popover__close slds-button_icon-inverse"
+                                                 title="Close dialog" onclick={closeErrorPopover}>
+                                                 <svg class="slds-button__icon" aria-hidden="true">
+                                                    <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close">
+                                                    </use>
+                                                 </svg>
+                                                 <span class="slds-assistive-text">Close dialog</span>
+                                              </button>
+                                              <header class="slds-popover__header">
+                                                 <div class="slds-media slds-media_center slds-has-flexi-truncate ">
+                                                    <div class="slds-media__figure">
+                                                       <span class="slds-icon_container slds-icon-utility-error">
+                                                          <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
+                                                             <use
+                                                                xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#error">
+                                                             </use>
+                                                          </svg>
+                                                       </span>
+                                                    </div>
+                                                    <div class="slds-media__body">
+                                                       <h2 class="slds-truncate slds-text-heading_medium" title="Errors">
+                                                          Errors</h2>
+                                                    </div>
+                                                 </div>
+                                              </header>
+                                              <div class="slds-popover__body">
+                                                 <ul>
+                                                    <template for:each={record.errorMessages} for:item="errorMessage"
+                                                       for:index="index">
+                                                       <li key={errorMessage.errorItem}>
+                                                          <b>{errorMessage.errorItem}</b><span>&nbsp;-&nbsp;</span><i>{errorMessage.message}</i>
+                                                       </li>
+                                                    </template>
+                                                 </ul>
+                                              </div>
+                                           </section>
+                                           <a class="slds-button" tabindex="-1" data-shift={record.Id}
+                                              onclick={showErrorPopover}>
+                                              <svg aria-hidden="true"
+                                                 class="slds-icon slds-icon-text-error slds-icon--x-small">
+                                                 <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#error">
+                                                 </use>
+                                              </svg>
+                                           </a>
+                                        </div>
+                                     </template>
+                                  </td>
+                                  <td>
+                                    <div >
+                                       <c-input-shift-times data-id={record.shift.Id}
+                                          start-time-template={record.shift.sirenum__Scheduled_Start_Time__c}
+                                          end-time-template={record.shift.sirenum__Scheduled_End_Time__c}
+                                          start-time-value={record.shift.sirenum__Scheduled_Start_Time__c}
+                                          end-time-value={record.shift.sirenum__Scheduled_End_Time__c}
+                                          site-timezone={record.timezone} start-disabled end-disabled
+                                          display-only-day="true" 
+                                          populate-on-blur="true"></c-input-shift-times>
+                                    </div>
+                                 </td>
+                                   <td>
+                                        <div >
+                                           <c-input-shift-times data-id={record.shift.Id}
+                                              start-time-template={record.shift.sirenum__Scheduled_Start_Time__c}
+                                              end-time-template={record.shift.sirenum__Scheduled_End_Time__c}
+                                              start-time-value={record.shift.sirenum__Scheduled_Start_Time__c}
+                                              end-time-value={record.shift.sirenum__Scheduled_End_Time__c}
+                                              site-timezone={record.timezone} start-disabled end-disabled
+                                              display-only-date="true"
+                                              populate-on-blur="true"></c-input-shift-times>
+                                        </div>
+                                     </td>
+                                     <td>
+                                       <c-input-time-and-hours data-id={record.shift.Id}
+                                          data-write-to-start="sirenum__Actual_Start_Time__c"
+                                          data-write-to-end="sirenum__Actual_End_Time__c"
+                                          show-only-start="true"
+                                          populate-on-blur="true"
+                                          candidate-view="true"
+                                          display-only-day="true" onfieldchange={handleTimesChange} record={record}
+                                          >
+                                       </c-input-time-and-hours>
+  
+                                    </td>
+                                    <td>
+                                       <c-input-time-and-hours data-id={record.shift.Id}
+                                        data-write-to-start="sirenum__Actual_Start_Time__c"
+                                        data-write-to-end="sirenum__Actual_End_Time__c"
+                                       show-only-end="true"
+                                       populate-on-blur="true"
+                                       candidate-view="true"
+                                       display-only-day="true" onfieldchange={handleTimesChange} record={record}
+                                       >
+                                    </c-input-time-and-hours>
+
+                                 
+                                     
+                                    </td>
+                                  <td>
+                                    <c-input-time-and-hours data-id={record.shift.Id}
+                                    data-write-to-start="sirenum__Actual_Start_Time__c"
+                                    data-write-to-end="sirenum__Actual_End_Time__c"
+                                    show-only-hours="true"
+                                    populate-on-blur="true"
+                                    candidate-view="true"
+                                    onfieldchange={handleTimesChange} record={record}
+                                    >
+                                 </c-input-time-and-hours>
+                                    
+                                  </td>
+                                   
+ 
+                                  <!-- Billable Times -->
+                                
+                                  <td>
+                                    <div if:true={record.shift.sirenum__Team__c} class="slds-truncate"
+                                       title={record.shift.sirenum__Team__r.Name}>
+                                       <a data-record={record.shift.sirenum__Team__c} data-object="sirenum__Team__c"
+                                          onclick={handleNavigateClick}>{record.shift.sirenum__Team__r.Name}</a>
+                                    </div>
+                                   
+                                 </td>
+                                 <td>
+                                    <div if:true={record.shift.sirenum__Site__r} class="slds-truncate"
+                                       title={record.shift.sirenum__Site__r.Name}>
+                                       {record.shift.sirenum__Site__r.Name}
+                                    </div>
+                                   
+                                    
+                                 </td>
+                                 <!--<td>
+                                    <ul>
+                                       <template
+                                           if:true={record.hasExpenses}
+                                           for:each={record.expenses}
+                                           for:item="expense"
+                                       >
+                                           <li key={expense.Id}>
+                                               <a
+                                                   data-shift={expense.Shift}
+                                                   data-expense={expense.Id}
+                                                   data-record={expense.Id}
+                                                   data-object="sirenum__Expense__c"
+                                                   onclick={handleNavigateClick}
+                                               >
+                                               
+                                              
+                                               <span style="display: block">{expense.ExepnseTypeName}</span>
+                                                   <span style="display: block;"
+                                                       ><lightning-formatted-number
+                                                           value={expense.Amount}
+                                                           format-style="currency"
+                                                       ></lightning-formatted-number
+                                                   ></span>
+                                               </a>
+                                           </li>
+                                       </template>
+                                         <template
+                                           if:false={record.hasExpenses}>
+                                          <li>
+                                             <a
+                                                data-shift={record.Id}
+                                                data-date={record.shiftDate}
+                                                data-start-time={record.shift.sirenum__Scheduled_Start_Time__c}
+                                                data-end-time={record.shift.sirenum__Scheduled_End_Time__c}
+                                                data-contact={record.shift.sirenum__Contact__r.Id}
+                                                onclick={handleAddExpense}
+                                             >
+                                                Add
+                                             </a>
+                                          </li>
+                                       </template>
+                                   </ul>
+                                 </td>-->
+ 
+                               </tr>
+                            </template>
+                         </tbody>
+                      </template>
+                   </table>
+                </template>
+             </div>
+          </div>
+       </div>
+    </article>
+    <footer class="slds-card__footer" if:true={hasChanges}>
+       <!-- Saving General Error -->
+       <div class="slds-popover_container">
+          <a class="slds-button c-custom-error-indicator" tabindex="-1" if:true={hasGeneralError}
+             onclick={toggleGeneralError}>
+             <svg aria-hidden="true" class="slds-icon slds-icon-text-error slds-icon--x-small">
+                <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#error"></use>
+             </svg>
+          </a>
+ 
+       </div>
+    </footer>
+ 
+    <!-- FILTERING COMPONENT MODAL -->
+    <div class={getExpressionBuilderWrapperClass}>
+       <section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open slds-modal_large">
+          <div class="slds-modal__container">
+             <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"
+                   onclick={closeFiltersModal}>
+                   <lightning-icon icon-name="utility:close" variant="inverse" size="small"></lightning-icon>
+                </button>
+                <h2 class="slds-text-heading_medium slds-hyphenate">Filters Manager</h2>
+             </header>
+             <div class="slds-modal__content slds-p-around_medium">
+                <c-filter-component target-object="sirenum__Shift__c" onloadingstatechange={handleFilterLoadingState}
+                   value={filterComponentValue} filter-group="1"></c-filter-component>
+             </div>
+             <footer class="slds-modal__footer">
+                <lightning-button label="Cancel" title="Cancel" class="slds-m-left_x-small" onclick={closeFiltersModal}
+                   disabled={isSaving}></lightning-button>
+                <lightning-button variant="brand" label="Apply" title="Apply Filters" class="slds-m-left_x-small"
+                   onclick={applyFilter} disabled={isSaving}></lightning-button>
+             </footer>
+          </div>
+       </section>
+       <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+ 
+    <!-- GENERAL ERROR POPOVER -->
+    <div if:true={showGeneralError}>
+       <section role="alertdialog" tabindex="0" class="slds-modal slds-fade-in-open slds-modal_prompt" aria-modal="true">
+          <div class="slds-modal__container">
+             <header class="slds-modal__header slds-theme_error slds-theme_alert-texture">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"
+                   onclick={toggleGeneralError}>
+                   <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                      <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>
+                   </svg>
+                </button>
+                <h2 class="slds-text-heading_medium">Saving Error</h2>
+             </header>
+             <div class="slds-modal__content slds-p-around_medium">
+                <p>{generalErrorMessage}</p>
+             </div>
+             <footer class="slds-modal__footer slds-theme_default">
+                <button class="slds-button slds-button_neutral" onclick={toggleGeneralError}>Close</button>
+             </footer>
+          </div>
+       </section>
+       <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+    <c-expense-editor onupdate={refresh}></c-expense-editor>
+ </template>

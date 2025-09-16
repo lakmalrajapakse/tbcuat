@@ -1,0 +1,6 @@
+/*
+Fixes issue with fields embeded in table top offset
+*/
+fieldset.slds-form-element.slds-form-element_compound.c-form-element {
+    margin-top: 4px;
+}

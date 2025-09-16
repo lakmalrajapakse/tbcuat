@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>63.0</apiVersion>
+    <isExposed>true</isExposed>
+      <targets>
+    <target>lightning__FlowScreen</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightning__FlowScreen">
+      <property
+        label="Root Record Id"
+        name="recordId"
+        type="String"
+        required="true"
+        description="The ID of the root Account to load children of"
+      />
+      <property
+        label="Content Document Ids"
+        name="contentDocumentIds"
+        type="String[]"
+        required="true"
+        description="The IDs of the Content Documents that the Accounts should be linked to"
+      />
+      <property
+        label="Names of the Files"
+        name="filenames"
+        type="String[]"
+        required="true"
+        description="The names of the uploaded Files"
+      />
+      <property
+        label="Content Document Links"
+        name="contentDocumentLinks"
+        type="@salesforce/schema/ContentDocumentLink[]"
+        role="outputOnly"
+        description="The Content Document Links that have been generated for the given Content Document Ids and selected Accounts"
+      />
+    </targetConfig>
+  </targetConfigs>
+</LightningComponentBundle>

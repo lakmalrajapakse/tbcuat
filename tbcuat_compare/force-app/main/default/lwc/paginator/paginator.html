@@ -1,0 +1,66 @@
+<!--
+  @description       : 
+  @author            : James Ridge
+  @group             : 
+  @last modified on  : 05-13-2021
+  @last modified by  : James Ridge
+  Modifications Log 
+  Ver   Date         Author        Modification
+  1.0   05-13-2021   James Ridge   Initial Version
+-->
+<template>
+    <ul class="slds-button-group-row">
+        <!-- Back Navigation -->
+        <template if:true={showLoadPrevious}>
+            <li class="slds-button-group-item">
+                <button class="slds-button slds-button_neutral" data-type="load-previous" onclick={handleNavigationClick}>
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                        <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevronleft"></use>
+                    </svg>
+                    {label.Previous}
+                </button>
+            </li>
+        </template>
+
+        <!-- Pagination Navigation -->
+        <template if:true={showEllipsisFirst}>
+            <li class="slds-button-group-item">
+                <button data-index={MIN_ALLOWED_PAGE} data-type="jump-index" class='slds-button slds-button_neutral page-num-button'
+                onclick={handleNavigationClick}>{MIN_ALLOWED_PAGE}</button>
+            </li>
+            <!-- TODO: Find a better way to center the dots -->
+            <li class="slds-button-group-item"><div class="slds-p-top_xx-small">...</div></li>
+        </template>
+        <template for:each={pagesList} for:item="pageItem">
+            <li class="slds-button-group-item" key={pageItem.pageNumber}>
+                <button data-index={pageItem.pageNumber} data-type="jump-index" class='slds-button slds-button_neutral page-num-button'
+                data-current={pageItem.isCurrent} onclick={handleNavigationClick}>{pageItem.pageNumber}</button>
+            </li>
+        </template>
+        <template if:true={showEllipsisLast}>
+            <li class="slds-button-group-item"><div class="slds-p-top_xx-small">...</div></li>
+            <li class="slds-button-group-item">
+                <button data-index={MAX_ALLOWED_PAGE} data-type="jump-index" class='slds-button slds-button_neutral page-num-button'
+                onclick={handleNavigationClick}>{MAX_ALLOWED_PAGE}</button>
+            </li>
+        </template>
+
+        <!-- Forward Navigation -->
+        <template if:true={showLoadNext}>
+            <li class="slds-button-group-item">
+                <button class="slds-button slds-button_neutral" data-type="load-next" onclick={handleNavigationClick}> 
+                    {label.Next}
+                    <svg class="slds-button__icon slds-button__icon_right" aria-hidden="true">
+                        <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#chevronright"></use>
+                    </svg>
+                </button>
+            </li>
+        </template>
+
+        <li class="slds-button-group-item c-set-size-selector" if:true={showPageSizeSelector}>
+            <lightning-combobox title={label.Title_PageSizeSelector}
+            variant="label-hidden" options={pageSizeOptions} value={pageSize}
+                onchange={handlePageSizeChange}></lightning-combobox>
+        </li>
+    </ul>
+</template>

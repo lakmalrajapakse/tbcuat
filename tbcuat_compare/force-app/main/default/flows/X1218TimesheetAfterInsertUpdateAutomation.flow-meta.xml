@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>63.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>SetContactFields</name>
+        <label>Set Contact Fields</label>
+        <locationX>50</locationX>
+        <locationY>863</locationY>
+        <assignmentItems>
+            <assignToReference>GetContact.DateWorkerSendToIntimeAsLeaver__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>fx_DateWorkerSendToIntimeAsLeaver</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>UpdateContact</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>ContactNotNullDecision</name>
+        <label>Contact Not Null Decision</label>
+        <locationX>336</locationX>
+        <locationY>323</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>ContactNotNull</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.sirenum__Worker__c</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>GetIntimeSetting</targetReference>
+            </connector>
+            <label>Contact Not Null</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>LeaverDateNotAccurateDecision</name>
+        <label>Leaver Date Not Accurate Decision</label>
+        <locationX>182</locationX>
+        <locationY>755</locationY>
+        <defaultConnector>
+            <targetReference>UpdateContact</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>LeaverDateNotAccurate</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetContact.DateWorkerSendToIntimeAsLeaver__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>fx_DateWorkerSendToIntimeAsLeaver</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SetContactFields</targetReference>
+            </connector>
+            <label>Leaver Date Not Accurate</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <name>fx_DateWorkerSendToIntimeAsLeaver</name>
+        <dataType>Date</dataType>
+        <expression>{!GetLatestTimesheet.sirenum__Week_Ending__c} + {!GetIntimeSetting.WorkerWithNoTimesheet__c}</expression>
+    </formulas>
+    <interviewLabel>1218 Timesheet After Insert Update Automation {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>1218 Timesheet After Insert Update Automation</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>GetContact</name>
+        <label>Get Contact</label>
+        <locationX>182</locationX>
+        <locationY>647</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>LeaverDateNotAccurateDecision</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.sirenum__Worker__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Contact</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>GetIntimeSetting</name>
+        <label>Get Intime Setting</label>
+        <locationX>182</locationX>
+        <locationY>431</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>GetLatestTimesheet</targetReference>
+        </connector>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>InTimeSetting__mdt</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>GetLatestTimesheet</name>
+        <label>Get Latest Timesheet</label>
+        <locationX>182</locationX>
+        <locationY>539</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>GetContact</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>sirenum__Worker__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.sirenum__Worker__c</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>sirenum__Week_Ending__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>sirenum__Timesheet__c</object>
+        <sortField>sirenum__Week_Ending__c</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>UpdateContact</name>
+        <label>Update Contact</label>
+        <locationX>182</locationX>
+        <locationY>1055</locationY>
+        <inputReference>GetContact</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>210</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>ContactNotNullDecision</targetReference>
+        </connector>
+        <object>sirenum__Timesheet__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Obsolete</status>
+</Flow>

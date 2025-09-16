@@ -1,0 +1,183 @@
+<template>
+    <!-- COMPONENT BODY -->
+    <template if:true={_showTimeEntry} >
+        <lightning-card>  
+            <template               
+               for:each={_shifts}
+               for:item="rec"
+            >                      
+                <div class="slds-box" key={rec.shift.Id}>
+                    <table class="cellTable">
+                        <tr>
+                            <td valign="middle" class="shiftDetail">
+                                <lightning-icon 
+                                    icon-name="standard:date_time"
+                                    size="x-small"
+                                    variant="inverse"
+                                ></lightning-icon>
+                                <span class="slds-p-left_xx-small" >
+                                Scheduled Time: {rec.scheduledStartTime} - {rec.scheduledEndTime}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr if:true={rec.hasApprovedTime}>
+                            <td valign="middle" class="shiftDetail">
+                                <lightning-icon 
+                                    icon-name="standard:date_time"
+                                    size="x-small"
+                                    variant="inverse"
+                                ></lightning-icon>
+                                <span class="slds-p-left_xx-small" >
+                                Approved Time: {rec.approvedStartTime} - {rec.approvedEndTime}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="middle" class="shiftDetail">  
+                                &nbsp;                         
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="middle" class="shiftDetail">  
+                                <lightning-icon 
+                                    icon-name="standard:date_time"
+                                    size="x-small"
+                                    variant="inverse"
+                                ></lightning-icon>                         
+                                <span class="slds-p-left_xx-small" >Actual Time:</span>
+                            </td>
+                        </tr>
+                        <template if:true={isDesktop}>                        
+                            <tr>
+                                <td class="shiftDetail">
+                                    <lightning-layout multiple-rows="true">
+                                        <!-- START TIME -->
+                                        <lightning-layout-item size="6">
+                                            <lightning-input
+                                                data-shift={rec.shift.Id}
+                                                type="time"
+                                                value={rec.startTime}
+                                                onchange={handleStartTimeChange}
+                                                disabled={rec.disable}
+                                                variant="label-hidden"                                                
+                                            ></lightning-input>
+                                        </lightning-layout-item>
+                                        <!-- START TIME -->
+                                        <!-- END TIME -->
+                                        <lightning-layout-item size="6" class="slds-p-left_xx-small">
+                                            <lightning-input
+                                                data-shift={rec.shift.Id}
+                                                type="time"
+                                                value={rec.endTime}
+                                                onchange={handleEndTimeChange}
+                                                disabled={rec.disable}
+                                                variant="label-hidden"                                                
+                                            ></lightning-input>
+                                        </lightning-layout-item>
+                                        <!-- END TIME -->
+                                    </lightning-layout>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="shiftDetail">
+                                    <!-- HOUR -->
+                                    <div align="center" >
+                                        <lightning-input
+                                            data-shift={rec.shift.Id}
+                                            type="text"
+                                            value={rec.hours}
+                                            step="0.01"
+                                            class="hour"
+                                            variant="label-hidden"
+                                            disabled={rec.disable}
+                                            onchange={handleHourChange}                                            
+                                        ></lightning-input>
+                                    </div>
+                                    <!-- HOUR --> 
+                                </td>
+                            </tr>
+                        </template>
+                        <template if:true={isMediumOrSmallDevice}>
+                            <tr>
+                                <td class="shiftDetail">
+                                    <lightning-layout multiple-rows="true">
+                                        <!-- START TIME -->
+                                        <lightning-layout-item size="4" small-device-size="2">
+                                            <lightning-input
+                                                data-shift={rec.shift.Id}
+                                                type="time"
+                                                value={rec.startTime}
+                                                onchange={handleStartTimeChange}
+                                                disabled={rec.disable}
+                                                variant="label-hidden"                                                
+                                            ></lightning-input>
+                                        </lightning-layout-item>
+                                        <!-- START TIME -->
+                                        <!-- END TIME -->
+                                        <lightning-layout-item size="4" small-device-size="2" class="slds-p-left_xx-small">
+                                            <lightning-input
+                                                data-shift={rec.shift.Id}
+                                                type="time"
+                                                value={rec.endTime}
+                                                onchange={handleEndTimeChange}
+                                                disabled={rec.disable}
+                                                variant="label-hidden"                                                
+                                            ></lightning-input>
+                                        </lightning-layout-item>
+                                        <!-- END TIME -->
+                                        <!-- HOUR -->
+                                        <lightning-layout-item size="4" small-device-size="2" class="slds-p-left_xx-small">
+                                            <lightning-input
+                                                data-shift={rec.shift.Id}
+                                                type="text"
+                                                value={rec.hours}
+                                                step="0.01"
+                                                class="hour"
+                                                variant="label-hidden"
+                                                disabled={rec.disable}
+                                                onchange={handleHourChange}                                                
+                                            ></lightning-input>
+                                        </lightning-layout-item>
+                                        <!-- HOUR -->
+                                    </lightning-layout>
+                                </td>
+                            </tr>
+                        </template>
+                        <tr>
+                            <td class="shiftDetail">  
+                                &nbsp;                         
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="shiftDetail slds-p-left_xx-small slds-truncate">
+                                <lightning-icon 
+                                    icon-name="custom:custom57"
+                                    size="xx-small"
+                                    variant="inverse"
+                                ></lightning-icon>
+                                <lightning-formatted-text 
+                                    value={teamName}
+                                    class="slds-p-left_xx-small slds-truncate"
+                                ></lightning-formatted-text>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="shiftDetail slds-p-left_xx-small slds-truncate">
+                                <lightning-icon 
+                                    icon-name="standard:location"
+                                    size="xx-small"
+                                    variant="inverse"
+                                ></lightning-icon>
+                                <lightning-formatted-text 
+                                    value={locationName}
+                                    class="slds-p-left_xx-small slds-truncate"
+                                ></lightning-formatted-text>
+                            </td>
+                        </tr>
+                    </table>
+                </div>            
+            </template>
+        </lightning-card>
+    </template>
+    <!-- COMPONENT BODY -->
+</template>

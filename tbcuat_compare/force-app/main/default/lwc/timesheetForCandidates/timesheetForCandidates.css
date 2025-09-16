@@ -1,0 +1,18 @@
+.centerAlign{
+    text-align: center;
+}
+.shiftData{
+    border:1px solid #CE0058;
+    overflow: visible;
+    padding:5px!important;
+}
+.shiftDataMobile {
+    cursor:pointer;
+}
+.selectedShift{
+    background-color:#CE0058;
+    color:white
+}
+.disabledBlock{
+    background-color: #dbdbdb;
+}

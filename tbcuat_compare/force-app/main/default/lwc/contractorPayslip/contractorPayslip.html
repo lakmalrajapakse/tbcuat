@@ -1,0 +1,33 @@
+<template>
+     <!-- SPINNER -->
+    <lightning-spinner
+        alternative-text="Loading..."
+        variant="brand"
+    ></lightning-spinner>
+    <!-- SPINNER -->
+    <!-- COMPONENT BODY -->
+    <lightning-card title="View/Download Payslips">
+        <template if:true={_hasIntimeId} >
+            <div align="center" >
+                <lightning-button 
+                    variant="brand" 
+                    label="View Payslips" 
+                    title="View Payslips" 
+                    onclick={handleOpenPayslips} 
+                    class="slds-m-left_x-small"
+                ></lightning-button>
+            </div>
+        </template>
+        <template if:false={_hasIntimeId} >
+            <div class="slds-p-around_x-small" >
+                <div class="slds-scoped-notification slds-media slds-media_center slds-theme_error" role="status">
+                    <div class="slds-media__body">
+                        <p>
+                        There are no payslips to view. 
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </lightning-card>
+</template>

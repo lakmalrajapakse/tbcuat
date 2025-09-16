@@ -1,0 +1,14 @@
+<template>
+    <lightning-layout horizontal-align="space">
+        <lightning-layout-item padding="around-small">
+            <lightning-radio-group
+                name="radioGroup"
+                label="Adjustment type"
+                options={options}
+                value={value}
+                type="radio"
+                onchange={handleChange}
+            ></lightning-radio-group>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>

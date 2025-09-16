@@ -1,0 +1,32 @@
+.pagination-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.page-number-input {
+    width: 65px;   
+}
+
+.page-button-previous {
+    margin-top: 15px;
+    margin-right: 5px;
+}
+
+.page-button-next {
+    margin-top: 15px;
+}
+
+.page-count {
+    width: 40px;
+    margin-left: 10px;
+    margin-top: 18px;
+}
+
+.page-size-input {
+    margin-left: 25px;
+}
+
+.grid {
+    height: 300px;
+}

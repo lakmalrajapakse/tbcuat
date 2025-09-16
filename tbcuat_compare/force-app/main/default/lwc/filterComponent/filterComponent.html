@@ -1,0 +1,48 @@
+<!--
+  @description       : 
+  @author            : James Ridge
+  @group             : 
+  @last modified on  : 01-27-2021
+  @last modified by  : James Ridge
+  Modifications Log 
+  Ver   Date         Author        Modification
+  1.0   08-13-2020   James Ridge   Initial Version
+-->
+<template>
+    <div class="slds-p-around_medium">
+        <div class="slds-grid slds-gutters_xx-small" if:true={showRelationshipSelector}>
+            <div class="slds-col">
+                <lightning-combobox
+                    label="Group Relationship"
+                    value={crossGroupOperator}
+                    placeholder="Select Option"
+                    options={crossGroupOperators}
+                    data-type="select-group-relationship"
+                    onchange={handleFieldChange}
+                    disabled={isLoading}
+                    required
+                ></lightning-combobox>                
+            </div>
+        </div>
+        <ul>
+            <template iterator:it={groups}>
+                <c-filter-group 
+                    key={it.value.id} 
+                    index={it.index} is-first={it.first} is-last={it.last} 
+                    cross-group-operator={crossGroupOperator}
+                    cross-condition-operator={it.value.crossConditionOperator}
+                    filter-conditions={it.value.conditions}
+                    ondelete={handleDeleteGroup}
+                    onreorder={handleReorderGroup}
+                    ongroupchange={handleGroupChange}
+                    target-object={targetObject}
+                    filter-group={filterGroup}>
+                </c-filter-group>
+            </template>
+        </ul>
+
+        <div class="slds-expression__buttons">
+            <lightning-button label="Add Filter Group" title="Add Filter Group" icon-name="utility:add" class="slds-m-left_x-small" onclick={addGroup} disabled={isLoading}></lightning-button>
+        </div>
+    </div>
+</template>

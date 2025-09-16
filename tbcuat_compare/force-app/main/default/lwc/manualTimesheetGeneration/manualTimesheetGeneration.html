@@ -1,0 +1,96 @@
+<template>
+    <lightning-card title="">
+           <h3 slot="title">
+               <lightning-icon icon-name="standard:timesheet" size="medium"></lightning-icon>
+               <span class="slds-m-left_medium">Manual Timesheet Generation</span>
+           </h3>
+           <template if:true={isLoading}>
+               <lightning-spinner alternative-text="Loading"></lightning-spinner>
+           </template>
+
+           <div class="slds-grid slds-gutters slds-p-around_small">
+              <div class="slds-col slds-size_1-of-2">
+                   <lightning-combobox label="Manual Timesheet Generation Template" placeholder="Select Template" options={templateOptions} data-form-component="true"
+                       onchange={handleFieldChange} data-type="template" required
+                   ></lightning-combobox>
+              </div>
+           </div> 
+
+           <div class="slds-grid slds-gutters slds-p-around_small">
+                <div class="slds-col slds-size_1-of-2">
+                   <c-g-lookup               
+                   errors={errorsPaycycle}
+                   onsearch={handlePayCycleSearch}
+                   onselectionchange={handleFieldChange}
+                   label="Pay Cycle"
+                   placeholder="Pay Cycle..."
+                   is-multi-entry={isMultiEntry}
+                   data-type="paycycleid"                    
+                   required
+                   ></c-g-lookup>
+                </div>            
+            </div>
+            <div class="slds-grid slds-gutters slds-p-around_small">
+                <div class="slds-col slds-size_1-of-2">
+                   <c-g-lookup               
+                   errors={errorsPeriod}
+                   onsearch={handlePeriodSearch}
+                   onselectionchange={handleFieldChange}
+                   label="Pay Period"
+                   placeholder="Pay Period..."
+                   is-multi-entry={isMultiEntry}
+                   data-type="periodid"                    
+                   required
+                   ></c-g-lookup>
+                </div>
+            </div>  
+
+           <div class="slds-grid slds-gutters slds-p-around_medium">
+            <div class="slds-col slds-size_1-of-6">
+                <lightning-input type="number" name="header_row" variant="label-stacked"
+                data-type="hrow" label="Header Row"  value={headerRow}  min=1 data-form-component="true"               
+                onchange={handleFieldChange}  autocomplete="off" required> </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-6">
+                <lightning-input type="number" name="start_data_Row" variant="label-stacked"
+                data-type="drow" label="First Data Row"  value={dataRow}  min=2 data-form-component="true"
+                onchange={handleFieldChange}  autocomplete="off" required> </lightning-input>
+            </div>
+        </div>  
+
+        <div class="slds-p-around_medium">
+            <div>
+                  <lightning-input onchange={handleFileUploaded} type="file" name="uploadFile" label="Upload File" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" disabled={disableFileUpload}></lightning-input>
+                  <div class="slds-text-body_small slds-text-color_error">{filename}</div>                  
+            </div>               
+        </div>
+        
+        <template if:true={batchInitiated}>                
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" 
+               aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_small">
+            <div class="slds-modal__container">            
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading-01" class="slds-text-heading_small slds-hyphenate">Loading...</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                   <lightning-progress-bar value={progress}></lightning-progress-bar>
+                </div>
+
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>  
+        
+        <template if:true={completed} >
+                <div class="slds-p-around_medium">                     
+                    <template if:false={isSucceeded}> 
+                            <div class="slds-text-body_medium ">File loaded with errors! Please <a data-record={batchId} data-object="Manual_Timesheet_Generation__c" onclick={handleNavigateClick}>click here</a> to view more details.</div>
+                    </template>
+                    <template if:true={isSucceeded}> 
+                        <div class="slds-text-body_medium slds-text-color_success">File loaded successfully! Please <a data-record={batchId} data-object="Manual_Timesheet_Generation__c" onclick={handleNavigateClick}>click here</a> to view details.</div>
+                    </template>
+                </div>
+            </template>
+
+    </lightning-card>     
+</template>

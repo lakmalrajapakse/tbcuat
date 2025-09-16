@@ -1,0 +1,16 @@
+<template>
+    <div class="slds-is-relative">
+        <lightning-spinner alternative-text="Loading" if:true={isLoading} variant="brand"></lightning-spinner>
+        <lightning-layout horizontal-align="space">
+            <lightning-layout-item padding="around-small">
+                <lightning-combobox
+                    label="Invoice No"
+                    value={selectedInvoiceNo}
+                    placeholder="Select Invoice No"
+                    options={invoiceNoOptions}
+                    onchange={handleInvoiceNoChange}
+                ></lightning-combobox>
+            </lightning-layout-item>
+        </lightning-layout>
+    </div>
+</template>

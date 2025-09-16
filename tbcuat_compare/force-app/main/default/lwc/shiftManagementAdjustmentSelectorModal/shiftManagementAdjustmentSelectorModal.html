@@ -1,0 +1,42 @@
+<template>
+    <lightning-modal-header label="Timesheet Adjustment"></lightning-modal-header>
+    <lightning-modal-body>
+        <div class="slds-is-relative">
+            <lightning-spinner alternative-text="Loading" if:true={isLoading} variant="brand"></lightning-spinner>
+            <c-shift-management-adjustment-invoice-selector
+                if:true={isInvoiceSelectionStep}
+                record-ids={recordIds}
+                onselectionchange={handleInvoiceSelectionChange}
+            ></c-shift-management-adjustment-invoice-selector>
+            <c-shift-management-adjustment-type-selector
+                if:true={isTypeSelectorStep}
+                onselectionchange={handleTypeSelectionChange}
+            ></c-shift-management-adjustment-type-selector>
+            <c-shift-management-adjustment-selector
+                if:true={isAdjustmentSelectionStep}
+                filters={adjustmentFilters}
+                adjustment-type={adjustmentType}
+                onadjustmentrequestschange={handleAdjustmentRequestsChange}
+            ></c-shift-management-adjustment-selector>
+            <c-shift-management-adjustment-progress
+                if:true={isAdjustmentProgressStep}
+                job-id={jobId}
+            ></c-shift-management-adjustment-progress>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button
+            variant="neutral"
+            label={cancelLabel}
+            onclick={handleCancelClick}
+        ></lightning-button>
+        <lightning-button
+            class="slds-m-left_x-small"
+            variant="brand"
+            label="Next"
+            onclick={handleNextClick}
+            disabled={nextDisabled}
+            hidden={nextHidden}
+        ></lightning-button>
+    </lightning-modal-footer>
+</template>

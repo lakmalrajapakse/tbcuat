@@ -1,0 +1,98 @@
+<template>
+    <!-- COMPONENT BODY -->
+    <div class="slds-box slds-m-around_small">
+        <div class="slds-text-heading_small"><b>Search</b></div>
+        <lightning-layout multiple-rows="true">
+            <!-- WORKER -->
+            <lightning-layout-item size="4" padding="around-small">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="form-element-01">Worker</label>
+                    <div class="slds-form-element__control">
+                        <lightning-select
+                            data-id="worker"
+                            options={_workersList}
+                            variant="label-hidden"
+                        ></lightning-select>
+                    </div>
+                </div>
+            </lightning-layout-item>
+            <!-- WORKER -->
+            <!-- PO NUMBER -->
+            <lightning-layout-item size="4" padding="around-small" >
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="form-element-01">PO Number</label>
+                    <div class="slds-form-element__control">
+                        <lightning-select
+                            data-id="poNumber"
+                            options={_poNumbersList}
+                            variant="label-hidden"
+                        ></lightning-select>
+                    </div>
+                </div>
+            </lightning-layout-item>
+            <!-- PO NUMBER -->
+            <!-- INTIME PAY ELEMENT -->
+            <lightning-layout-item size="4" padding="around-small" >
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="form-element-01">Pay Element</label>
+                    <div class="slds-form-element__control">
+                        <lightning-select
+                            data-id="payElement"
+                            options={_payElementsList}
+                            variant="label-hidden"
+                        ></lightning-select>
+                    </div>
+                </div>
+            </lightning-layout-item>
+            <!-- INTIME PAY ELEMENT -->
+            <!-- START TOTAL -->
+            <lightning-layout-item padding="around-small" size="4">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="form-element-01">Start Total</label>
+                    <div class="slds-form-element__control">
+                        <lightning-input 
+                            type="number" 
+                            data-id="startTotal"
+                            name="total"
+                            variant="label-hidden"
+                            step="0.01"
+                            formatter="currency"
+                        ></lightning-input>
+                    </div>
+                </div>
+            </lightning-layout-item>
+            <!-- START TOTAL -->
+            <!-- END TOTAL -->
+            <lightning-layout-item padding="around-small" size="4">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="form-element-01">End Total</label>
+                    <div class="slds-form-element__control">
+                        <lightning-input 
+                            type="number" 
+                            data-id="endTotal"
+                            name="total"
+                            variant="label-hidden"
+                            step="0.01"
+                            formatter="currency"
+                        ></lightning-input>
+                    </div>
+                </div>
+            </lightning-layout-item>
+            <!-- END TOTAL -->
+        </lightning-layout>
+        <div align="center" class="slds-p-top_xx-small">
+            <lightning-button 
+                variant="neutral"
+                label="Reset"
+                onclick={handleReset} 
+            ></lightning-button>
+            <lightning-button 
+                class="slds-p-left_xx-small"
+                variant="brand"
+                label="Search"
+                onclick={handleSearch} 
+            ></lightning-button>
+        </div>
+    </div>
+    <!-- COMPONENT BODY -->
+</template>

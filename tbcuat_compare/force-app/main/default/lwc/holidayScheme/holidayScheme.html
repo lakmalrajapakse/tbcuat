@@ -1,0 +1,34 @@
+<template>
+    <!-- SPINNER -->
+    <lightning-spinner
+        alternative-text="Loading..."
+        variant="brand"
+    ></lightning-spinner>
+    <!-- SPINNER -->
+    <!-- COMPONENT BODY -->
+    <lightning-card title="Holiday Balance">
+        <div align="center" class="slds-text-heading_medium slds-m-around_x-small">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped slds-table_bordered slds-table_col-bordered">
+                <tbody>
+                    <tr>
+                        <td>
+                            Available 
+                        </td>
+                        <td>
+                            <b>{_holidayBalance}</b> hours
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Awaiting Approval 
+                        </td>
+                        <td>
+                            <b>{_daysAwaitingApproval}</b> hours
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </lightning-card>
+    <!-- COMPONENT BODY -->
+</template>

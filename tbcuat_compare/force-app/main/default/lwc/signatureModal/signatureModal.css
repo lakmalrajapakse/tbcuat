@@ -1,0 +1,8 @@
+.large_container {
+    /* max-width: 125rem !important;
+     width:125%;*/
+ }
+ 
+ div.slds-modal__content{
+     overflow: initial !important;
+ }

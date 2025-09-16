@@ -1,0 +1,13 @@
+/* Pagination page items CSS */
+button[data-current="true"] {
+    background: rgba(27, 82, 151, 1);
+    color: white;
+}
+button[data-current="true"]:hover {
+    background: rgba(27, 82, 151, 1);
+    color: white;
+    cursor: no-drop;
+}
+li.slds-button-group-item.c-set-size-selector {
+    width: 80px;
+}

@@ -1,0 +1,93 @@
+<template>
+    <lightning-modal-header label="New Employee Request"></lightning-modal-header>
+    <lightning-modal-body>
+        <div class="slds-is-relative">
+            <lightning-spinner alternative-text="Loading" if:true={isLoading} variant="brand"></lightning-spinner>
+            <lightning-record-edit-form
+                record-id={recordId}
+                object-api-name={object}
+                onsuccess={handleOnSuccess}
+                onerror={handleOnError}
+                onload={handleOnLoad}
+            >
+                <lightning-messages></lightning-messages>
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning-input-field field-name={contactField} disabled value={contactId}>
+                        </lightning-input-field>
+                        <lightning-input-field
+                            field-name={allDayField}
+                            onchange={handleAllDayChange}
+                            lwc:ref="allDayField"
+                        ></lightning-input-field>
+                        <div class="employee-requests-list-view-new__hidden-fields">
+                            <lightning-input-field field-name={startDatetimeField} value={startDatetime}>
+                            </lightning-input-field>
+                            <lightning-input-field field-name={endDatetimeField} value={endDatetime}>
+                            </lightning-input-field>
+                        </div>
+                        <div if:true={displayDateTimeFields}>
+                            <lightning-input
+                                type="datetime"
+                                label="Start Time"
+                                value={startDatetime}
+                                onchange={handleStartDateChange}
+                                field-level-help="The date and time at which the request starts. Inclusive."
+                                variant="label-inline"
+                                required
+                            ></lightning-input>
+                            <lightning-input
+                                type="datetime"
+                                label="End Time"
+                                value={endDatetime}
+                                onchange={handleEndDateChange}
+                                field-level-help="The date and time at which the request ends. Exclusive."
+                                variant="label-inline"
+                                required
+                            ></lightning-input>
+                        </div>
+                        <div if:false={displayDateTimeFields}>
+                            <lightning-input
+                                type="date"
+                                label="Start Date"
+                                value={startDate}
+                                onchange={handleStartDateChange}
+                                field-level-help="The date on which the request starts. Inclusive."
+                                variant="label-inline"
+                                required
+                            ></lightning-input>
+                            <lightning-input
+                                type="date"
+                                label="End Date"
+                                value={endDate}
+                                onchange={handleEndDateChange}
+                                field-level-help="The date on which the request ends. Inclusive."
+                                variant="label-inline"
+                                required
+                            ></lightning-input>
+                        </div>
+                        <lightning-input-field
+                            field-name={typeField}
+                            required
+                            disabled={typeDisabled}
+                        ></lightning-input-field>
+                    </div>
+                </div>
+            </lightning-record-edit-form>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button
+            variant="brand"
+            label={createUpdateLabel}
+            disabled={saveDisabled}
+            onclick={handleCreateClick}
+        ></lightning-button>
+        <lightning-button
+            class="slds-m-left_x-small"
+            variant="neutral"
+            label="Cancel"
+            onclick={handleCancelClick}
+        ></lightning-button>
+    </lightning-modal-footer>
+</template>

@@ -1,0 +1,154 @@
+<template>
+    <!-- SPINNER -->
+    <lightning-spinner
+        alternative-text="Loading..."
+        variant="brand"
+    ></lightning-spinner>
+    <!-- SPINNER -->
+    <!-- COMPONENT BODY -->
+    <lightning-card title="Timesheets">
+        <!-- FILTERS -->
+        <div class="slds-box slds-m-around_small" >
+            <lightning-layout multiple-rows="true">
+                <!-- PLAN CODES -->
+                <lightning-layout-item padding="around-small" size="4">
+                    <lightning-select
+                        label="Plan Codes"
+                        value={_selectedPlanCodes}
+                        options={_planCodesList}
+                        onchange={handleOnPlanCodeChange}
+                        multiple="true" 
+                    ></lightning-select>
+                </lightning-layout-item>
+                <!-- PLAN CODES -->
+                <!-- BRANCHES -->
+                <lightning-layout-item padding="around-small" size="4">
+                    <c-lookup-search 
+                        data-validated-component="true" 
+                        label="Branch"
+                        sobject-name="Branch__c" 
+                        title="Name" 
+                        onselectionchange={handleOnBranchSelectionChange} 
+                        placeholder="Search.."
+                        is-multi-entry="true"
+                    ></c-lookup-search>
+                </lightning-layout-item>
+                <!-- BRANCHES -->
+                <!-- ACCOUNT -->
+                <lightning-layout-item padding="around-small" size="4">
+                    <c-lookup-search 
+                        data-validated-component="true" 
+                        label="Client"
+                        sobject-name="Account" 
+                        title="Name" 
+                        onselectionchange={handleOnAccountSelectionChange} 
+                        placeholder="Search.."
+                        is-multi-entry="true"
+                    ></c-lookup-search>
+                </lightning-layout-item>
+                <!-- ACCOUNT -->
+                <!-- CONTACT -->
+                <lightning-layout-item padding="around-small" size="4">
+                    <c-lookup-search 
+                        data-validated-component="true" 
+                        label="Worker"
+                        sobject-name="Contact" 
+                        title="Name" 
+                        onselectionchange={handleOnContactSelectionChange} 
+                        placeholder="Search.."
+                        is-multi-entry="true"
+                    ></c-lookup-search>
+                </lightning-layout-item>
+                <!-- CONTACT -->
+                <!-- PERIOD -->
+                <lightning-layout-item padding="around-small" size="4">
+                    <c-lookup-search 
+                        data-validated-component="true" 
+                        label="Period"
+                        sobject-name="sirenum__Week__c" 
+                        title="Name" 
+                        onselectionchange={handleOnWeekSelectionChange} 
+                        placeholder="Search.."
+                        is-multi-entry="true"
+                        show-payroll-in-default-mode="false"
+                    ></c-lookup-search>
+                </lightning-layout-item>
+                <!-- PERIOD -->
+            </lightning-layout>
+            <!-- REFRESH -->
+            <div align="center" class="slds-p-vertical_small" >
+                <!-- SAVE BUTTON -->
+                <lightning-button 
+                    variant="brand" 
+                    label="Refresh"
+                    onclick={handleRefresh} 
+                    class="slds-m-left_x-small"
+                ></lightning-button>
+                <!-- SAVE BUTTON -->
+            </div>
+            <!-- ACTIONS -->
+        </div>
+        <!-- FILTERS -->
+        <div class="slds-box slds-m-around_small" >
+            <template if:true={hasTimesheetsToDisplay}>
+                <!-- <template if:true={hasMoreThanOnePage}> -->
+                    <div align="center" class="slds-p-vertical_small" >
+                        <!-- SELECTALL BUTTON -->
+                        <lightning-button 
+                            variant="brand" 
+                            label="Select All"
+                            onclick={handleSelectAll} 
+                            class="slds-m-left_x-small"
+                        ></lightning-button>
+                        <!-- SELECTALL BUTTON -->
+                    </div>
+                <!-- x -->
+                <!-- DATATABLE -->
+                <lightning-datatable
+                    key-field="Id"
+                    show-row-number-column="true"
+                    data={_timesheetsToDisplay}
+                    columns={_columnsList}
+                    selected-rows={_selectedTimesheetIds}
+                    onrowselection={handleOnRowSelection}
+                ></lightning-datatable>
+            </template>
+            <!-- DATATABLE -->
+            <template if:false={hasTimesheetsToDisplay}>
+                <div class="slds-p-top_medium" >
+                    <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_dark" role="status">
+                        <div class="slds-media__body">
+                            <p>
+                                No timesheets to display.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- PAGINATOR -->
+            <template if:true={hasRecordsToDisplay} >
+                <div class="slds-p-vertical_small">
+                    <c-timesheet-paginator 
+                        onpagechange={handlePageChange}
+                    ></c-timesheet-paginator>
+                </div>
+            </template>
+            <!-- PAGINATOR -->
+            <!-- ACTIONS -->
+            <div align="center" class="slds-p-vertical_small" >
+                <!-- SAVE BUTTON -->
+                <lightning-button 
+                    variant="brand" 
+                    label="Send"
+                    onclick={handleSave} 
+                    disabled={hasRecordsSelected}
+                    class="slds-m-left_x-small"
+                ></lightning-button>
+                <!-- SAVE BUTTON -->
+            </div>
+            <!-- ACTIONS -->
+        </div>
+    </lightning-card>
+    <!-- COMPONENT BODY -->
+</template>

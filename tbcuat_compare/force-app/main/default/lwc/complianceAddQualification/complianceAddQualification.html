@@ -1,0 +1,116 @@
+<template>
+    <lightning-modal-header label="Add Qualification"></lightning-modal-header>
+    <lightning-modal-body>
+        <div class="slds-is-relative modal-body">
+            <lightning-spinner alternative-text="Loading" if:true={isLoading} variant="brand"></lightning-spinner>
+            <div class="search-body">
+                <div class="search-body-input">
+                    <lightning-layout pull-to-boundary="medium" class="date-input">
+                        <lightning-layout-item size="6" padding="horizontal-medium">
+                            <lightning-input
+                                type="text"
+                                label="Search for a competency"
+                                placeholder="Search for a competency"
+                                onchange={handleSearchChange}
+                                class="slds-p-bottom_medium"
+                                value={searchTerm}
+                            ></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="6" padding="horizontal-medium">
+                            <lightning-combobox
+                                name="categoryField"
+                                label="Category"
+                                value={selectedCategory}
+                                placeholder="Select Category"
+                                options={categoryOptions}
+                                onchange={handleCategoryChange}
+                                disabled={categoryDisabled}
+                                required
+                            ></lightning-combobox>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+                <div class="search-body-output">
+                    <template if:true={hasData}>
+                        <lightning-datatable
+                            key-field="Id"
+                            data={data}
+                            columns={columns}
+                            max-row-selection="1"
+                            onrowselection={handleCompetencySelection}
+                            class="datatable slds-border_bottom"
+                        >
+                        </lightning-datatable>
+                        <lightning-layout pull-to-boundary="medium" multiple-rows>
+                            <lightning-layout-item size="6" padding="horizontal-medium">
+                                <lightning-layout pull-to-boundary="medium" multiple-rows>
+                                    <lightning-layout-item size="12" padding="horizontal-medium" class="date-input">
+                                        <lightning-input
+                                            type="date"
+                                            name="validFromInput"
+                                            label="Valid from"
+                                            onchange={handleValidFromChange}
+                                            required
+                                        ></lightning-input>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="12" padding="horizontal-medium" class="date-input">
+                                        <lightning-input
+                                            type="date"
+                                            name="validToInput"
+                                            label="Valid to"
+                                            onchange={handleValidToChange}
+                                            required
+                                        ></lightning-input>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="6" padding="horizontal-medium" class="file-input">
+                                <div class="file-input-container">
+                                    <lightning-file-upload
+                                        label="Upload Supporting Documents"
+                                        name="fileUploader"
+                                        multiple
+                                        accept=".pdf,.jpg,.png,.doc,.docx"
+                                        onuploadfinished={handleAttachmentUpload}
+                                    >
+                                    </lightning-file-upload>
+                                    <div class="slds-m-top_x-small">
+                                        <template for:each={files} for:item="file">
+                                            <div key={file.id} class="file-attachment-container">
+                                                <div class="file-attachment-label">{file.name}</div>
+                                                <lightning-button-icon
+                                                    data-attachment-id={file.id}
+                                                    icon-name="utility:delete"
+                                                    size="small"
+                                                    alternative-text="Delete attachment"
+                                                    variant="bare"
+                                                    class="file-attachment-delete-button"
+                                                    onclick={handleAttachmentDeleteClick}
+                                                ></lightning-button-icon>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </template>
+                    <c-no-data-illustration if:false={hasData} class="slds-align_absolute-center fill-vertical">
+                        <div slot="message" class="slds-text-body_regular">
+                            Cannot find any competencies matching the given search term.
+                        </div>
+                    </c-no-data-illustration>
+                </div>
+            </div>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="Cancel" onclick={handleCancelClick}></lightning-button>
+        <lightning-button
+            label="Add"
+            variant="brand"
+            onclick={handleAddClick}
+            class="slds-m-left_small"
+            disabled={addButtonDisabled}
+        ></lightning-button>
+    </lightning-modal-footer>
+</template>

@@ -1,0 +1,78 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <lightning-card title="SMS Message" icon-name="utility:sms">
+        <template if:true={isLoading}>
+            <div class="loading-container">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                <p class="loading-text">Loading...</p>
+            </div>
+        </template>
+        <template if:false={isLoading}>
+            <div class="scrollable-container slds-card slds-var-p-around_medium slds-var-m-around_medium chat-container">
+                <slot></slot>
+                <section role="log" class="slds-chat">
+                    <ul class="slds-chat-list">
+                        <template for:each={pastMessagesContent} for:item="message">
+                                <c-mobile-messaging-chat-message
+                                slot="meesage-id"
+                                data-key={message.id}
+                                    message={message}
+                                    key={message.id}
+                                    message-id={message.id}
+                                    owner-id={message.ownerName}
+                                ></c-mobile-messaging-chat-message>
+                        </template>
+                    </ul>
+                </section>
+            </div>
+        </template>
+    </lightning-card>
+
+    <section role="templates">
+        <div class="slds-m-top_medium slds-m-bottom_x-large icon-container">
+            <div class="slds-grid slds-grid_vertical-align-center slds-grid_align-center">
+                <div class="slds-p-horizontal_small">
+                    <lightning-button-icon
+                        onclick={insertFirstName}
+                        variant="brand"
+                        icon-name="utility:adduser"
+                        size="large"
+                        alternative-text="firstname"
+                        title="First Name"
+                    ></lightning-button-icon>
+                </div>
+                <div class="slds-p-horizontal_small">
+                    <lightning-button-icon
+                        onclick={insertGreetings}
+                        variant="brand"
+                        icon-name="utility:signature"
+                        size="large"
+                        alternative-text="Greetings"
+                        title="Greetings"
+                    ></lightning-button-icon>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+    <section>
+        <div class="slds-media slds-comment slds-hint-parent">
+            <div class="slds-media__body">
+                <div class="slds-publisher slds-publisher_comment slds-is-active">
+                    <label for="comment-text-input-01" class="slds-assistive-text">Send SMS</label>
+                    <textarea
+                        value={newMessageContent}
+                        id="comment-text-input-01"
+                        class="slds-publisher__input slds-input_bare slds-text-longform"
+                        placeholder="Write an SMS…"
+                        oninput={handleInputChange}
+                    ></textarea>
+                    <div class="slds-publisher__actions slds-grid slds-grid_align-spread">
+                        <button class="slds-button slds-button_brand" onclick={handleSendMessage}>Send Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>

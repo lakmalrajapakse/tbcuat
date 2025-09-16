@@ -1,0 +1,84 @@
+<!--
+  @description       : 
+  @author            : James Ridge
+  @group             : 
+  @last modified on  : 06-03-2021
+  @last modified by  : James Ridge
+  Modifications Log 
+  Ver   Date         Author        Modification
+  1.0   08-13-2020   James Ridge   Initial Version
+-->
+<template>
+    <div class="slds-form-element">
+        <label class="slds-form-element__label" for="searchInput" if:false={hideLabel}>
+            <abbr if:true={required}
+            class="slds-required"
+            title="required">* </abbr>
+            {fieldLabel}
+        </label>
+        <div class="slds-form-element__control">
+            <div class={containerClasses}>
+                <div class={comboboxClasses} aria-expanded={showListbox} aria-haspopup="listbox" role="combobox">
+                    <!-- Search input start -->
+                    <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
+                        <!-- Text input -->
+                        <div onkeyup={onKeyup}>
+                            <input 
+                                class={inputClasses}
+                                value={inputValue}
+                                onfocus={setFocus}
+                                onblur={setFocus}
+                                minlength="3"
+                                pattern="[a-zA-Z]*"
+                                autocomplete="off"
+                                aria-autocomplete="list"
+                                aria-controls="searchInput"
+                                role="textbox"
+                                readonly={isReadOnly}
+                                disabled={isReadOnly}
+                                required={required}
+                                placeholder={placeholder}></input>
+                        </div>
+
+                        <!-- Search icon -->
+                        <span if:true={record} class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_left">
+                            <lightning-icon size="x-small" icon-name={iconName}></lightning-icon>
+                        </span>
+                        <span if:false={record} class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_left">
+                           <lightning-icon size="x-small" icon-name="utility:search" if:false={isReadOnly}></lightning-icon>
+                        </span>
+
+                        <!-- Clear selection button icon for single entry lookups -->
+                        <button title="Remove selected option" type="button" onclick={clearSelection}
+                            if:true={showClear} class="slds-button slds-button_icon slds-input__icon slds-input__icon_right">
+                            <lightning-icon icon-name="utility:close" size="x-small"
+                                alternative-text="Remove selected option" class="slds-button__icon">
+                            </lightning-icon>
+                        </button>
+                        <!-- Loader -->
+                        <div class="slds-input__icon-group slds-input__icon-group_right">
+                            <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_x-small slds-input__spinner" if:true={isLoading}>
+                                <div class="slds-spinner__dot-a"></div>
+                                <div class="slds-spinner__dot-b"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div if:true={hasError} class="slds-form-element__help">
+                        {error.message}
+                    </div>
+
+                    <div if:true={showListbox} class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
+                        <c-listbox
+                            records={records}
+                            title={title}
+                            active-id={activeId}
+                            subtitle={subtitle}
+                            icon-name={iconName}
+                            onselected={handleSelected}
+                        ></c-listbox>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

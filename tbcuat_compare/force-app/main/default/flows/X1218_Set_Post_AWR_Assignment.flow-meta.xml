@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Should_Update</name>
+        <label>Should Update</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>AWR_status_changed</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.sirenum__Shift__r.sirenum__Placement__r.Post_AWR__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>postAwr</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Placement</targetReference>
+            </connector>
+            <label>AWR status changed</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <name>postAwr</name>
+        <dataType>Boolean</dataType>
+        <expression>{!$Record.sirenum__AWR__r.sirenum__Weeks_Worked__c} &gt;= {!$Setup.TBC_General_Settings__c.Post_AWR_Weeks__c}</expression>
+    </formulas>
+    <interviewLabel>1218 - Set Post AWR - Assignment {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>1218 - Set Post AWR - Assignment</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Update_Placement</name>
+        <label>Update Placement</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.sirenum__Shift__r.sirenum__Placement__c</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Post_AWR__c</field>
+            <value>
+                <elementReference>postAwr</elementReference>
+            </value>
+        </inputAssignments>
+        <object>sirenum__Placement__c</object>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Should_Update</targetReference>
+        </connector>
+        <filterFormula>AND(NOT({!$Record.sirenum__Shift__r.sirenum__Cancelled__c}), NOT(IsBlank({!$Record.sirenum__AWR__r.sirenum__Weeks_Worked__c})),
+NOT(IsBlank({!$Record.sirenum__Shift__r.sirenum__Placement__c}))
+)</filterFormula>
+        <object>sirenum__AWR_Contributor__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

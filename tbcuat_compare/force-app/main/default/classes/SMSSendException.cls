@@ -1,0 +1,1 @@
+public class SMSSendException extends Exception {}

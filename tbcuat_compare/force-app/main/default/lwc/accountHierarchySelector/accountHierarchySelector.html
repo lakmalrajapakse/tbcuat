@@ -1,0 +1,10 @@
+<template>
+    <lightning-tree-grid
+        columns={gridColumns}
+        data={accounts}
+        key-field="recordId"
+        onrowselection={handleRowSelection}
+        selected-rows={selectedRows}
+        expanded-rows={expandedRows}
+    ></lightning-tree-grid>
+</template>

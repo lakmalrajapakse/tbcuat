@@ -1,0 +1,480 @@
+<apex:page extensions="ShiftImportTool" standardController="ShiftImportLog__c" showHeader="false" sidebar="false"
+    standardStylesheets="false" docType="HTML-5.0">
+    <style>
+    </style>
+    <c:ShiftImportStyles />
+    <apex:form id="theForm">
+        <apex:pagemessages ></apex:pagemessages>
+        <!-- Import/ Drop Section -->
+        <div class="page-wrapper settings" id="settingsPannel">
+            <div class="sirenumLabel"><img id="loadingSpinner" src="{!URLFOR($Resource.Chosen, 'loading.gif')}"
+                    alt="Loading" class="loadingSpinnerCard" height="15" width="15" />Shift Import Tool</div>
+            <div class="sirenumFormElement">
+                <div id="messages" class="Messages"></div>
+                <p><i>Use <a href="{!URLFOR($Resource.TemplateShiftImport)}" target="_blank"> this </a> template to
+                        upload Shifts or Shift Demands.</i></p>
+                <apex:outputPanel rendered="{!gSettings.allowDelete}">
+                    <button id="buttonSettings" type="button" class="btn btn-success"
+                        onclick="$('#modalSettings').modal();">Settings</button>
+                </apex:outputPanel>
+                <p>
+                <div id="drop">Drop file here </div>
+                </p>
+                <p><input type="file" name="xlfile" id="xlf" /> ... or select a file</p>
+                <div class="SetupBox">
+                    <label for="autoPilot">Quick Create:</label>
+                    {!if(gSettings.allowQuickCreate, 'Allowed', 'No')}
+                    <label for="autoPilot">Accept Requirements</label>
+                    {!if(gSettings.allowShiftDemands, 'Yes', 'No')}
+                    <label for="autoPilot">Accept Shifts</label>
+                    {!if(gSettings.allowShift, 'Yes', 'No')}
+                </div>
+            </div>
+        </div>
+        <button id="buttonOpenModal" type="button" class="btn btn-primary hiddenInput"
+            onclick="$('#shiftModal').modal();">Edit Errors</button>
+
+        <div id="tblOut" align="center">
+            <!-- The spew out of data here. -->
+        </div>
+    </apex:form>
+
+    <!-- MODAL Results -->
+    <div id="shiftModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span
+                            class="sr-only">close</span></button>
+                    <h4 id="modalTitle" class="modal-title"><img id="modalSpinner"
+                            src="{!URLFOR($Resource.Chosen, 'loading.gif')}" alt="Loading" class="loadingSpinnerCard"
+                            height="15" width="15" /> A few problems </h4>
+                    <h5>
+                        <div id="messagesModal" class="Messages"></div>
+                    </h5>
+                </div>
+                <apex:pageMessages ></apex:pageMessages>
+                <apex:form styleclass="form-horizontal">
+                    <div id="modalBody" class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <a class="btn btn-success" id="shiftSave" href="#top" target="_blank" role="button"
+                            onclick="saveChanges(); spinnerStart(); ">Save</a>
+                    </div>
+                </apex:form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Settings -->
+    <div class="modal fade" id="modalSettings">
+        <div>
+            <div class="page-wrapper settings modal-settings">
+                <div class="sirenumFormElement">
+                    <div class="sirenumLabel"><img id="fileAttachmentDoc"
+                            src="{!URLFOR($Resource.Chosen, 'loading.gif')}" alt="Loading" class="loadingSpinnerCard"
+                            height="15" width="15" />Settings<div id="messages1" class="Messages"></div>
+                    </div>
+                    <div id="messagesModal" class="Messages"></div>
+                    <apex:form id="settingsForm">
+                        <label for="emailRecipient">Results to be sent to</label>
+                        <apex:input id="emailRecipient" value="{!tSettings.emailRecipient}"
+                            html-placeholder="Paste content here.." />
+                        <br />
+                        <label for="deleteResults">Results to delete</label>
+                        <apex:input id="deleteResults" value="{!tSettings.deleteLines}" />
+                        <br />
+                        <apex:commandButton value="Delete" action="{!doDelete}" styleClass="btn btn-danger" />
+                    </apex:form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Calendar -->
+    <div class="modal fade" id="modalCal">
+        <div>
+            <div class="page-wrapper settings">
+                <div class="sirenumFormElement">
+                    <div class="sirenumLabel"><img id="fileAttachmentDoc"
+                            src="{!URLFOR($Resource.Chosen, 'loading.gif')}" alt="Loading" class="loadingSpinnerCard"
+                            height="15" width="15" />Settings<div id="messages1" class="Messages"></div>
+                    </div>
+                    <div id="messagesModal" class="Messages"></div>
+                    <iframe src="" style="zoom:0.60" width="99.6%" height="1000" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $("a[href='#top']").click(function () {
+            $("html, body").animate({ scrollTop: 0 }, "slow");
+            return false;
+        });
+        function openCal(id) {
+            var frameSrc = '/apex/ContactSchedule?id=' + id;
+
+            $('#modalCal iframe').attr("src", frameSrc);
+            $('#modalCal').modal();
+        }
+
+        //This function is called when errors are found. We stringify the table and return it to the server with any changes made
+        function saveChanges() {
+            var header = $('#modalBody table thead tr td').map(function () {
+
+                return $(this).text();
+            });
+            var tableObj = $('#modalBody table  tbody tr').map(function (i) {
+                var row = {};
+                $(this).find('td').each(function (i) {
+                    var rowName = header[i];
+                    row[rowName] = $(this).find("div").text();
+                });
+                return row;
+            }).get();
+
+
+            var output = '{"Sheet1":' + JSON.stringify(tableObj) + '}';
+            console.log('Output : ' + output);
+            var divMessages = document.getElementById('messagesModal');
+
+            submitToController(output, divMessages);
+        }
+        function spinnerStart() {
+            var x = document.getElementById("loadingSpinner");
+            x.classList.add("loadingSpinnerCardShow");
+            x.classList.remove("loadingSpinnerCard");
+
+            var y = document.getElementById("modalSpinner");
+            y.classList.add("loadingSpinnerCardShowModal");
+            y.classList.remove("loadingSpinnerCard");
+        }
+        function spinnerStop() {
+            var x = document.getElementById("loadingSpinner");
+            x.classList.add("loadingSpinnerCard");
+            x.classList.remove("loadingSpinnerCardShow");
+
+            var y = document.getElementById("modalSpinner");
+            y.classList.add("loadingSpinnerCard");
+            y.classList.remove("loadingSpinnerCardShowModal");
+        }
+
+        var X = XLSX;
+        var XW = {
+            msg: 'xlsx',
+            rABS: './xlsxworker2.js',
+            norABS: './xlsxworker1.js',
+            noxfer: './xlsxworker.js'
+        };
+        var rABS = false;
+        var use_worker = false;
+        var transferable = false;
+        var wtf_mode = false;
+
+        function fixdata(data) {
+            var o = "", l = 0, w = 10240;
+            for (; l < data.byteLength / w; ++l) o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w, l * w + w)));
+            o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
+            return o;
+        }
+        function ab2str(data) {
+            var o = "", l = 0, w = 10240;
+            for (; l < data.byteLength / w; ++l) o += String.fromCharCode.apply(null, new Uint16Array(data.slice(l * w, l * w + w)));
+            o += String.fromCharCode.apply(null, new Uint16Array(data.slice(l * w)));
+            return o;
+        }
+        function s2ab(s) {
+            var b = new ArrayBuffer(s.length * 2), v = new Uint16Array(b);
+            for (var i = 0; i != s.length; ++i) v[i] = s.charCodeAt(i);
+            return [v, b];
+        }
+        function xw_noxfer(data, cb) {
+            var worker = new Worker(XW.noxfer);
+            worker.onmessage = function (e) {
+                switch (e.data.t) {
+                    case 'ready': break;
+                    case 'e': console.error(e.data.d); break;
+                    case XW.msg: cb(JSON.parse(e.data.d)); break;
+                }
+            };
+            var arr = rABS ? data : btoa(fixdata(data));
+            worker.postMessage({ d: arr, b: rABS });
+        }
+        function xw_xfer(data, cb) {
+            var worker = new Worker(rABS ? XW.rABS : XW.norABS);
+            worker.onmessage = function (e) {
+                switch (e.data.t) {
+                    case 'ready': break;
+                    case 'e': console.error(e.data.d); break;
+                    default: xx = ab2str(e.data).replace(/\n/g, "\\n").replace(/\r/g, "\\r"); console.log("done"); cb(JSON.parse(xx)); break;
+                }
+            };
+            if (rABS) {
+                var val = s2ab(data);
+                worker.postMessage(val[1], [val[1]]);
+            } else {
+                worker.postMessage(data, [data]);
+            }
+        }
+        function xw(data, cb) {
+            transferable = false;
+            if (transferable) xw_xfer(data, cb);
+            else xw_noxfer(data, cb);
+        }
+        function get_radio_value(radioName) {
+            var radios = document.getElementsByName(radioName);
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked || radios.length === 1) {
+                    return radios[i].value;
+                }
+            }
+        }
+        function to_json(workbook) {
+            var result = {};
+            workbook.SheetNames.forEach(function (sheetName) {
+                var roa = X.utils.sheet_to_json(workbook.Sheets[sheetName], { raw: false, 'date_format': 'dd/mm/yyyy;@' });
+                if (roa.length > 0) {
+                    result[sheetName] = roa;
+                }
+            });
+            return result;
+        }
+
+        var tarea = document.getElementById('b64data');
+        function b64it() {
+            if (typeof console !== 'undefined') console.log("onload", new Date());
+            var wb = X.read(tarea.value, { type: 'base64', WTF: wtf_mode, cellDates: true, dateNF: 'dd/mm/yyyy;@' });
+            process_wb(wb);
+        }
+
+        function process_wb(wb) {
+            var output = "";
+            var sringJson = "";
+            var obj;
+
+            output = JSON.stringify(to_json(wb), 2, 2);
+            obj = to_json(wb);
+            sringJson = JSON.stringify(to_json(wb));
+
+            console.log('Parsed file:', output);
+            console.log('Parsed file:' + output);
+
+            var arr = Object.keys(obj).map(function (k) { return obj[k] });
+
+
+            var divMessages = document.getElementById('messages');
+            submitToController(output, divMessages);
+
+        }
+        var drop = document.getElementById('drop');
+        function handleDrop(e) {
+            spinnerStart();
+            e.stopPropagation();
+            e.preventDefault();
+            rABS = false;
+            use_worker = false;
+            var files = e.dataTransfer.files;
+            var f = files[0];
+            {
+                var reader = new FileReader();
+                var name = f.name;
+                reader.onload = function (e) {
+                    if (typeof console !== 'undefined') console.log("onload", new Date(), rABS, use_worker);
+                    var data = e.target.result;
+                    if (use_worker) {
+                        xw(data, process_wb);
+                    } else {
+                        var wb;
+                        if (rABS) {
+                            wb = X.read(data, { type: 'binary', cellDates: true, dateNF: 'dd/mm/yyyy;@' });
+                        } else {
+                            var arr = fixdata(data);
+                            wb = X.read(btoa(arr), { type: 'base64', cellDates: true, dateNF: 'dd/mm/yyyy;@' });
+                        }
+                        process_wb(wb);
+                    }
+                };
+                if (rABS) reader.readAsBinaryString(f);
+                else reader.readAsArrayBuffer(f);
+            }
+        }
+        function handleDragover(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        }
+        if (drop.addEventListener) {
+            drop.addEventListener('dragenter', handleDragover, false);
+            drop.addEventListener('dragover', handleDragover, false);
+            drop.addEventListener('drop', handleDrop, false);
+        }
+        var xlf = document.getElementById('xlf');
+        function handleFile(e) {
+            spinnerStart();
+            rABS = false;
+            use_worker = false
+            var files = e.target.files;
+            var f = files[0];
+            {
+                var reader = new FileReader();
+                var name = f.name;
+                reader.onload = function (e) {
+                    if (typeof console !== 'undefined') console.log("onload", new Date(), rABS, use_worker);
+                    var data = e.target.result;
+                    if (use_worker) {
+                        xw(data, process_wb);
+                    } else {
+                        var wb;
+                        if (rABS) {
+                            wb = X.read(data, { type: 'binary', cellDates: true, dateNF: 'dd/mm/yyyy;@' });
+                        } else {
+                            var arr = fixdata(data);
+                            wb = X.read(btoa(arr), { type: 'base64', cellDates: true, dateNF: 'dd/mm/yyyy;@' });
+                        }
+                        process_wb(wb);
+                    }
+                };
+                if (rABS) reader.readAsBinaryString(f);
+                else reader.readAsArrayBuffer(f);
+            }
+        }
+        if (xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
+
+
+        function submitToController(output, divMessages) {
+            console.log('******output', output);
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.ShiftImportTool.parse}',
+                output,
+                function (result, event) {
+                    if (event.status) {
+                        var checkModal = false;
+
+                        /* Writing the Table to the HTML */
+                        var html = '<table border="1" class="responstable" id="theTableGenerated" >';
+                        var modal = '<table border="1" class="responstable" id="theTableGeneratedModal" >';
+
+                        modal = html + '<thead><tr>';
+                        <apex:repeat value="{!gSettings.parsedHeaders}" var="h">
+                            modal = modal + '<td>'+ '{!h}' +'</td>';
+                        </apex:repeat>
+                        modal = modal + '</tr></thead><tbody>';
+
+                        html = html + '<thead><tr>';
+                        <apex:repeat value="{!gSettings.parsedHeaders}" var="h">
+                            html = html + '<td>'+ '{!h}' +'</td>';
+                        </apex:repeat>
+                        html = html + '</thead><tbody>';
+
+                        for (var i = 0; i < result.length; i++) {
+                            if (!result[i].isSuccess) {
+                                checkModal = true;
+                                html = html + '<tr class="errorrow"><td>' + result[i].infoReference + '</td>';
+                            }
+                            else {
+                                html = html + '<tr><td><a href="/' + result[i].infoId + '" target="_blank">' + result[i].infoReference + '</a></td>';
+                            }
+
+                            if (result[i].conId != '') {
+                                var id = result[i].conId;
+                                html = html + '<td>' + result[i].infoContact + '</td>';
+                            } else {
+                                html = html + '<td></td>';
+                            }
+
+                            html = html + '<td>' + result[i].infoTeam + '</td>';
+                            html = html + '<td>' + result[i].infoSite + '</td>';
+                            html = html + '<td>' + result[i].infoRota + '</td>';
+                            html = html + '<td>' + result[i].infoDate + '</td>';
+                            html = html + '<td>' + result[i].infoStart + '</td>';
+                            html = html + '<td>' + result[i].infoEnd + '</td>';
+                            html = html + '<td>' + result[i].infoOpenings + '</td>';
+                            html = html + '<td><i>' + result[i].infoComments + '</i></td>';
+                            html = html + '<td><i>' + result[i].infoCancellation + '</i></td>';
+                            html = html + '<td>' + result[i].infoLocation + '</td>';
+                            html = html + '<td>' + result[i].infoPONumber + '</td>';
+                           
+                            html = html + '<td>' + result[i].infoActStartDate + '</td>';
+                            html = html + '<td>' + result[i].infoActStartTime + '</td>';
+                            html = html + '<td>' + result[i].infoActEndDate + '</td>';                            
+                            html = html + '<td>' + result[i].infoActEndTime + '</td>';
+                            html = html + '<td>' + result[i].infoBillStartDate + '</td>';
+                            html = html + '<td>' + result[i].infoBillStartTime + '</td>';
+                            html = html + '<td>' + result[i].infoBillEndDate + '</td>';
+                            html = html + '<td>' + result[i].infoBillEndTime + '</td>';
+                            html = html + '<td>' + result[i].infoApproved + '</td>';
+
+                            html = html + '<td><b>' + result[i].infoMessage + '</b></td>';
+                            html = html + '</tr>';
+
+                            if (!result[i].isSuccess) {
+                                checkModal = true;
+                                modal = modal + '<tr><td><div contentEditable="true">' + result[i].infoReference + '</div></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoContact + '</div></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoTeam + '</div></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoSite + '</div></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoRota + '</div></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoDate + '</div></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoStart + '</div></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoEnd + '</div></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoOpenings + '</div></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoComments + '</div></i></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoCancellation + '</div></i></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoLocation + '</div></i></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoPONumber + '</div></i></td>';
+
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoActStartDate + '</div></i></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoActStartTime + '</div></i></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoActEndDate + '</div></i></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoActEndTime + '</div></i></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoBillStartDate + '</div></i></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoBillStartTime + '</div></i></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoBillEndDate + '</div></i></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoBillEndTime + '</div></i></td>';
+                                modal = modal + '<td><div contentEditable="true">' + result[i].infoApproved + '</div></i></td>';
+
+                                modal = modal + '<td><b class="i    mport-errors">' + result[i].infoMessage + '</b></td>';
+                                modal = modal + '</tr>';
+                                //modal = modal + '<td><div contentEditable="{!gSettings.allowQuickCreate}" style="display:none">'+ result[i].infoAuto +'</div><input type="checkbox" {!if(gSettings.allowQuickCreate, '', 'disabled')} onclick="if(this.previousSibling.innerHTML == \'false\'){this.previousSibling.innerHTML = \'true\'} else {this.previousSibling.innerHTML = \'false\'}">Create<br></td></tr>';
+                            }
+                        }
+
+                        html = html + '</tbody></table>';
+                        spinnerStop();
+                        $('#tblOut').html(html);
+
+                        if (checkModal == true) {
+                            $('#modalBody').html(modal);
+                            $('#shiftModal').modal();
+                            $('#buttonOpenModal').removeClass('hiddenInput');
+                        } else {
+                            divMessages.innerHTML = "Success!";
+                            divMessages.style.display = "block";
+
+                            $('#shiftModal').modal('hide');
+                            $('#buttonOpenModal').addClass('hiddenInput');
+                        }
+
+
+                    } else if (event.type === 'exception') {
+
+                        spinnerStop();
+                        divMessages.innerHTML = event.message;
+                        divMessages.style.display = "block";
+
+
+                    } else {
+                        divMessages.innerHTML = event.message;
+                        divMessages.style.display = "block";
+                        spinnerStop();
+
+                    }
+                },
+                { escape: false }
+            );
+        }
+    </script>
+</apex:page>

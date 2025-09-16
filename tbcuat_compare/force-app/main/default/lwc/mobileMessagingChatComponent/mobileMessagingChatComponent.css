@@ -1,0 +1,9 @@
+/* myComponent.css */
+.scrollable-container {
+    max-height: 300px; /* Adjust the height as needed */
+    overflow-y: auto;  /* Enables vertical scrolling */
+}
+.icon-container {
+    background-color: transparent;
+    margin-bottom: var(--lwc-spacingXxxSmall, 0.125rem); /* Reduce the space between icons and the section below */
+}

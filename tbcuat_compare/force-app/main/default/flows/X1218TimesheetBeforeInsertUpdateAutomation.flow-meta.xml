@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>63.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>SetTimesheetFields</name>
+        <label>Set Timesheet Fields</label>
+        <locationX>176</locationX>
+        <locationY>287</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.RebateAmount__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>fx_RebateValue</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <environments>Default</environments>
+    <formulas>
+        <name>fx_RebateValue</name>
+        <dataType>Currency</dataType>
+        <expression>IF(
+	AND(
+		NOT(ISBLANK({!$Record.sirenum__Client__c})),
+		NOT(ISBLANK({!$Record.sirenum__Client__r.Rebate__c}))
+	),
+	IF(
+		ISPICKVAL({!$Record.sirenum__Client__r.Rebate__r.Type__c},&apos;Percent&apos;),
+		(({!$Record.sirenum__Client__r.Rebate__r.Percent__c} / 100) * {!$Record.sirenum__Total_Charge__c}),
+		IF(
+			ISPICKVAL({!$Record.sirenum__Client__r.Rebate__r.Type__c},&apos;Pounds per hour&apos;),
+			({!$Record.sirenum__Client__r.Rebate__r.AmountPerHour__c} * {!$Record.sirenum__Total_Hours__c}),
+			0.00
+		) 
+	),
+	0.00
+)</expression>
+        <scale>2</scale>
+    </formulas>
+    <interviewLabel>1218 - Timesheet {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>1218 - Timesheet Before Insert Update Automation</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>SetTimesheetFields</targetReference>
+        </connector>
+        <object>sirenum__Timesheet__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

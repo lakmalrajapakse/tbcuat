@@ -1,0 +1,1367 @@
+* {
+    font-family: Arial, sans-serif;
+}
+
+.br {
+	clear: both;
+}
+
+/* Button styling */
+
+body button,
+body input[type="submit"],
+body input[type="button"],
+body a.sirenumButton {
+    border: solid 1px #202945;
+	border-radius: 5px;
+	color: black;
+    background: white;
+	font-weight: normal;
+	cursor: pointer;
+	padding: 6px 11px;
+	margin: 0;
+	font-family: arial, sans-serif;
+	font-size: 15px;
+	outline: none;
+	text-decoration: none !important;
+    transition: background 0.3s, color 0.3s;
+}
+
+body .bPageHeader input[type="button"] {
+	box-shadow: inherit;
+	padding: inherit;
+	margin: inherit;
+}
+
+body a.sirenumButton {
+	display: inline-block;
+}
+
+body button:hover,
+body button.clicked,
+body input[type="submit"]:hover,
+body input[type="button"]:hover,
+body a.sirenumButton:hover {
+    background: #202945;
+    color: white;
+}
+
+body button.orange,
+body input[type="submit"].orange,
+body input[type="button"].orange,
+body a.sirenumButton.orange {
+	border-color: #CE0058;
+}
+
+body button.orange:hover,
+body input[type="submit"].orange:hover,
+body input[type="button"].orange:hover,
+body a.sirenumButton.orange:hover {
+    background: #CE0058;
+}
+
+body button.red,
+body input[type="submit"].red,
+body input[type="button"].red,
+body a.sirenumButton.red {
+	border-color: #FF424E;
+}
+
+body button.red:hover,
+body input[type="submit"].red:hover,
+body input[type="button"].red:hover,
+body a.sirenumButton.red:hover {
+    background: #FF424E;
+}
+
+body button.green,
+body input[type="submit"].green,
+body input[type="button"].green,
+body a.sirenumButton.green {
+	border-color: #5cb85c;
+}
+
+body button.green:hover,
+body input[type="submit"].green:hover,
+body input[type="button"].green:hover,
+body a.sirenumButton.green:hover {
+    background: #5cb85c;
+}
+
+/* Cards */
+.container {
+	display: flex;
+	flex-wrap: wrap;
+	align-content: center;
+}
+
+.sirenumCard,
+div.apexp {
+	flex-grow: 1;
+	flex-shrink: 1;
+	background: #FFFFFF;
+    outline: none;
+    display: block;
+    position: relative;
+    margin-right: 1%;
+    margin-bottom: 10px;
+	/*box-shadow: 2px 2px 4px -1px #aaa;*/
+	padding-bottom: 10px;
+    min-width: 300px;
+
+    border-radius: 0.25rem;
+    border: 1px solid rgb(216, 221, 230);
+}
+
+.sirenumCard.noGrow {
+	flex-grow: 0;
+}
+
+.sirenumCard.noShrink {
+	flex-shrink: 0;
+}
+
+.sirenumCard[size="1"] {
+	flex-basis: 32%;
+}
+
+.sirenumCard[size="2"] {
+	flex-basis: 65%;
+    flex-grow: 2;
+}
+
+.sirenumCard[size="3"] {
+	flex-basis: 100%;
+	flex-grow: 3;
+}
+
+@media screen and (max-width: 830px) {
+   .sirenumCard[size="2"] {
+    }
+}
+
+@media (max-width:1252px) and (min-width:830px){
+   .sirenumCard[size="3"] {
+	      width: 65.35%;
+        min-width: 811px;
+     }
+}
+
+@media (max-width: 830px) {
+   .sirenumCard[size="3"] {
+	      width: 32%;
+        min-width: 400px;
+     }
+
+}
+
+.sirenumCard[size="auto"] {
+	width: auto;
+}
+
+.close {
+    float: right;
+    padding-right:5%;
+    padding-top: 20px;
+}
+
+.cardIcon {
+	display: block;
+	margin: 0 auto;
+	background-position: top center;
+	background-size: auto 99%;
+	background-repeat: no-repeat;
+	color: white !important;
+	font-size: 16px;
+	font-weight: bold;
+	min-height: 150px;
+	position: relative;
+}
+
+/* Card action buttons */
+.sirenumCard .listButton{
+	margin-right: 10px !important;
+	margin-left: 10px !important;
+}
+
+.sirenumCard  .cardViewLinks .leftButtonContact, .rightButtonContact {
+    margin: 0 5%;
+}
+
+.sirenumCard .cardViewLinks .rightButtonContact {
+	float: right;
+}
+
+.sirenumCard .cardViewLinks .leftButtonContact {
+	float: left;
+}
+
+/* Tables */
+.cardDataTable,
+.pageDataTable {
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.cardDataTable th,
+.pageDataTable th {
+	background: white;
+}
+
+
+.cardDataTable tr:nth-child(even),
+.pageDataTable tr:nth-child(even) {
+    background: #efefef;
+}
+
+.cardDataTable th,
+.pageDataTable th {
+	font-weight: bold;
+	white-space: nowrap;
+	color: black;
+	background: white;
+	padding: 0 5px;
+	text-align: left;
+	border-bottom: solid 1px #ccc !important;
+}
+
+.cardDataTable td,
+.pageDataTable td {
+	text-align: left;
+	vertical-align: middle !important;
+	min-height: 30px;
+	height: 30px;
+	color: black;
+	padding: 5px;
+	border-bottom: solid 1px #ccc !important;
+}
+
+
+.pageDataTable tr td {
+	position: relative;
+}
+
+.pageDataTable .actions {
+	max-width: 0;
+	transition: all 0.25s ease-in-out;
+	background-color: rgba(217, 83, 79, 0.8);
+	position: absolute;
+	left: 0;
+	top: 0;
+	padding: 5px 0;
+	overflow: hidden;
+}
+
+.pageDataTable tr:hover .actions {
+	max-width: 100px;
+	padding: 5px 10px 5px 10px;
+}
+
+.cardDataTable td {
+	height: 20px;
+	min-height: 20px;
+}
+
+/* Table row hover effect */
+.cardDataTable tr td,
+.pageDataTable tr td {
+	box-shadow: none;
+	transition: box-shadow 0.25s ease-in-out;
+}
+
+.cardDataTable tr:hover td,
+.pageDataTable tr:hover td {
+	box-shadow: 0 -5px 5px -5px #202945 inset,
+	            0 5px 5px -5px #202945 inset;
+}
+
+.pageDataTable a,
+.cardDataTable a {
+	color: #202945;
+	text-decoration: none !important;
+}
+
+.shiftList {
+	overflow:auto;
+	text-align: left;
+}
+
+/* Custom Forms */
+
+.sirenumFormElement {
+	display: block;
+	width: 100%;
+	margin-bottom: 5px;
+	padding: 0;
+}
+
+.sirenumFormElement .sirenumInput:not(a),
+.sirenumFormElement.sirenumFormElementWithButton a.sirenumInlineButton {
+    width: 63%;
+    box-sizing: border-box;
+    height: 22px;
+    line-height: 22px;
+    margin: 0;
+    outline: none;
+    padding: 0 5px;
+    background: transparent;
+    border: solid 1px #ccc;
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+}
+
+.sirenumFormElement.sirenumFormElementWithButton .sirenumInput:not(a) {
+    width: 67%;
+    border-radius: 0;
+}
+
+.sirenumFormElement.sirenumFormElementWithButton a.sirenumInlineButton {
+    width: 5%;
+    text-decoration: none;
+    cursor: pointer;
+    text-align: center;
+    padding: 0;
+    background-color: #efefef;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sirenumFormElement.sirenumFormElementWithButton .sirenumInlineButton:hover {
+    background-color: #202945;
+    color: white;
+}
+
+.sirenumFormElement .sirenumInput.inputDisabled:not(a) {
+    background-color: #ccc;
+}
+
+.sirenumFormElement .sirenumInput.sirenumInputNoLabel:not(a) {
+	border-left: solid 1px #ccc;
+	border-radius: 4px;
+}
+
+/* Card mini-forms */
+.sirenumCard .sirenumFormElement .dateFormat {
+	display: none;
+}
+
+.sirenumCard form {
+	padding: 0 10px;
+}
+
+.sirenumFormElement .sirenumLabel {
+	display: block;
+    border: solid 1px #ccc;
+    float: left;
+    width: 30%;
+    height: 22px;
+    line-height: 22px;
+    margin: 0;
+    padding: 0 5px;
+    color: #666;
+    background-color: #efefef;
+    border-radius: 4px 0 0 4px;
+    white-space: nowrap;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* The SirenumInfoIcon class sets up a foundation for showing a fontAwesome icon */
+/* Additional classes can then be applied to the element to determine which icon to show in which colour */
+.sirenumFormElement div.sirenumInfoIcon {
+	float: right;
+	width: 6%;
+	box-sizing: border-box;
+	line-height: 22px;
+	padding-left: 2px;
+	text-decoration: none;
+	font-size: 15px;
+}
+
+.sirenumFormElement > div.checkbox {
+	float: left;
+	width: 93%;
+	box-sizing: border-box;
+	margin-bottom: 5px;
+}
+
+/* Ordering is important here. the dirty class should override the mixed class */
+.sirenumInfoIcon.mixed:before {
+	content: "\f05a"; /* fa-info-circle */
+	color: #1292f7;
+}
+
+.sirenumInfoIcon.dirty:before{
+	content: "\f058"; /* fa-check-circle */
+	color: #07bc07;
+}
+
+.sirenumInfoIcon.dirty:hover:before {
+	content: "\f057"; /* fa-times-circle */
+	cursor: pointer;
+	color: red;
+}
+
+.sirenumCard  .sirenumFormElement .sirenumLabel {
+	width: 20%;
+	padding-left: 1%;
+	overflow:hidden;
+}
+
+a.sirenumInput {
+	position: absolute;
+	right: 10px;
+}
+
+/* Card achievement bars */
+
+.achieveBar {
+	width: 60%;
+	margin: 0 auto;
+}
+
+.meter {
+	width: 96%;
+	height: 10px;
+	margin: 20px auto;
+	background: #202945;
+	-moz-border-radius: 25px;
+	-webkit-border-radius: 25px;
+	border-radius: 25px;
+	padding: 2%;
+	clear: both;
+	position: relative;
+}
+
+.orange > span {
+	background-color: #f1a165;
+	background-image: -moz-linear-gradient(top, #f1a165, #f36d0a);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #f1a165), color-stop(1, #f36d0a));
+	background-image: -webkit-linear-gradient(#f1a165, #f36d0a);
+}
+
+.meter > span {
+	display: block;
+	height: 100%;
+	-webkit-border-radius: 20px 8px 8px 20px;
+	-moz-border-radius: 20px 8px 8px 20px;
+	border-radius: 20px 8px 8px 20px;
+	background: repeating-linear-gradient(135deg, #fdad73, #fdad73 30%, #CE0058 30%, #CE0058 60%);
+	-webkit-box-shadow: inset 0 2px 9px rgba(255, 255, 255, 0.3), inset 0 -2px 6px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: inset 0 2px 9px rgba(255, 255, 255, 0.3), inset 0 -2px 6px rgba(0, 0, 0, 0.4);
+	box-shadow: inset 0 2px 9px rgba(255, 255, 255, 0.3), inset 0 -2px 6px rgba(0, 0, 0, 0.4);
+	position: relative;
+	overflow: hidden;
+}
+
+
+.starDiv {
+	bottom: 0;
+	right: -30px;
+	font-size: medium;
+	position: absolute;
+}
+
+.color {
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
+}
+
+.lowLimit,
+.topLimit {
+	float: left;
+	font-family: arial, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #202945;
+	margin: 0 2% 5px 2%;
+}
+
+.topLimit {
+	float: right;
+}
+
+/* Card close button */
+.closeButton {
+    display: block;
+    cursor: pointer;
+    text-align: center;
+    font-size: 12px;
+    color: white;
+    position: absolute;
+	font-family: tahoma, sans-serif;
+    height: 16px;
+    width: 16px;
+    border-radius: 10px;
+    line-height: 16px;
+    top: 2px;
+    right: 5px;
+    z-index: 3;
+
+
+	background-repeat: no-repeat;
+	background-size: 100%;
+}
+
+.closeButton .cardCloseButtonList {
+	border: solid 1px #ccc;
+	background: white;
+}
+
+.closeButton .cardCloseButtonList div {
+  text-align: left;
+  padding: 5px;
+  border-bottom: solid 1px #ccc;
+}
+
+.closeButton .cardCloseButtonList div:last-child {
+  border-bottom: none;
+}
+
+.closeButton .cardCloseButtonList div:hover {
+  background: #efefef;
+}
+
+.cardCloseButtonList {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  left: initial;
+  width: 190px;
+  overflow-y: hidden;
+  background: none repeat scroll 0 0 #FFF;
+  z-index: 4;
+  color: black;
+  font-weight: normal;
+  line-height: normal;
+  border: none;
+  box-shadow: 1px 1px 1px 0 #000;
+}
+
+/* Custom form letter filter list */
+
+.alphabetDiv {
+	font-size: 91%;
+	text-align: right;
+	float: none;
+	cursor:pointer;
+	margin-top: 1%;
+	margin-bottom: 1%;
+}
+
+.spanLetter {
+	color: #015ba7;
+	text-decoration: none;
+	font-weight: normal;
+	border-right: 1px solid #cfcece;
+	display: inline-block;
+	padding: 0 5px 0 1px;
+}
+
+.createHeader {
+
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  height: 25px;
+  line-height: 25px;
+  background-color: #CE0058;
+  color: white;
+  display: block;
+  margin-bottom: 1%;
+  border-bottom: solid 1px #ccc;
+  padding-left: 5px;
+  width: 100%;
+
+
+}
+
+.subHeader {
+  width: 98%;
+  padding: 5px 1%;
+  background-color: #202945 !important;
+  font-weight: normal !important;
+  color: white !important;
+  background-image: none !important;
+  margin-bottom: 1%;
+}
+
+.noRecords {
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  height: 25px;
+  line-height: 25px;
+  background-color: #CE0058;
+  color: white;
+  display: block;
+  border-bottom: solid 1px #ccc;
+  width: 100%;
+  margin-top: 1%;
+
+
+}
+
+.circle {
+	display: block;
+	position: absolute;
+	height: 0;
+	padding-bottom: 31%;
+	width: 31%;
+	text-align: center;
+	left: 34.25%;
+	top: 1%;
+	-moz-border-radius: 30px;
+	border-radius: 100px;
+	border: solid 2px white;
+	z-index: 1;
+}
+
+.chartCard {
+   display: inline-block;
+   text-align: center;
+	min-height: 256px;
+}
+
+.sirenumCard:nth-child(2),
+.sirenumCard:nth-child(7),
+.sirenumCard:nth-child(12),
+.sirenumCard:nth-child(17) {
+	border-color: #6EA3FF;
+}
+
+.sirenumCard:nth-child(3),
+.sirenumCard:nth-child(8),
+.sirenumCard:nth-child(13),
+.sirenumCard:nth-child(18) {
+	border-color: #FACD29;
+}
+
+.sirenumCard:nth-child(4),
+.sirenumCard:nth-child(9),
+.sirenumCard:nth-child(14),
+.sirenumCard:nth-child(19) {
+	border-color: #A459CC;
+}
+
+.sirenumCard:nth-child(5),
+.sirenumCard:nth-child(10),
+.sirenumCard:nth-child(15),
+.sirenumCard:nth-child(20) {
+	border-color: #537F4F;
+}
+
+.sirenumCardTitle {
+	text-align: center;
+	line-height: 30px;
+	height: 30px;
+	font-size: 130%;
+	color: black;
+	margin-bottom: 10px;
+	overflow-y: hidden;
+    background-color: transparent;
+}
+
+
+.listBackButton {
+	float: left;
+	position: relative;
+	top: 2px;
+	margin-left: 10px;
+}
+
+.listBackButton img {
+	max-height: 16px;
+}
+
+.cardViewLinks {
+	text-align: center;
+    height: 30px;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.cardIconText {
+	text-align: center;
+	font-size: 12px;
+	color: #1C75BC;
+	font-weight: bold !important;
+	text-decoration: none;
+	display: block;
+	padding: 10px;
+}
+
+.sirenumCard .analyticsCordaChart img {
+	width: 100%;
+}
+
+.sirenumCard .analyticsEmbeddedReportChart .outerbound {
+	border-style: none;
+}
+
+.sirenumCard .analyticsEmbeddedReportChart.width_small {
+	width: 100% !important;
+}
+
+#contentWrapper {
+	min-width: 500px !important;
+}
+
+table.sirenumDataEntryTable span.dateInput span.dateFormat{
+	display:none;
+}
+
+table.sirenumDataEntryTable .errorMsg {
+	display: none;
+}
+
+table.sirenumDataEntryTable td input:not([type="submit"]):not([type="button"]),
+table.sirenumDataEntryTable td select {
+	border: none;
+	outline: none;
+	height: 20px;
+	padding: 0 2%;
+	width: 96%;
+	margin: 2px 0;
+}
+
+table.sirenumDataEntryTable td .error {
+	border: none !important;
+	background: #F4B2B9;
+}
+
+table.sirenumDataEntryTable td .lookupInput input {
+	width: 80%;
+}
+
+table.sirenumDataEntryTable .requiredInput .requiredBlock {background: none !important;}
+
+@keyframes blink {
+	0% {opacity: 1;}
+	50% {opacity: 0.5;}
+	100% {opacity: 1;}
+}
+
+.buttonCard .buttonContainer {
+	width: auto;
+	height: auto;
+	margin: 0 auto;
+	display: flex;
+	flex-wrap: wrap;
+	padding: 0 1em;
+}
+
+.buttonCard .buttonContainer a {
+	text-decoration: none;
+	flex-basis: 63px;
+	font-size: 12px;
+	border-radius: 4px;
+	text-align: center;
+	margin: 6px 5px 5px 2px;
+	display: inline-block;
+	padding: 7px;
+	border: 1px solid rgba(0,0,0,.2);
+	color: white;
+	cursor: pointer;
+	background:#1C9C44;
+	box-shadow: 0 1px hsla(0,0%,100%,.15) inset, 1px 1px hsl(30,20%,20%), 2px 2px hsl(30,20%,18%), 3px 3px hsl(30,20%,16%), 3px 3px 10px rgba(0,0,0,.5);
+	transition-duration: .1s;
+	transition-property: box-shadow, -webkit-transform;
+	-webkit-backface-visibility: hidden;
+}
+
+.buttonCard .buttonContainer a[color="red"] {
+    background: #9c1c1c;
+}
+
+.buttonCard .buttonContainer a:hover {
+	text-decoration: none;
+	color: white;
+	box-shadow: 0 1px hsla(0,0%,100%,.2) inset, 1px 1px hsl(30,20%,20%), 2px 2px hsl(30,20%,18%), 3px 3px hsl(30,20%,16%), 4px 4px hsl(30,20%,15%), 4px 4px 10px rgba(0,0,0,.5);
+}
+
+.buttonCard .buttonContainer a:active {
+	-webkit-transform: translate(3px, 3px);
+	box-shadow: 1px 1px hsl(30,20%,14%) inset, 2px 2px hsl(30,20%,16%) inset, 3px 3px hsl(30,20%,18%) inset, 4px 4px 10px rgba(0,0,0,.5) inset;
+}
+.activeTab {
+        background-color: #FFFFFF;
+        background-image: none;
+        display: inline-block;
+        margin: 0 0 -1px;
+        padding: 15px 25px;
+        text-align: center;
+        color: #555!important;
+        border: 1px solid transparent;
+        border-bottom: 1px solid #fff;
+        font-weight: 600;
+        }
+
+.inactiveTab {
+    background-color: #FFFFFF;
+    color:#555;
+        background-image:none;
+        border-top: 2px solid white;
+    }
+.activeTab:hover{
+    color: #191919!important;
+    cursor: pointer;
+    border-top: 2px solid orange;
+}
+.rich-tab-active {
+    background-color: #FFFFFF;
+    background-image: none;
+    cursor: default;
+    color: #191919!important;
+    border: 1px solid #ddd;
+    border-top: 2px solid orange;
+    border-bottom: 1px solid #fff;
+}
+.rich-tab-inactive {
+    background-color: #FFFFFF;
+    border-color: #fff;
+    background-image: none;
+    border-width: 1px;
+    border-style: solid;
+    background-repeat: repeat-x;
+    background-position: top;
+    border-bottom-width: 0;
+    cursor: default;
+    color:#555;
+    border-top: 2px solid white;
+
+}
+.rich-tab-header {
+    font-size: 11px;
+}
+
+.rich-tabpanel-content {
+    background: white;
+}
+
+body .bPageBlock {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+    border-top: none !important;
+    background-color: white !important;
+    border-right: none !important;
+    border-left: none !important;
+}
+
+.pbSubheader {
+    background-color: #CE0058 !important;
+    color: white !important;
+    background-image: none !important;
+}
+
+#sidebarDiv,
+#bodyCell {
+    background-color: #f9f9f9 !important;
+}
+
+body[sirenumFraming="true"],
+html body.sfdcBody[sirenumFraming="true"] {
+	padding: 0;
+}
+
+/* Loading Spinner styling*/
+.sirenumSpinningLoader .sirenumSpinningLoaderPopupBackground {
+    background-color:#333333;
+    opacity: 0.50;
+    filter: alpha(opacity = 20);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 998;
+    position: absolute;
+    cursor:wait;
+}
+
+.sirenumSpinningLoader .sirenumSpinningLoaderPopupPanel {
+    background-color: transparent;
+    left: 50%;
+    width: 200px;
+    margin-left: -100px;
+    top: 40%;
+    height: 50px;
+    z-index: 999;
+    position: absolute;
+    cursor:pointer;
+}
+@-webkit-keyframes rotate {
+	from {-webkit-transform: rotate(0deg);}
+	to {-webkit-transform: rotate(360deg);}
+}
+@-webkit-keyframes top {
+    from {top:0;}
+    to {top:-60%;}
+}
+@-webkit-keyframes bottom {
+    from {bottom:0;}
+    to {bottom:-60%;}
+}
+
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 120px;
+    height: 120px;
+    margin: -50px 0 0 -50px;
+    -webkit-animation: rotate linear 3.2s infinite;
+}
+
+.sirenumSpinningLoaderContainer > div {
+    position: absolute;
+}
+.sirenumSpinningLoaderContainer > div:before,
+.sirenumSpinningLoaderContainer > div:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    background: #CE0058;
+}
+.sirenumSpinningLoaderContainer > div:before {
+    top: 0;
+    border-radius: 999px 999px 0 0;
+    -webkit-animation: top ease .8s alternate infinite;
+}
+
+.sirenumSpinningLoaderContainer > div:after {
+    bottom: 0;
+    border-radius: 0 0 999px 999px;
+    -webkit-animation: bottom ease .8s alternate infinite;
+}
+
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer > div:nth-child(6) { top:0; right:0; bottom:0; left:0; }
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer > div:nth-child(5) { top:10px; right:10px; bottom:10px; left:10px; }
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer > div:nth-child(4) { top:20px; right:20px; bottom:20px; left:20px; }
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer > div:nth-child(3) { top:30px; right:30px; bottom:30px; left:30px; }
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer > div:nth-child(2) { top:50px; right:40px; bottom:40px; left:40px; }
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer > div:nth-child(1) { top:50px; right:50px; bottom:50px; left:50px; }
+
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer > div:nth-child(5):before,
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer > div:nth-child(5):after {
+    background: antiquewhite;
+    -webkit-animation-delay: 50ms;
+}
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer > div:nth-child(4):before,
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer > div:nth-child(4):after {
+    -webkit-animation-delay: 50ms;
+}
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer > div:nth-child(3):before,
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer > div:nth-child(3):after {
+    background: antiquewhite;
+    -webkit-animation-delay: 150ms;
+}
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer > div:nth-child(2):before,
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer > div:nth-child(2):after {
+    -webkit-animation-delay: 100ms;
+}
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer > div:nth-child(1):before,
+.sirenumSpinningLoader .sirenumSpinningLoaderContainer > div:nth-child(1):after {
+    background: gold;
+    box-shadow: 0 0 50px gold;
+    -webkit-animation: none;
+}
+/* End of spinner styling */
+
+.apexp textarea.pretty {
+	color:#666;
+	font-size:14px;
+	padding: 5px 5px;
+	-moz-border-radius: 8px; -webkit-border-radius: 8px;
+	border: #999 1px solid;
+	transition: all 0.25s ease-in-out;
+	-webkit-transition: all 0.25s ease-in-out;
+	-moz-transition: all 0.25s ease-in-out;
+	box-shadow: 0 0 5px rgba(81, 203, 238, 0);
+	-webkit-box-shadow: 0 0 5px rgba(81, 203, 238, 0);
+	-moz-box-shadow: 0 0 5px rgba(81, 203, 238, 0);
+}
+
+.apexp textarea.pretty:focus {
+	color:#000;
+	outline:none;
+	border:#35a5e5 1px solid;
+	box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+	-webkit-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+	-moz-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+}
+
+.pageDataTable textarea.pretty {
+	border: none;
+	resize: none;
+}
+
+.pageDataTable textarea.pretty:focus {
+	height: 100px !important;
+	width: 300px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	background: white;
+	z-index: 2;
+}
+
+*[data-tooltip]:not([data-tooltip=""]) {
+	position: relative;
+	color: #0071FF;
+}
+
+*[data-tooltip]:after {
+    content: attr(data-tooltip);
+    display: block;
+    position: absolute;
+    z-index: 10;
+    background: #575757;
+    color: #FFFFFF;
+    padding: 5px;
+    border-radius: 6px;
+	width: 200px;
+	margin-left: -100px;
+	font-weight: normal;
+	font-size: small;
+    bottom: calc(100% + 5px);
+    left: 50%;
+    transition: opacity 0.3s;
+    opacity: 0;
+    visibility: hidden;
+}
+
+*[data-tooltip]:hover:after {
+	opacity: 1;
+	visibility: visible;
+}
+
+/* Homepage Template */
+
+#sirenumNavigation {
+    min-width: 100px;
+}
+
+.iconDiv {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none !important;
+    background-color: white;
+    color: black;
+}
+
+/*Show menu items on top if indicated so in Style code or if we are in Lightning */
+
+.sirenumPageParent[menuTop="true"] #sirenumNavigation{
+    font-size: 0;
+    width : 100%;
+    border-bottom: 3px solid #CE0058;
+    position:fixed;
+    top:0;
+    left:0;
+    background-color: white;
+    padding: 5px 20px 0 20px;
+    z-index:1;
+}
+
+.sirenumPageParent[menuTop="true"] #sirenumNavigation .iconDiv{
+    padding: 0 15px 0 15px;
+    border-top: 3px solid transparent;
+    line-height: 30px;
+    font-size: 16px;
+    color: rgb(43,43,42);
+}
+
+.sirenumPageParent[menuTop="true"] #sirenumNavigation .iconDiv img{
+    display:none;
+}
+
+.sirenumPageParent[menuTop="true"] #sirenumNavigation .iconDiv:hover,
+.sirenumPageParent[menuTop="true"] #sirenumNavigation .iconDiv[current=true]{
+    background-color: #CE005833;
+    transition: ease-in 100ms;
+}
+
+.sirenumPageParent[menuTop="true"] #sirenumNavigation .iconDiv[current=true]{
+    border-top: 3px solid  #CE0058;
+}
+
+.sirenumPageParent[menuTop="true"] #sirenumContents {
+	margin-top: 20px;
+    z-index:0;
+    position:relative;
+}
+
+/*If in SF classic we can't have the menu fixed on top since there could be an SF header to our menu will overlap */
+.sirenumPageParent[menuTop="true"][theme="Theme3"] #sirenumNavigation{
+    position:inherit;
+    width: auto;
+}
+
+.sirenumPageParent[menuTop="true"][theme="Theme3"] #sirenumContents{
+    margin-top: 20px;
+}
+
+/*Show menu items on side if indicated so in Style code or if we are in SF classic */
+
+.sirenumPageParent[menuTop="false"] {
+    display:flex;
+}
+
+.sirenumPageParent[menuTop="false"] #sirenumNavigation {
+    width : 100px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    margin-right: 10px;
+    box-shadow: 5px 0 8px -4px black;
+}
+
+.sirenumPageParent[menuTop="false"] .iconDiv{
+    display: block;
+    margin-right: 10px;
+    float: left;
+    border-left-width: 0;
+    border-top-width: 1px;
+    padding: 5px 0;
+    border-bottom: solid 1px #BBB;
+    flex-basis:100%;
+    border-left-style: solid;
+    transition: border-left-width 0.2s, border-left-color 0.2s, border-top-width 0.2s, border-top-color 0.2s;
+}
+
+.sirenumPageParent[menuTop="false"] .iconDiv[current=true] {
+    border-left-width: 10px;
+    border-left-color: #1797C0;
+}
+
+.sirenumPageParent[menuTop="false"] .iconDiv img {
+    border-radius: 4px;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+@media screen and (max-width: 1149px) {
+    .sirenumPageParent[menuTop="false"] #sirenumNavigation .iconDiv:hover {
+		border-top-width: 10px;
+		border-top-color: #85B1BF;
+	}
+
+    .sirenumPageParent[menuTop="false"] #sirenumNavigation .iconDiv[current=true] {
+		border-top-width: 10px;
+		border-top-color: #1797C0;
+	}
+}
+
+@media screen and (min-width: 1150px) {
+    .sirenumPageParent[menuTop="false"] #sirenumNavigation .iconDiv {
+		margin-right: 0;
+		padding-bottom: 0;
+		font-size: 16px;
+		line-height: 50px;
+		text-align: left;
+	}
+
+    .sirenumPageParent[menuTop="false"] #sirenumNavigation .iconDiv img {
+		margin-bottom: 0;
+		height: 50px;
+		float: left;
+		width: auto;
+	}
+
+    .sirenumPageParent[menuTop="false"] #sirenumNavigation {
+		min-width: 230px;
+	}
+
+    .sirenumPageParent[menuTop="false"] .iconDiv:hover {
+		border-left-width: 10px;
+		border-left-color: #85B1BF;
+	}
+
+}
+
+#sirenumContents {
+    flex-grow: 1;
+    min-height: 500px;
+    padding: 0 0 20px 15px;
+}
+
+/* Loading animation */
+#sirenumFullPageLoader {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.5);
+	z-index: 100;
+}
+
+
+/* Auto Complete */
+
+/* The input of an autocomplete component must always have a position defined, otherwise it could potentially
+    have a different offsetParent to the dropdown which would bugger up the positioning of the latter. */
+input[sirenum-autocomplete-object] {
+    position: relative;
+}
+
+/* main drop down menu */
+#sirenumAutoCompleteDiv {
+    position: absolute;
+    background-color: white;
+    opacity: 0.96;
+    padding: 0;
+    min-width: 300px;
+    width: auto;
+    box-shadow: 1px 1px 3px 1px black;
+    z-index: 100;
+    min-height: 50px;
+    overflow-y: auto;
+}
+#sirenumAutoCompleteDiv table {
+    font-family: 'Arial', sans-serif;
+    border-collapse: collapse;
+    border-bottom: none;
+    border-spacing: 0;
+    color: black;
+    cursor: default;
+    width: 100%;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+}
+div .autosearchtable tr{
+    border-bottom: solid 1px #EEE;
+    text-decoration: none;
+    width: 100%;
+}
+div table .sirenumAutoCompleteHeaders{
+    line-height:18px;
+}
+#sirenumAutoCompleteDiv th {
+    background: #007bb5;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 13px;
+    padding: 4px;
+    text-align: center;
+}
+
+#sirenumAutoCompleteDiv tr td{
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, sans-serif;
+    font-variant: normal;
+    font-size: 12px;
+    padding: 7px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Tabular Search */
+
+div .autosearchtable {
+    width:100%;
+}
+
+.selectedRow .sirenumCellStyling{
+    background-color: #CE0058;
+    color: #fff !important;
+    text-decoration: none;
+    opacity: 0.98;
+}
+
+
+
+.autoComp-wrapper {
+    min-width: 200px;
+}
+
+#sirenumAutocompleteDiv {
+    z-index: 999;
+}
+
+/* End of Auto Complete*/
+
+/* Lightning */
+.sirenumPageParent[theme="Theme4d"] .sirenumCard,
+.sirenumPageParent[theme="Theme4t"] .sirenumCard {
+    border-radius: .25rem;
+    border: 1px solid rgb(216, 221, 230);
+}
+
+body .sirenumPageParent[theme="Theme4d"] button,
+body .sirenumPageParent[theme="Theme4d"] input[type="submit"],
+body .sirenumPageParent[theme="Theme4d"] input[type="button"],
+body .sirenumPageParent[theme="Theme4d"] a.sirenumButton,
+body .sirenumPageParent[theme="Theme4t"] button,
+body .sirenumPageParent[theme="Theme4t"] input[type="submit"],
+body .sirenumPageParent[theme="Theme4t"] input[type="button"],
+body .sirenumPageParent[theme="Theme4t"] a.sirenumButton {
+    color: rgb(84, 105, 141);
+    padding: 3px 5px;
+    background: transparent;
+    background-clip: border-box;
+    border-radius: .25rem;
+    white-space: normal;
+    transition: color .05s linear,background-color .05s linear;
+    border: 1px solid rgb(216, 221, 230);
+}
+
+body .sirenumPageParent[theme="Theme4d"] button:hover,
+body .sirenumPageParent[theme="Theme4d"] input[type="submit"]:hover,
+body .sirenumPageParent[theme="Theme4d"] input[type="button"]:hover,
+body .sirenumPageParent[theme="Theme4d"] a.sirenumButton:hover,
+body .sirenumPageParent[theme="Theme4t"] button:hover,
+body .sirenumPageParent[theme="Theme4t"] input[type="submit"]:hover,
+body .sirenumPageParent[theme="Theme4t"] input[type="button"]:hover,
+body .sirenumPageParent[theme="Theme4t"] a.sirenumButton:hover {
+    background-color: rgb(244, 246, 249) ;
+}
+
+/* Modal Forms */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    background: rgba(0,0,0,0.5);
+}
+
+.modal .modal-content {
+    background: white;
+    min-width: 50%;
+    max-width: 70%;
+    margin: 0 auto;
+    position: relative;
+    top: 40px;
+    padding: 5px;
+    border-radius: 5px;
+    border: solid 1px #000;
+    box-shadow: 0 5px 15px rgba(0,0,0,.5)
+}
+
+.modal .modal-header,
+.modal .modal-body {
+    border-bottom: solid 1px #ccc;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+.modal .modal-footer {
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    text-align: right;
+}
+
+.modal .modal-footer button,
+.modal .modal-footer input {
+    margin-left: 5px;
+}
+
+.modal .modal-header h4 {
+    margin: 0;
+    padding: 0;
+}

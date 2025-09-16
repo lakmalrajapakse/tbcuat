@@ -1,0 +1,10 @@
+span.slds-pill {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+li.slds-listbox-item {
+    margin: 1px;
+}
+span.c-allow-word-break {
+    white-space: break-spaces !important;
+}

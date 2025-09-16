@@ -1,0 +1,221 @@
+<!-- sldsValidatorIgnore -->
+    <!--
+    @description       : 
+    @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+    @group             : 
+    @last modified on  : 01-01-2024
+    @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+    -->
+    <template>
+        <div class="container">
+            <!-- Header -->
+            <div class="slds-page-header">
+                <div class="slds-page-header__row">
+                    <div class="slds-page-header__col-title">
+                        <div class="slds-media">
+                            <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-standard-feedback">
+                                    <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                        <use xlink:href="/_slds/icons/standard-sprite/svg/symbols.svg#feedback"></use>
+                                    </svg>
+                                </span>
+                            </div>
+                            
+                            <div class="slds-media__body">
+                                <div class="slds-page-header__name">
+                                    <div class="slds-page-header__name-title">
+                                        <h1>
+                                            <span class="slds-page-header__title slds-truncate">Communication Manager</span>
+                                        </h1>
+                                    </div>
+                                </div>
+                                <p class="slds-page-header__name-meta">Mass SMS</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <lightning-tabset>
+                <!-- New Outbound Message -->
+                <lightning-tab label="New Message" value="new" onactive={handleActive}>
+                    <!-- Show send options -->
+                    <template if:false={sendOperationComplete}>
+                        <!-- Message Section -->
+                        <div class="slds-section slds-is-open">
+                            <h3 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-var-p-horizontal_small" title="Message Content">Message Content</span>
+                            </h3>
+                            <div aria-hidden="false" class="slds-section__content">
+                                <!-- <div class="slds-form-element">
+                                    <lightning-combobox label="Template" placeholder="Select Template" options={templateOptions}
+                                        spinner-active={loadingTemplates} onchange={handleFieldChange} data-fieldname="template"
+                                        if:false={sendOperationComplete}
+                                        ></lightning-combobox>
+                                </div> -->
+                                <section role="templates">
+                                    <div class="slds-m-top_medium slds-m-bottom_x-large icon-container">
+                                        <div class="slds-grid slds-grid_vertical-align-center slds-grid_align-center">
+                                            <div class="slds-p-horizontal_small">
+                                                <lightning-button-icon
+                                                    onclick={insertFirstName}
+                                                    variant="brand"
+                                                    icon-name="utility:adduser"
+                                                    size="large"
+                                                    alternative-text="firstname"
+                                                    title="First Name"
+                                                ></lightning-button-icon>
+                                            </div>
+                                            <div class="slds-p-horizontal_small">
+                                                <lightning-button-icon
+                                                    onclick={insertGreetings}
+                                                    variant="brand"
+                                                    icon-name="utility:signature"
+                                                    size="large"
+                                                    alternative-text="Greetings"
+                                                    title="Greetings"
+                                                ></lightning-button-icon>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                                <div class="slds-form-element">
+                                    <lightning-textarea label="Message Content" onchange={handleFieldChange}
+                                        data-fieldname="content" value={messageContent} required disabled={sendOperationComplete}
+                                        class="slds-text-longform">
+                                    </lightning-textarea>
+                                    <span class="slds-text-body_small">Special formatting for the message is not supported</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Recepients Section -->
+                        <div class="slds-section slds-is-open slds-m-bottom_xx-large">
+                            <h3 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-var-p-horizontal_small" title="Recepients">Recepients</span>
+                            </h3>
+                            <div aria-hidden="false" class="slds-section__content">
+                                <template if:true={isLoading}>
+                                    <div class="slds-spinner_container">
+                                        <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                                            <span class="slds-assistive-text">Loading</span>
+                                            <div class="slds-spinner__dot-a"></div>
+                                            <div class="slds-spinner__dot-b"></div>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template if:false={isLoading}>
+                                    <template if:true={hasRecepients}>
+                                        <div class="slds-box slds-box_small">
+                                            <table class="slds-table">
+                                                <thead>
+                                                    <tr class="slds-line-height_reset">
+                                                        <th class="" scope="col">
+                                                            <div class="slds-truncate">Recepient</div>
+                                                        </th>
+                                                        <th class="" scope="col">
+                                                            <div class="slds-truncate">Phone Number</div>
+                                                        </th>
+                                                        <!-- <th class="" scope="col">
+                                                            <div class="slds-truncate">Email</div>
+                                                        </th>
+                                                        <th class="" scope="col">
+                                                            <div class="slds-truncate">Mobile Device</div>
+                                                        </th> -->
+                                                        <th class="" scope="col">
+                                                            <a href="javascript:void(0);" data-type="sms" onclick={markAll}>SMS</a>
+                                                        </th>
+                                                        <!-- <th class="" scope="col">
+                                                            <a href="javascript:void(0);" data-type="email"
+                                                                onclick={markAll}>Email</a>
+                                                        </th>
+                                                        <th class="" scope="col">
+                                                            <a href="javascript:void(0);" data-type="push"
+                                                                onclick={markAll}>Push</a>
+                                                        </th> -->
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <template for:each={recepients} for:item="recepient">
+                                                        <tr class="slds-hint-parent" key={recepient.conId}>
+                                                            <th scope="row">
+                                                                <div class="slds-size_12-of-12">
+                                                                    <div class="slds-truncate">{recepient.contact.Name}</div>
+                                                                </div>
+                                                            </th>
+                                                            <td>
+                                                                <div class="slds-truncate">{recepient.contact.MobilePhone}</div>
+                                                            </td>
+                                                            <!-- <td>
+                                                                <div class="slds-truncate">{recepient.contact.Email}</div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="slds-truncate">
+                                                                    {recepient.contact.sirenum__MySirenum_Device_Platform__c}</div>
+                                                            </td> -->
+                                                            <td>
+                                                                <lightning-input type="checkbox-button" variant="label-hidden"
+                                                                    disabled={recepient.sendSMSDisabled} checked={recepient.sendSMS}
+                                                                    onchange={handleFieldChange} data-ischeckbox="true"
+                                                                    data-fieldname="sendSMS" data-conid={recepient.conId}>
+                                                                </lightning-input>
+                                                            </td>
+                                                            <!-- <td>
+                                                                <lightning-input type="checkbox-button" variant="label-hidden"
+                                                                    disabled={recepient.sendEmailDisabled}
+                                                                    checked={recepient.sendEmail} onchange={handleFieldChange}
+                                                                    data-ischeckbox="true" data-fieldname="sendEmail"
+                                                                    data-conid={recepient.conId}></lightning-input>
+                                                            </td>
+                                                            <td>
+                                                                <lightning-input type="checkbox-button" variant="label-hidden"
+                                                                    disabled={recepient.sendPushDisabled}
+                                                                    checked={recepient.sendPush} onchange={handleFieldChange}
+                                                                    data-ischeckbox="true" data-fieldname="sendPush"
+                                                                    data-conid={recepient.conId}></lightning-input>
+                                                            </td> -->
+                                                        </tr>
+                                                    </template>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </template>
+                                    <template if:false={hasRecepients}>
+                                        <c-illustration-desert body="No Recepients Selected"></c-illustration-desert>
+                                    </template>
+                                </template>
+                            </div>
+                        </div>
+            
+                        <div class="slds-docked-form-footer" if:true={hasRecepients}>
+                            <button type="button" class="slds-button slds-button_brand" onclick={sendMessages}
+                                disabled={isLoading}>Send</button>
+                        </div>
+                    </template>
+            
+                    <template if:true={sendOperationComplete}>
+                        <div class="slds-section slds-is-open">
+                            <div aria-hidden="false" class="slds-section__content">
+                                <c-illustration-base body="The message has been queued successfully."></c-illustration-base>
+                            </div>
+                        </div>
+                    </template>
+                </lightning-tab>
+            
+                <!-- History -->
+                <!-- <lightning-tab label="History" value="history" onactive={handleActive}>
+                    <div class="slds-section slds-is-open">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-var-p-horizontal_small" title="Past Mass Notifications">Past Mass Notifications</span>
+                        </h3>
+                        <div aria-hidden="false" class="slds-section__content">
+                            <c-dynamic-data-table
+                            object-api-name="Mass_Message__c"
+                            field-names-str="Contact_Name__c,Message__c,Type__c,Status__c,Error_Reason__c,Time_Sent__c,Sent_By__c">
+                            </c-dynamic-data-table>
+                        </div>
+                    </div>
+                </lightning-tab> -->
+            </lightning-tabset>
+        </div>
+
+    </template>

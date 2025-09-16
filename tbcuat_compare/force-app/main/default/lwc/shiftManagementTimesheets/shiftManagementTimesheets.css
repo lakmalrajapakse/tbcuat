@@ -1,0 +1,12 @@
+table.fixed {
+  table-layout: fixed;
+}
+
+.centered-text {
+  text-align: center;
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

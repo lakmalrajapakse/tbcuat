@@ -1,0 +1,12 @@
+<template>
+    <div class="slds-text-align_center">{status}</div>
+    <div class="slds-text-align_center slds-p-top_small">{message}</div>
+    <lightning-progress-ring
+        class="slds-align_absolute-center slds-p-top_small"
+        value={progress}
+        variant={variant}
+        size="large"
+    >
+    </lightning-progress-ring>
+    <div if:true={hasErrors} class="slds-text-align_center slds-p-top_small">{extendedStatus}</div>
+</template>

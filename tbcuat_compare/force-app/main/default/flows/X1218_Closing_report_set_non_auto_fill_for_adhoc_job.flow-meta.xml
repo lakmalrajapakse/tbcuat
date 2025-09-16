@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <description>This flow sets the auto assign checkbox on new Closing reports to False if the job is Adhoc Shifts and not auto fill</description>
+    <environments>Default</environments>
+    <interviewLabel>1218 - Closing report set non auto fill for adhoc job {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>1218 - Closing report set non auto fill for adhoc job</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Set_Autofill_false_on_closing_report</name>
+        <label>Set Autofill false on closing report</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <inputAssignments>
+            <field>s5m__AutoAssign__c</field>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Set_Autofill_false_on_closing_report</targetReference>
+        </connector>
+        <filterFormula>ISPICKVAL({!$Record.TR1__Job__r.s5m__ShiftDemandGeneration__c}, &quot;Adhoc Shifts&quot;) &amp;&amp; !{!$Record.TR1__Job__r.s5m__AutoFulfil__c}</filterFormula>
+        <object>TR1__Closing_Report__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

@@ -1,0 +1,38 @@
+<apex:page controller="ShiftReportPDFController" renderAs="pdf" showheader="false" applyHtmlTag="false">
+      <head>
+            <style>
+                @page{
+                    size: A4 landscape;
+                }
+                </style>
+        </head>
+    <h1>Timesheet Report</h1>
+
+            <p>Pay Period: {!payPeriod}</p>
+            <p>Site: {!siteName}</p>
+            <p>Job: {!jobName}</p>
+            <p>Worker: {!workerName}</p>
+      
+        <table border="1" cellpadding="4" cellspacing="0" width="100%">
+            <th>Shift Date</th> 
+            <th>Hours</th>
+            <th>Approved Date</th>
+            <th>Approved By</th>
+       
+
+        <apex:repeat value="{!shifts}" var="s">
+            <tr>
+                <td>  <apex:outputText value="{0,date,dd/MM/yyyy}">
+                    <apex:param value="{!s.sirenum__Shift_Date__c}" />
+                    </apex:outputText></td>
+                <td>{!s.sirenum__Billable_Calculated_Shift_Length__c}</td>
+                <td>
+                    <apex:outputText value="{0,date,dd/MM/yyyy}, {0,time,HH:mm}">
+                    <apex:param value="{!s.sirenum__Approved_By_Client__c}" />
+                    </apex:outputText>
+                </td>
+                <td>{!s.sirenum__Client_Approval_By__r.Name}</td>
+            </tr>
+        </apex:repeat>
+    </table>
+</apex:page>

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>63.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Contract_Has_Rate_card</name>
+        <label>Contract Has Rate card?</label>
+        <locationX>611</locationX>
+        <locationY>431</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes_Has_valid_rate_card</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Contract.sirenum__Rate_Card__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Job_Type_Team</targetReference>
+            </connector>
+            <label>Yes Has valid rate card</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Found_matching_Rate_Card_Page</name>
+        <label>Found matching Rate Card Page?</label>
+        <locationX>380</locationX>
+        <locationY>755</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes_Rate_card_page_found</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Rate_Card_Page.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Rate_line_for_Normal_rate</targetReference>
+            </connector>
+            <label>Yes Rate card page found</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Found_normal_rate_for_rate_card</name>
+        <label>Found &quot;normal&quot; rate for rate card?</label>
+        <locationX>182</locationX>
+        <locationY>971</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes_rate_line_found</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Rate_line_for_Normal_rate.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Rate_on_assignment_based_on_rate_line</targetReference>
+            </connector>
+            <label>Yes, rate line found</label>
+        </rules>
+    </decisions>
+    <description>Sets the Pay rate and Bill rate on the assignment based upon the related rate card line found for the contract and job role combination</description>
+    <environments>Default</environments>
+    <interviewLabel>1218 - Assignment on create set default rates from contract and role {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>1218 - Assignment on create set default rates from contract and role</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Gets the contract from the placement to then get the related rate card record.</description>
+        <name>Get_Contract</name>
+        <label>Get Contract</label>
+        <locationX>611</locationX>
+        <locationY>323</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Contract_Has_Rate_card</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.sirenum__Contract__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>sirenum__ProActiveContract__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the related Job Type record to use the Name field in the subsequent query.</description>
+        <name>Get_Job_Type_Team</name>
+        <label>Get Job Type (Team)</label>
+        <locationX>380</locationX>
+        <locationY>539</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Rate_Card_Page</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.sirenum__Job_Role__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>sirenum__Team__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Get the Rate Card Page which meets the criteria based upon the matching Job Role.Name (must also meet the condition criteria which matches this too, see filter conditions)</description>
+        <name>Get_Rate_Card_Page</name>
+        <label>Get Rate Card Page</label>
+        <locationX>380</locationX>
+        <locationY>647</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Found_matching_Rate_Card_Page</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>sirenum__Rate_Card__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Contract.sirenum__Rate_Card__c</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>sirenum__Condition_Suggestions__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Job_Role_Name__c</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>sirenum__Condition_Operator__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Equal to</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>sirenum__Condition_value__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Job_Type_Team.Name</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>sirenum__Rate_Card_Page__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the rate card line items for this rate card page</description>
+        <name>Get_Rate_line_for_Normal_rate</name>
+        <label>Get Rate line for Normal rate</label>
+        <locationX>182</locationX>
+        <locationY>863</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Found_normal_rate_for_rate_card</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>sirenum__Rate_Card_Page__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Rate_Card_Page.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>sirenum__Code__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>sirenum__Rate_Line__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Set_Rate_on_assignment_based_on_rate_line</name>
+        <label>Set Rate on assignment based on rate line</label>
+        <locationX>50</locationX>
+        <locationY>1079</locationY>
+        <inputAssignments>
+            <field>sirenum__Charge_Rate__c</field>
+            <value>
+                <elementReference>Get_Rate_line_for_Normal_rate.sirenum__Charge_Rate__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>sirenum__Pay_rate__c</field>
+            <value>
+                <elementReference>Get_Rate_line_for_Normal_rate.sirenum__Pay_Rate__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>485</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Contract</targetReference>
+        </connector>
+        <object>sirenum__Placement__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>var_TemplateId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

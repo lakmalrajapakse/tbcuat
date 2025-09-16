@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Set_Holiday_Days</name>
+        <label>Set Holiday Days</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Holiday_Days__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>holidayDays</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <environments>Default</environments>
+    <formulas>
+        <name>holidayDays</name>
+        <dataType>Number</dataType>
+        <expression>IF({!$Record.Post_AWR__c}, {!$Record.sirenum__Contract__r.Holiday_Days_Post_AWR__c},{!$Record.sirenum__Contract__r.Holiday_Days_Pre_AWR__c})</expression>
+        <scale>0</scale>
+    </formulas>
+    <interviewLabel>Set Holiday Days {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>1218 - Set Assignment Holiday Days</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Set_Holiday_Days</targetReference>
+        </connector>
+        <filterFormula>AND(NOT(IsBlank({!$Record.sirenum__Contract__c})),
+OR(IsNew(), IsBlank({!$Record__Prior.sirenum__Contract__c}), {!$Record__Prior.sirenum__Contract__c} != {!$Record.sirenum__Contract__c},
+{!$Record.Post_AWR__c} != {!$Record__Prior.Post_AWR__c})
+)</filterFormula>
+        <object>sirenum__Placement__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

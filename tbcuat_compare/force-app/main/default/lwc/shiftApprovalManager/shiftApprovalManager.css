@@ -1,0 +1,88 @@
+/* Popover Location and Position */
+section.c-absolute-position {
+  position: absolute;
+}
+
+section.c-line-error-popover {
+  bottom: 73%;
+  left: 8px;
+}
+
+section.c-general-error-popover {
+  bottom: 50px;
+}
+
+.slds-popover__body {
+  white-space: pre-wrap;
+  max-height: 7rem;
+  overflow-y: auto;
+}
+
+/* Align Error icon next to buttons */
+a.slds-button.c-custom-error-indicator {
+  margin-left: 15px;
+}
+
+.multi-row-header {
+  white-space: break-spaces;
+}
+
+/* Filters Side Panel Adjustments */
+.slds-panel {
+  height: auto;
+  overflow: hidden;
+}
+
+th:nth-child(7),
+td:nth-child(7) {
+  width: 100px;
+}
+
+.warning-feedback {
+  color: #c86304;
+}
+
+.rightAdjust {
+  padding-left: 6px !important;
+}
+
+table.second-filter-row > tbody > tr > td:nth-of-type(1) {
+  min-width: 220px;
+}
+table.second-filter-row > tbody > tr > td:nth-of-type(2) {
+  min-width: 130px;
+}
+table.second-filter-row > tbody > tr > td:nth-of-type(5) {
+  width: 100%;
+}
+
+table.progress-table > tbody > tr > td:nth-of-type(1) {
+  min-width: 125px;
+}
+table.progress-table> tbody > tr > td:nth-of-type(2) {
+  width: 100%;
+}
+
+.progress-container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.progress-row {
+  width: 100%;
+  display: flex;
+}
+.progress-label {
+  padding: 10px;
+  text-align: center;
+}
+.progress-fill-space {
+  flex: 1;
+  padding: 14px;
+  text-align: center;
+}
+
+.payroll-progress {
+  --lwc-progressBarColorBackgroundFill: green
+}

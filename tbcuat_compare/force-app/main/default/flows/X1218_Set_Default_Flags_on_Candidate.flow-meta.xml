@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <constants>
+        <name>ErrorMessage_RighttoWork</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>We are unable to progress your application at this time - please contact your local branch to discuss this further.</stringValue>
+        </value>
+    </constants>
+    <customErrors>
+        <name>Message_to_registree</name>
+        <label>Message to registree</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <customErrorMessages>
+            <errorMessage>{!ErrorMessage_RighttoWork}</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <decisions>
+        <name>No_Right_to_Work_Outside_UK</name>
+        <label>No Right to Work/Outside UK?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Updated_the_Booking_and_Sales_contact</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Bypass</defaultConnectorLabel>
+        <rules>
+            <name>No_Right_To_Work</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Do_you_have_the_right_to_work_in_the_UK__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Do_you_currently_live_in_the_UK__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Message_to_registree</targetReference>
+            </connector>
+            <label>No Right To Work</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <interviewLabel>1218- {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>1218-Set Default Flags on Candidate</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Updated_the_Booking_and_Sales_contact</name>
+        <label>Updated the Booking and Sales contact</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <inputAssignments>
+            <field>Booking_Contact__c</field>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Sales_Contact__c</field>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>No_Right_to_Work_Outside_UK</targetReference>
+        </connector>
+        <filterFormula>AND(
+NOT(ISBLANK({!$Record.RecordTypeId})),
+{!$Record.RecordType.Name} = &quot;Candidate&quot;
+)</filterFormula>
+        <object>Contact</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Obsolete</status>
+</Flow>

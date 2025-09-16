@@ -1,0 +1,17 @@
+<template>
+    <ul class="slds-button-group-row">
+        <li class="slds-button-group-item c-set-size-selector">
+            <span class="slds-text-title_caps">Payroll cycle</span>
+            <lightning-combobox
+                variant="label-hidden"
+                options={payrollCycles}
+                value={selectedPayrollCycle}
+                placeholder="None"
+                label="Payroll cycle"
+                onchange={handlePayrollCycle}
+                class="combo"
+            >
+            </lightning-combobox>
+        </li>
+    </ul>
+</template>

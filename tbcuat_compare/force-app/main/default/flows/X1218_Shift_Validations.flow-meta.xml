@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <customErrors>
+        <name>Only_Candidate_record_type_error</name>
+        <label>Only Candidate record type error</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <customErrorMessages>
+            <errorMessage>You cannot assign a person who is not a &quot;Candidate&quot; record type to a shift.</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <customErrors>
+        <name>Portal_users_cannot_create_shift_records</name>
+        <label>Portal users cannot create shift records</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <customErrorMessages>
+            <errorMessage>You cannot directly create shifts, a shift demand must be raised instead.</errorMessage>
+            <fieldSelection>RecordTypeId</fieldSelection>
+            <isFieldError>true</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <decisions>
+        <description>Checks to see if a client portal user (Has contactId lookup on user) and if so they cannot be the creator of a Shift of record type &quot;Shift&quot;</description>
+        <name>Check_created_by_can_create_this_record_type</name>
+        <label>Check created by can create this record type</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Only_candidates_can_be_linked_to_a_shift</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Is_client_portal_user</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.CreatedBy.ContactId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.RecordType.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Shift</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Portal_users_cannot_create_shift_records</targetReference>
+            </connector>
+            <label>Is client portal user?</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Checks the record type of the linked contact record to make sure it is a Candidate contact.</description>
+        <name>Only_candidates_can_be_linked_to_a_shift</name>
+        <label>Only candidates can be linked to a shift</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Non_Candidate_linked</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.sirenum__Contact__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.sirenum__Contact__r.RecordType.DeveloperName</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>Candidate</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Only_Candidate_record_type_error</targetReference>
+            </connector>
+            <label>Non Candidate linked</label>
+        </rules>
+    </decisions>
+    <description>Additional validations applied to shifts to work around the cross object formula limit hit when trying to create standard validation rules.</description>
+    <environments>Default</environments>
+    <interviewLabel>1218 - Shift Validations {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>1218 - Shift Validations</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Check_created_by_can_create_this_record_type</targetReference>
+        </connector>
+        <filterFormula>OR(ISNEW(), ISCHANGED({!$Record.sirenum__Contact__c}))</filterFormula>
+        <object>sirenum__Shift__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

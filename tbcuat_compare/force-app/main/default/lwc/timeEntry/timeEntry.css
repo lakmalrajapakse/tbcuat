@@ -1,0 +1,15 @@
+.shiftDetail,.shiftDetail:hover{
+    border : none;
+}
+.hour{
+    width:50%;
+}
+.cellTable {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.cellTable td {
+   padding: 0; 
+   margin: 0;
+}

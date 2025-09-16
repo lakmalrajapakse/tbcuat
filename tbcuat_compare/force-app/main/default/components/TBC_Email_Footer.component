@@ -1,0 +1,5 @@
+<apex:component id="TBC_Email_Footer" access="global">   
+<footer>
+    <apex:image url="https://thebestconnectionsf.lightning.force.com/servlet/servlet.ImageServer?id=015QH000004cJyb&oid=00DQH000004uaph" />
+</footer>
+</apex:component>

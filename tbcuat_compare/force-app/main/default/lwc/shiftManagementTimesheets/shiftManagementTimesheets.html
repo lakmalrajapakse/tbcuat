@@ -1,0 +1,85 @@
+<template>
+    <div class="slds-is-relative">
+        <lightning-spinner
+            if:true={isLoading}
+            alternative-text="Loading"
+            size="large"
+            variant="brand"
+        ></lightning-spinner>
+
+        <div class="slds-clearfix slds-m-bottom_small">
+            <ul class="slds-float_right slds-list_horizontal">
+                <li class="slds-align_absolute-center">
+                    <lightning-formatted-text value="Sum Total Charge"></lightning-formatted-text>
+                    <lightning-formatted-number
+                        class="slds-m-left_x-small"
+                        value={totalChargeSum}
+                        format-style="currency"
+                    ></lightning-formatted-number>
+                </li>
+                <li class="slds-button-group-item">
+                    <lightning-button
+                        label="Generate Timesheet Proof"
+                        title="Generate timesheet proff for selected timesheets"
+                        icon-name="utility:record_create"
+                        class="slds-m-left_x-small"
+                        onclick={handleGenerateTimesheetProof}
+                        disabled={generateTimesheetProofDisabled}
+                    ></lightning-button>
+                </li>
+                <li class="slds-button-group-item">
+                    <lightning-button
+                        label="Upload Attachment(s)"
+                        title="Upload attachments to selected timesheets"
+                        icon-name="utility:upload"
+                        class="slds-m-left_x-small"
+                        onclick={handleUploadClick}
+                        disabled={uploadDisabled}
+                    ></lightning-button>
+                </li>
+                <li class="slds-button-group-item">
+                    <lightning-button
+                        label="Edit Selected"
+                        title="Edit selected timesheets"
+                        icon-name="utility:edit"
+                        class="slds-m-left_x-small"
+                        onclick={handleEditClick}
+                        disabled={editDisabled}
+                    ></lightning-button>
+                </li>
+                <li class="slds-button-group-item" if:false={isCommunity}>
+                    <lightning-button
+                        variant="destructive"
+                        label="Delete Selected"
+                        title="Delete selected timesheets and lines"
+                        icon-name="utility:delete"
+                        class="slds-m-left_x-small"
+                        disabled={deleteDisabled}
+                        onclick={handleDeleteClick}
+                    ></lightning-button>
+                </li>
+            </ul>
+        </div>
+        <lightning-layout if:true={_apexJobId}>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12"
+                padding="around-small">
+                <div class="slds-p-top_large">
+                    Batch Percentage Executed: <b>{executedPercentage}%</b>
+                </div>
+                <div class="slds-p-top_large">
+                    <lightning-progress-bar value={executedIndicator} size="large"></lightning-progress-bar>
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+        <lightning-tree-grid
+            columns={columns}
+            data={data}
+            key-field="Name"
+            onrowselection={handleRowSelection}
+            onrowaction={handleRowAction}
+        ></lightning-tree-grid>
+        <c-no-data-illustration if:false={hasData} class="slds-align_absolute-center" style="height: 250px">
+            <div slot="message" class="slds-text-body_regular">No data to show, yet.</div>
+        </c-no-data-illustration>
+    </div>
+</template>

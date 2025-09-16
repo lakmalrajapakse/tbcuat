@@ -1,0 +1,40 @@
+<template>
+    <template if:true={showModal}>
+        <section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open slds-modal_small" >
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" ></lightning-icon>
+                    </button>
+                    <h1 class="slds-text-heading_medium slds-hyphenate title"><strong>Query</strong></h1>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <div class="c-custom-min-height">
+                        <p class="wrap-text">{query}</p>
+                    </div>
+                </div>
+                <footer class="slds-modal__footer">
+                    <div class="button-container">
+                        <ul class="slds-button-group-row">
+                            <li class="slds-button-group-item">
+                                <lightning-button variant="brand" label="Close" class="slds-m-left_x-small" 
+                                    onclick={closeModal}
+                                ></lightning-button>
+                            </li>
+                            <!-- <li class="slds-button-group-item">
+                                <lightning-button variant="brand" label="Save" class="slds-m-left_x-small" 
+                                    onclick={handleConfirm}
+                                ></lightning-button>
+                            </li> -->
+                        </ul>
+                    </div>
+                </footer>
+            </div>
+        </section>
+        
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

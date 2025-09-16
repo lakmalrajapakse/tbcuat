@@ -1,0 +1,38 @@
+<template>
+    <lightning-modal-header label="Edit Timesheet"></lightning-modal-header>
+    <lightning-modal-body>
+        <div class="slds-is-relative">
+            <lightning-spinner alternative-text="Loading" if:true={isLoading} variant="brand"></lightning-spinner>
+            <lightning-record-edit-form
+                record-id={recordId}
+                object-api-name={object}
+                onsuccess={handleOnSuccess}
+                onerror={handleOnError}
+                onload={handleOnLoad}
+            >
+                <lightning-messages></lightning-messages>
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning-input-field field-name={contactField} disabled> </lightning-input-field>
+                        <lightning-input-field field-name={poNumberField}> </lightning-input-field>
+                    </div>
+                </div>
+            </lightning-record-edit-form>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button
+            variant="neutral"
+            label="Cancel"
+            onclick={handleCancelClick}
+            disabled={buttonsDisabled}
+        ></lightning-button>
+        <lightning-button
+            class="slds-m-left_x-small"
+            variant="brand"
+            label="Update"
+            disabled={buttonsDisabled}
+            onclick={handleUpdateClick}
+        ></lightning-button>
+    </lightning-modal-footer>
+</template>

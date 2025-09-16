@@ -1,0 +1,30 @@
+<!--
+  @description       : 
+  @author            : James Ridge
+  @group             : 
+  @last modified on  : 01-29-2021
+  @last modified by  : James Ridge
+  Modifications Log 
+  Ver   Date         Author        Modification
+  1.0   01-29-2021   James Ridge   Initial Version
+-->
+<template>
+    <!-- Pill -->
+    <li class="slds-listbox-item c-filter-group-condition" role="presentation">
+        <span class="slds-pill" role="option" tabindex="0" aria-selected="true">
+            <!-- Pill Description --> 
+            <span class="slds-pill__label c-allow-word-break">
+                <template if:false={isFirst}>
+                    <span class="c-condition-operator"><b>{crossConditionOperator} </b></span> 
+                </template>
+                <span class="c-target-field"><a href="javascript:void(0);">{value.targetFieldLabel} </a></span>
+                <span class="c-target-operator slds-text-title_caps">{value.selectedOperatorLabel} </span> 
+                <!-- <span class="c-target-value" if:true={value.targetValueLabel}>{value.targetValueLabel}</span>
+                <span class="c-target-value" if:false={value.targetValueLabel}>Empty</span> -->
+                <span class="c-target-value">{targetValue}</span>                
+            </span>
+            <!-- Pill Actions -->
+            <slot></slot>
+        </span>
+    </li> 
+</template>

@@ -1,0 +1,12 @@
+<template>
+    <template if:true={error}>
+        <div class="slds-text-color_error">Error loading branch details.</div>
+    </template>
+    <template if:true={branchName}>
+    
+        <h1>Branch Details</h1>
+        <div class="slds-text-body_regular">
+            Your branch is {branchName}, Contact information is {contactName} ({contactEmail})
+        </div>
+    </template>
+</template>

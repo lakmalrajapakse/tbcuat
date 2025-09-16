@@ -1,0 +1,18 @@
+<template>
+    <li class={messageCssClass} data-key={slotMessageId}>
+        <div class="slds-chat-message">
+                <template if:true={isInboundMessage}>
+                        <!-- Example using SLDS utility icon for SMS-like functionality -->
+                        <lightning-icon icon-name="utility:sms" size="medium" alternative-text="SMS"></lightning-icon>
+                    
+                </template>
+                <div class="slds-chat-message__body">
+                    <div class={messageCssContent}>
+                        <span>{message.messageContent}</span>
+                    </div>
+            <div class="slds-chat-message__meta">
+                {message.senderName} • {message.formattedTimestamp}
+            </div></div>
+        </div>
+    </li>
+</template>

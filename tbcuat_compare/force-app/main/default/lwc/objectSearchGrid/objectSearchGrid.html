@@ -1,0 +1,36 @@
+<template>
+    <div class="slds-is-relative modal-body">
+        <lightning-spinner alternative-text="Loading" if:true={isLoading} variant="brand"></lightning-spinner>
+        <div class="search-body">
+            <div class="search-body-input">
+                <lightning-input
+                    type="text"
+                    label={objectSearchLabel}
+                    placeholder={objectSearchFieldsLabel}
+                    field-level-help="The first 100 records matching the search will be displayed. If you cannot find the record you are looking for then try to make your search more specfic."
+                    onchange={handleSearchChange}
+                    class="slds-p-bottom_medium"
+                    value={searchTerm}
+                ></lightning-input>
+            </div>
+            <div class="search-body-output">
+                <template if:true={hasData}>
+                    <lightning-datatable
+                        key-field="Id"
+                        data={data}
+                        columns={columns}
+                        max-row-selection="1"
+                        onrowselection={handleSelection}
+                        class="datatable slds-border_bottom"
+                    >
+                    </lightning-datatable>
+                </template>
+                <c-no-data-illustration if:false={hasData} class="slds-align_absolute-center illustration">
+                    <div slot="message" class="slds-text-body_regular">
+                        {objectNoDataLabel}
+                    </div>
+                </c-no-data-illustration>
+            </div>
+        </div>
+    </div>
+</template>
